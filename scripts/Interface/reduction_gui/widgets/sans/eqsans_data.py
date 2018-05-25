@@ -53,16 +53,16 @@ class DataSetsWidget(BaseWidget):
         self._content.sample_thickness_edit.setValidator(QtGui.QDoubleValidator(self._content.sample_thickness_edit))
 
         # Connections
-        self.connect(self._content.data_file_browse_button, QtCore.SIGNAL("clicked()"), self._data_file_browse)
-        self.connect(self._content.calculate_radio, QtCore.SIGNAL("clicked()"), self._calculate_clicked)
-        self.connect(self._content.fix_trans_radio, QtCore.SIGNAL("clicked()"), self._calculate_clicked)
+        self._content.data_file_browse_button.clicked.connect(self._data_file_browse)
+        self._content.calculate_radio.clicked.connect(self._calculate_clicked)
+        self._content.fix_trans_radio.clicked.connect(self._calculate_clicked)
 
-        self.connect(self._content.empty_button, QtCore.SIGNAL("clicked()"), self._empty_browse)
-        self.connect(self._content.sample_button, QtCore.SIGNAL("clicked()"), self._sample_browse)
+        self._content.empty_button.clicked.connect(self._empty_browse)
+        self._content.sample_button.clicked.connect(self._sample_browse)
 
-        self.connect(self._content.data_file_plot_button, QtCore.SIGNAL("clicked()"), self._data_file_plot)
-        self.connect(self._content.empty_plot_button, QtCore.SIGNAL("clicked()"), self._empty_plot)
-        self.connect(self._content.sample_plot_button, QtCore.SIGNAL("clicked()"), self._sample_plot)
+        self._content.data_file_plot_button.clicked.connect(self._data_file_plot)
+        self._content.empty_plot_button.clicked.connect(self._empty_plot)
+        self._content.sample_plot_button.clicked.connect(self._sample_plot)
 
         # Calculate/Fix radio button
         g1 = QtWidgets.QButtonGroup(self)
@@ -91,17 +91,17 @@ class DataSetsWidget(BaseWidget):
         #self._content.bck_thickness_edit.setValidator(QtGui.QDoubleValidator(self._content.bck_thickness_edit))
 
         # Connections
-        self.connect(self._content.background_chk, QtCore.SIGNAL("clicked(bool)"), self._background_clicked)
-        self.connect(self._content.background_browse, QtCore.SIGNAL("clicked()"), self._background_browse)
-        self.connect(self._content.bck_calculate_radio, QtCore.SIGNAL("clicked()"), self._bck_calculate_clicked)
-        self.connect(self._content.bck_fix_trans_radio, QtCore.SIGNAL("clicked()"), self._bck_calculate_clicked)
+        self._content.background_chk.clicked[bool].connect(self._background_clicked)
+        self._content.background_browse.clicked.connect(self._background_browse)
+        self._content.bck_calculate_radio.clicked.connect(self._bck_calculate_clicked)
+        self._content.bck_fix_trans_radio.clicked.connect(self._bck_calculate_clicked)
 
-        self.connect(self._content.bck_empty_button, QtCore.SIGNAL("clicked()"), self._bck_empty_browse)
-        self.connect(self._content.bck_sample_button, QtCore.SIGNAL("clicked()"), self._bck_sample_browse)
+        self._content.bck_empty_button.clicked.connect(self._bck_empty_browse)
+        self._content.bck_sample_button.clicked.connect(self._bck_sample_browse)
 
-        self.connect(self._content.background_plot_button, QtCore.SIGNAL("clicked()"), self._background_plot_clicked)
-        self.connect(self._content.bck_empty_plot_button, QtCore.SIGNAL("clicked()"), self._bck_empty_plot)
-        self.connect(self._content.bck_sample_plot_button, QtCore.SIGNAL("clicked()"), self._bck_sample_plot)
+        self._content.background_plot_button.clicked.connect(self._background_plot_clicked)
+        self._content.bck_empty_plot_button.clicked.connect(self._bck_empty_plot)
+        self._content.bck_sample_plot_button.clicked.connect(self._bck_sample_plot)
 
         # Calculate/Fix radio button
         g2 = QtWidgets.QButtonGroup(self)

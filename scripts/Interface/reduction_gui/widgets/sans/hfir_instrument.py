@@ -127,27 +127,27 @@ class SANSInstrumentWidget(BaseWidget):
         self._summary.n_sub_pix_edit.setValidator(QtGui.QIntValidator(self._summary.n_sub_pix_edit))
 
         # Event connections
-        self.connect(self._summary.detector_offset_chk, QtCore.SIGNAL("clicked(bool)"), self._det_offset_clicked)
-        self.connect(self._summary.sample_dist_chk, QtCore.SIGNAL("clicked(bool)"), self._sample_dist_clicked)
-        self.connect(self._summary.sample_si_dist_chk, QtCore.SIGNAL("clicked(bool)"), self._sample_si_dist_clicked)
-        self.connect(self._summary.total_detector_distance_chk, QtCore.SIGNAL("clicked(bool)"), self._total_dist_clicked)
-        self.connect(self._summary.wavelength_chk, QtCore.SIGNAL("clicked(bool)"), self._wavelength_clicked)
+        self._summary.detector_offset_chk.clicked[bool].connect(self._det_offset_clicked)
+        self._summary.sample_dist_chk.clicked[bool].connect(self._sample_dist_clicked)
+        self._summary.sample_si_dist_chk.clicked[bool].connect(self._sample_si_dist_clicked)
+        self._summary.total_detector_distance_chk.clicked[bool].connect(self._total_dist_clicked)
+        self._summary.wavelength_chk.clicked[bool].connect(self._wavelength_clicked)
 
         self._summary.sample_dist_edit.textChanged.connect(self._update_total_distance)
         self._summary.sample_si_dist_edit.textChanged.connect(self._update_total_distance)
         self._summary.detector_offset_edit.textChanged.connect(self._update_total_distance)
 
-        self.connect(self._summary.dark_current_check, QtCore.SIGNAL("clicked(bool)"), self._dark_clicked)
-        self.connect(self._summary.dark_browse_button, QtCore.SIGNAL("clicked()"), self._dark_browse)
-        self.connect(self._summary.dark_plot_button, QtCore.SIGNAL("clicked()"), self._dark_plot_clicked)
-        self.connect(self._summary.normalization_none_radio, QtCore.SIGNAL("clicked()"), self._normalization_clicked)
-        self.connect(self._summary.normalization_time_radio, QtCore.SIGNAL("clicked()"), self._normalization_clicked)
-        self.connect(self._summary.normalization_monitor_radio, QtCore.SIGNAL("clicked()"), self._normalization_clicked)
+        self._summary.dark_current_check.clicked[bool].connect(self._dark_clicked)
+        self._summary.dark_browse_button.clicked.connect(self._dark_browse)
+        self._summary.dark_plot_button.clicked.connect(self._dark_plot_clicked)
+        self._summary.normalization_none_radio.clicked.connect(self._normalization_clicked)
+        self._summary.normalization_time_radio.clicked.connect(self._normalization_clicked)
+        self._summary.normalization_monitor_radio.clicked.connect(self._normalization_clicked)
 
         # Q range
         self._summary.n_q_bins_edit.setText("100")
         self._summary.n_sub_pix_edit.setText("1")
-        self.connect(self._summary.log_binning_radio, QtCore.SIGNAL("clicked(bool)"), self._summary.align_check.setEnabled)
+        self._summary.log_binning_radio.clicked[bool].connect(self._summary.align_check.setEnabled)
 
         self._summary.scale_edit.setText("1")
 
@@ -159,18 +159,18 @@ class SANSInstrumentWidget(BaseWidget):
         self._dark_clicked(self._summary.dark_current_check.isChecked())
 
         # Mask Connections
-        self.connect(self._summary.mask_browse_button, QtCore.SIGNAL("clicked()"), self._mask_browse_clicked)
-        self.connect(self._summary.mask_plot_button, QtCore.SIGNAL("clicked()"), self._mask_plot_clicked)
-        self.connect(self._summary.mask_check, QtCore.SIGNAL("clicked(bool)"), self._mask_checked)
+        self._summary.mask_browse_button.clicked.connect(self._mask_browse_clicked)
+        self._summary.mask_plot_button.clicked.connect(self._mask_plot_clicked)
+        self._summary.mask_check.clicked[bool].connect(self._mask_checked)
 
         # Absolute scale connections and validators
         self._summary.scale_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_edit))
         self._summary.scale_beam_radius_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_beam_radius_edit))
         self._summary.scale_att_trans_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_att_trans_edit))
-        self.connect(self._summary.scale_data_browse_button, QtCore.SIGNAL("clicked()"), self._scale_data_browse)
-        self.connect(self._summary.scale_data_plot_button, QtCore.SIGNAL("clicked()"), self._scale_data_plot_clicked)
-        self.connect(self._summary.beamstop_chk, QtCore.SIGNAL("clicked(bool)"), self._beamstop_clicked)
-        self.connect(self._summary.scale_chk, QtCore.SIGNAL("clicked(bool)"), self._scale_clicked)
+        self._summary.scale_data_browse_button.clicked.connect(self._scale_data_browse)
+        self._summary.scale_data_plot_button.clicked.connect(self._scale_data_plot_clicked)
+        self._summary.beamstop_chk.clicked[bool].connect(self._beamstop_clicked)
+        self._summary.scale_chk.clicked[bool].connect(self._scale_clicked)
         self._scale_clicked(self._summary.scale_chk.isChecked())
 
         # If we are not in debug/expert mode, hide some advanced options

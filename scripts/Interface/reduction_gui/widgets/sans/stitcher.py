@@ -78,31 +78,31 @@ class StitcherWidget(BaseWidget):
         self._content.medium_max_edit.setValidator(QtGui.QDoubleValidator(self._content.medium_max_edit))
 
         # Browse buttons
-        self.connect(self._content.low_q_browse_button, QtCore.SIGNAL("clicked()"), self._low_q_browse)
-        self.connect(self._content.medium_q_browse_button, QtCore.SIGNAL("clicked()"), self._medium_q_browse)
-        self.connect(self._content.high_q_browse_button, QtCore.SIGNAL("clicked()"), self._high_q_browse)
+        self._content.low_q_browse_button.clicked.connect(self._low_q_browse)
+        self._content.medium_q_browse_button.clicked.connect(self._medium_q_browse)
+        self._content.high_q_browse_button.clicked.connect(self._high_q_browse)
 
-        self.connect(self._content.low_q_combo, QtCore.SIGNAL("activated(int)"), self._update_low_q)
-        self.connect(self._content.medium_q_combo, QtCore.SIGNAL("activated(int)"), self._update_medium_q)
-        self.connect(self._content.high_q_combo, QtCore.SIGNAL("activated(int)"), self._update_high_q)
+        self._content.low_q_combo.activated[int].connect(self._update_low_q)
+        self._content.medium_q_combo.activated[int].connect(self._update_medium_q)
+        self._content.high_q_combo.activated[int].connect(self._update_high_q)
 
         # Radio buttons
-        self.connect(self._content.low_radio, QtCore.SIGNAL("clicked()"), self._low_q_selected)
-        self.connect(self._content.medium_radio, QtCore.SIGNAL("clicked()"), self._medium_q_selected)
-        self.connect(self._content.high_radio, QtCore.SIGNAL("clicked()"), self._high_q_selected)
+        self._content.low_radio.clicked.connect(self._low_q_selected)
+        self._content.medium_radio.clicked.connect(self._medium_q_selected)
+        self._content.high_radio.clicked.connect(self._high_q_selected)
 
         # Selection buttons
-        self.connect(self._content.low_range_button, QtCore.SIGNAL("clicked()"), self._low_range)
-        self.connect(self._content.medium_range_button, QtCore.SIGNAL("clicked()"), self._medium_range)
+        self._content.low_range_button.clicked.connect(self._low_range)
+        self._content.medium_range_button.clicked.connect(self._medium_range)
 
         # Scale factors
-        self.connect(self._content.low_scale_edit, QtCore.SIGNAL("returnPressed()"), self._update_low_scale)
-        self.connect(self._content.medium_scale_edit, QtCore.SIGNAL("returnPressed()"), self._update_medium_scale)
-        self.connect(self._content.high_scale_edit, QtCore.SIGNAL("returnPressed()"), self._update_high_scale)
+        self._content.low_scale_edit.returnPressed.connect(self._update_low_scale)
+        self._content.medium_scale_edit.returnPressed.connect(self._update_medium_scale)
+        self._content.high_scale_edit.returnPressed.connect(self._update_high_scale)
 
         # Apply and save buttons
-        self.connect(self._content.apply_button, QtCore.SIGNAL("clicked()"), self._apply)
-        self.connect(self._content.save_result_button, QtCore.SIGNAL("clicked()"), self._save_result)
+        self._content.apply_button.clicked.connect(self._apply)
+        self._content.save_result_button.clicked.connect(self._save_result)
 
         # Create button group for data set selection
         g = QtWidgets.QButtonGroup(self)

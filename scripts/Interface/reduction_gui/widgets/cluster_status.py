@@ -50,11 +50,11 @@ class RemoteJobsWidget(BaseWidget):
         self.copyAction = QtWidgets.QAction("Copy", self)
         self.copyAction.setShortcut("Ctrl+C")
         self.addAction(self.copyAction)
-        self.connect(self.copyAction, QtCore.SIGNAL("triggered()"), self.copyCells)
+        self.copyAction.triggered.connect(self.copyCells)
         self._content.job_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.connect(self._content.job_table, QtCore.SIGNAL("customContextMenuRequested(QPoint)"), self.tableWidgetContext)
+        self._content.job_table.customContextMenuRequested[QtCore.QPoint].connect(self.tableWidgetContext)
 
-        self.connect(self._content.refresh_button, QtCore.SIGNAL("clicked()"), self._update_content)
+        self._content.refresh_button.clicked.connect(self._update_content)
 
         # Set the time of the oldest displayed job to 2 days ago
         self._content.date_time_edit.setDateTime(QtCore.QDateTime().currentDateTime().addDays(-2))
@@ -236,7 +236,7 @@ class RemoteJobsWidget(BaseWidget):
                 btn.setText('Remove')
                 btn.setToolTip('Remove this job and its temporary files')
             call_back = partial(self._remove_job, is_running=is_running, job_id=job_id, trans_id=job_list[i][5])
-            self.connect(btn, QtCore.SIGNAL("clicked()"), call_back)
+            btn.clicked.connect(call_back)
             self._content.job_table.setCellWidget(i, 5, btn)
 
         self._content.job_table.setSortingEnabled(True)

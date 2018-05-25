@@ -66,37 +66,37 @@ class DetectorWidget(BaseWidget):
         self._content.min_sensitivity_edit.setValidator(QtGui.QDoubleValidator(self._content.min_sensitivity_edit))
         self._content.max_sensitivity_edit.setValidator(QtGui.QDoubleValidator(self._content.max_sensitivity_edit))
 
-        self.connect(self._content.data_file_browse_button_2, QtCore.SIGNAL("clicked()"), self._flood_beam_finder_browse)
+        self._content.data_file_browse_button_2.clicked.connect(self._flood_beam_finder_browse)
 
-        self.connect(self._content.sensitivity_chk, QtCore.SIGNAL("clicked(bool)"), self._sensitivity_clicked)
-        self.connect(self._content.sensitivity_browse_button, QtCore.SIGNAL("clicked()"), self._sensitivity_browse)
-        self.connect(self._content.sensitivity_dark_browse_button, QtCore.SIGNAL("clicked()"), self._sensitivity_dark_browse)
+        self._content.sensitivity_chk.clicked[bool].connect(self._sensitivity_clicked)
+        self._content.sensitivity_browse_button.clicked.connect(self._sensitivity_browse)
+        self._content.sensitivity_dark_browse_button.clicked.connect(self._sensitivity_dark_browse)
 
-        self.connect(self._content.use_beam_finder_checkbox, QtCore.SIGNAL("clicked(bool)"), self._use_beam_finder_changed)
-        self.connect(self._content.scattering_data, QtCore.SIGNAL("clicked()"), self._center_method_changed)
-        self.connect(self._content.direct_beam, QtCore.SIGNAL("clicked()"), self._center_method_changed)
+        self._content.use_beam_finder_checkbox.clicked[bool].connect(self._use_beam_finder_changed)
+        self._content.scattering_data.clicked.connect(self._center_method_changed)
+        self._content.direct_beam.clicked.connect(self._center_method_changed)
 
-        self.connect(self._content.use_sample_center_checkbox, QtCore.SIGNAL("clicked(bool)"), self._use_sample_center_changed)
-        self.connect(self._content.scattering_data_2, QtCore.SIGNAL("clicked()"), self._flood_center_method_changed)
-        self.connect(self._content.direct_beam_2, QtCore.SIGNAL("clicked()"), self._flood_center_method_changed)
-        self.connect(self._content.use_beam_finder_checkbox_2, QtCore.SIGNAL("clicked(bool)"), self._flood_use_beam_finder_changed)
+        self._content.use_sample_center_checkbox.clicked[bool].connect(self._use_sample_center_changed)
+        self._content.scattering_data_2.clicked.connect(self._flood_center_method_changed)
+        self._content.direct_beam_2.clicked.connect(self._flood_center_method_changed)
+        self._content.use_beam_finder_checkbox_2.clicked[bool].connect(self._flood_use_beam_finder_changed)
 
-        self.connect(self._content.data_file_browse_button, QtCore.SIGNAL("clicked()"), self._beam_finder_browse)
+        self._content.data_file_browse_button.clicked.connect(self._beam_finder_browse)
 
         self._use_beam_finder_changed(self._content.use_beam_finder_checkbox.isChecked())
         self._content.use_sample_center_checkbox.setChecked(True)
         self._sensitivity_clicked(self._content.sensitivity_chk.isChecked())
         self._use_sample_center_changed(self._content.use_sample_center_checkbox.isChecked())
 
-        self.connect(self._content.sensitivity_plot_button, QtCore.SIGNAL("clicked()"), self._sensitivity_plot_clicked)
-        self.connect(self._content.data_file_plot_button, QtCore.SIGNAL("clicked()"), self._data_file_plot_clicked)
-        self.connect(self._content.sensitivity_dark_plot_button, QtCore.SIGNAL("clicked()"), self._sensitivity_dark_plot_clicked)
-        self.connect(self._content.data_file_plot_button_2, QtCore.SIGNAL("clicked()"), self._data_file_plot2_clicked)
+        self._content.sensitivity_plot_button.clicked.connect(self._sensitivity_plot_clicked)
+        self._content.data_file_plot_button.clicked.connect(self._data_file_plot_clicked)
+        self._content.sensitivity_dark_plot_button.clicked.connect(self._sensitivity_dark_plot_clicked)
+        self._content.data_file_plot_button_2.clicked.connect(self._data_file_plot2_clicked)
 
         # Patch sensitivity
-        self.connect(self._content.patch_sensitivity_check, QtCore.SIGNAL("clicked()"), self._patch_checked)
-        self.connect(self._content.draw_patch_button, QtCore.SIGNAL("clicked()"), self._draw_patch)
-        self.connect(self._content.create_sensitivity_button, QtCore.SIGNAL("clicked()"), self._create_sensitivity)
+        self._content.patch_sensitivity_check.clicked.connect(self._patch_checked)
+        self._content.draw_patch_button.clicked.connect(self._draw_patch)
+        self._content.create_sensitivity_button.clicked.connect(self._create_sensitivity)
         self._patch_checked()
 
         if not self._in_mantidplot:

@@ -48,12 +48,12 @@ class SANSCatalogWidget(BaseWidget):
         self.copyAction.setShortcut("Ctrl+C")
         self.addAction(self.copyAction)
 
-        self.connect(self.copyAction, QtCore.SIGNAL("triggered()"), self.copyCells)
+        self.copyAction.triggered.connect(self.copyCells)
         self._content.data_set_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.connect(self._content.data_set_table, QtCore.SIGNAL("customContextMenuRequested(QPoint)"), self.tableWidgetContext)
-        self.connect(self._content.refresh_button, QtCore.SIGNAL("clicked()"), self._update_content)
-        self.connect(self._content.browse_button, QtCore.SIGNAL("clicked()"), self._browse_directory)
-        self.connect(self._content.directory_edit, QtCore.SIGNAL("returnPressed()"), self._update_content)
+        self._content.data_set_table.customContextMenuRequested[QtCore.QPoint].connect(self.tableWidgetContext)
+        self._content.refresh_button.clicked.connect(self._update_content)
+        self._content.browse_button.clicked.connect(self._browse_directory)
+        self._content.directory_edit.returnPressed.connect(self._update_content)
         self._content.directory_edit.setText(self._settings.catalog_data_path)
         self._content.directory_edit.setToolTip("Use a path of the form: /SNS/<instrument>/IPTS-<number>/data\nE.g.: "
                                                 "/SNS/EQSANS/IPTS-1234/data")

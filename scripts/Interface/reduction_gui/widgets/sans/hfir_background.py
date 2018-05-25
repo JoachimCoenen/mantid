@@ -87,15 +87,15 @@ class BackgroundWidget(BaseWidget):
         #self._content.thickness_edit.setValidator(QtGui.QDoubleValidator(self._content.thickness_edit))
 
         # Connections
-        self.connect(self._content.calculate_trans_chk, QtCore.SIGNAL("clicked(bool)"), self._calculate_clicked)
-        self.connect(self._content.trans_direct_chk, QtCore.SIGNAL("clicked()"), self._direct_beam)
-        self.connect(self._content.trans_spreader_chk, QtCore.SIGNAL("clicked()"), self._beam_spreader)
-        self.connect(self._content.background_chk, QtCore.SIGNAL("clicked(bool)"), self._background_clicked)
-        self.connect(self._content.background_browse, QtCore.SIGNAL("clicked()"), self._background_browse)
-        self.connect(self._content.trans_dark_current_button, QtCore.SIGNAL("clicked()"), self._trans_dark_current_browse)
+        self._content.calculate_trans_chk.clicked[bool].connect(self._calculate_clicked)
+        self._content.trans_direct_chk.clicked.connect(self._direct_beam)
+        self._content.trans_spreader_chk.clicked.connect(self._beam_spreader)
+        self._content.background_chk.clicked[bool].connect(self._background_clicked)
+        self._content.background_browse.clicked.connect(self._background_browse)
+        self._content.trans_dark_current_button.clicked.connect(self._trans_dark_current_browse)
 
-        self.connect(self._content.background_plot_button, QtCore.SIGNAL("clicked()"), self._background_plot_clicked)
-        self.connect(self._content.trans_dark_current_plot_button, QtCore.SIGNAL("clicked()"), self._trans_dark_current_plot_clicked)
+        self._content.background_plot_button.clicked.connect(self._background_plot_clicked)
+        self._content.trans_dark_current_plot_button.clicked.connect(self._trans_dark_current_plot_clicked)
 
         # Process transmission option
         if not self.show_transmission:

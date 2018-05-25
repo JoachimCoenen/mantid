@@ -51,6 +51,8 @@ import ui.ui_reduction_main # noqa
 import ui.ui_instrument_dialog # noqa
 import ui.ui_cluster_details_dialog # noqa
 
+from functionalStyleGUI import FunctionalStyleGUI
+
 
 class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction):
     def __init__(self, instrument=None, instrument_list=None):
@@ -63,7 +65,6 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
 
         # Application settings
         settings = QtCore.QSettings()
-        print(settings.fileName())
 
         # Name handle for the instrument
         if instrument is None:
@@ -99,7 +100,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         self._compute_resources = ['Fermi']
         if IS_IN_MANTIDPLOT \
                 and hasattr(ConfigService.Instance().getFacility(), "computeResources"):
-                self._compute_resources = ConfigService.Instance().getFacility().computeResources()
+            self._compute_resources = ConfigService.Instance().getFacility().computeResources()
 
         # Internal flag for clearing all settings and restarting the application
         self._clear_and_restart = False
@@ -125,8 +126,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         # after which we should close this window.
         # Note: there is no way to identify which Widget is the ApplicationWindow.
         for w in QtCore.QCoreApplication.instance().topLevelWidgets():
-            if hasattr(w, "shutting_down"):
-                w.shutting_down.connect(self.close)
+            w.shutting_down.connect(self.close)
 
         self.general_settings.progress.connect(self._progress_updated)
 
@@ -325,7 +325,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
                     self.facility_combo.addItem(QtWidgets.QApplication.translate("Dialog", facility, None))
 
                 self._facility_changed(instruments[0])
-                self.facility_combo.activated[str].connect(self._facility_changed)
+                self.facility_combo.activated.connect(self._facility_changed)
 
             def _facility_changed(self, facility):
                 self.instr_combo.clear()

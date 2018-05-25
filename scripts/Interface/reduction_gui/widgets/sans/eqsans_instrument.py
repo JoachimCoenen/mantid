@@ -88,22 +88,22 @@ class SANSInstrumentWidget(BaseWidget):
         self._summary.n_q_bins_edit.setValidator(QtGui.QIntValidator(self._summary.n_q_bins_edit))
 
         # Event connections
-        self.connect(self._summary.detector_offset_chk, QtCore.SIGNAL("clicked(bool)"), self._det_offset_clicked)
-        self.connect(self._summary.sample_dist_chk, QtCore.SIGNAL("clicked(bool)"), self._sample_dist_clicked)
-        self.connect(self._summary.help_button, QtCore.SIGNAL("clicked()"), self._show_help)
+        self._summary.detector_offset_chk.clicked[bool].connect(self._det_offset_clicked)
+        self._summary.sample_dist_chk.clicked[bool].connect(self._sample_dist_clicked)
+        self._summary.help_button.clicked.connect(self._show_help)
 
-        self.connect(self._summary.dark_current_check, QtCore.SIGNAL("clicked(bool)"), self._dark_clicked)
-        self.connect(self._summary.dark_browse_button, QtCore.SIGNAL("clicked()"), self._dark_browse)
-        self.connect(self._summary.dark_plot_button, QtCore.SIGNAL("clicked()"), self._dark_plot_clicked)
+        self._summary.dark_current_check.clicked[bool].connect(self._dark_clicked)
+        self._summary.dark_browse_button.clicked.connect(self._dark_browse)
+        self._summary.dark_plot_button.clicked.connect(self._dark_plot_clicked)
 
         # Output directory
         g2 = QtWidgets.QButtonGroup(self)
         g2.addButton(self._summary.select_output_dir_radio)
         g2.addButton(self._summary.use_data_dir_radio)
         g2.setExclusive(True)
-        self.connect(self._summary.select_output_dir_radio, QtCore.SIGNAL("clicked()"), self._output_dir_clicked)
-        self.connect(self._summary.use_data_dir_radio, QtCore.SIGNAL("clicked()"), self._output_dir_clicked)
-        self.connect(self._summary.output_dir_browse_button, QtCore.SIGNAL("clicked()"), self._output_dir_browse)
+        self._summary.select_output_dir_radio.clicked.connect(self._output_dir_clicked)
+        self._summary.use_data_dir_radio.clicked.connect(self._output_dir_clicked)
+        self._summary.output_dir_browse_button.clicked.connect(self._output_dir_browse)
         self._output_dir_clicked()
 
         # Lin/log option
@@ -121,18 +121,18 @@ class SANSInstrumentWidget(BaseWidget):
         self._dark_clicked(self._summary.dark_current_check.isChecked())
 
         # Mask Connections
-        self.connect(self._summary.mask_browse_button, QtCore.SIGNAL("clicked()"), self._mask_browse_clicked)
-        self.connect(self._summary.mask_plot_button, QtCore.SIGNAL("clicked()"), self._mask_plot_clicked)
-        self.connect(self._summary.mask_check, QtCore.SIGNAL("clicked(bool)"), self._mask_checked)
+        self._summary.mask_browse_button.clicked.connect(self._mask_browse_clicked)
+        self._summary.mask_plot_button.clicked.connect(self._mask_plot_clicked)
+        self._summary.mask_check.clicked[bool].connect(self._mask_checked)
 
         # Absolute scale connections and validators
         self._summary.scale_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_edit))
         self._summary.scale_beam_radius_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_beam_radius_edit))
         self._summary.scale_att_trans_edit.setValidator(QtGui.QDoubleValidator(self._summary.scale_att_trans_edit))
-        self.connect(self._summary.scale_data_browse_button, QtCore.SIGNAL("clicked()"), self._scale_data_browse)
-        self.connect(self._summary.scale_data_plot_button, QtCore.SIGNAL("clicked()"), self._scale_data_plot_clicked)
-        self.connect(self._summary.beamstop_chk, QtCore.SIGNAL("clicked(bool)"), self._beamstop_clicked)
-        self.connect(self._summary.scale_chk, QtCore.SIGNAL("clicked(bool)"), self._scale_clicked)
+        self._summary.scale_data_browse_button.clicked.connect(self._scale_data_browse)
+        self._summary.scale_data_plot_button.clicked.connect(self._scale_data_plot_clicked)
+        self._summary.beamstop_chk.clicked[bool].connect(self._beamstop_clicked)
+        self._summary.scale_chk.clicked[bool].connect(self._scale_clicked)
         self._scale_clicked(self._summary.scale_chk.isChecked())
 
         # TOF cut validator
@@ -140,15 +140,15 @@ class SANSInstrumentWidget(BaseWidget):
         self._summary.high_tof_edit.setValidator(QtGui.QDoubleValidator(self._summary.high_tof_edit))
 
         # TOF connections
-        self.connect(self._summary.tof_cut_chk, QtCore.SIGNAL("clicked(bool)"), self._tof_clicked)
+        self._summary.tof_cut_chk.clicked[bool].connect(self._tof_clicked)
 
         # Monitor normalization
-        self.connect(self._summary.beam_monitor_chk, QtCore.SIGNAL("clicked(bool)"), self._beam_monitor_clicked)
-        self.connect(self._summary.beam_monitor_browse_button, QtCore.SIGNAL("clicked()"), self._beam_monitor_reference_browse)
+        self._summary.beam_monitor_chk.clicked[bool].connect(self._beam_monitor_clicked)
+        self._summary.beam_monitor_browse_button.clicked.connect(self._beam_monitor_reference_browse)
 
         # Resolution validator
         self._summary.sample_apert_edit.setValidator(QtGui.QDoubleValidator(self._summary.sample_apert_edit))
-        self.connect(self._summary.resolution_chk, QtCore.SIGNAL("clicked(bool)"), self._resolution_clicked)
+        self._summary.resolution_chk.clicked[bool].connect(self._resolution_clicked)
 
         # Since EQSANS does not currently use the absolute scale calculation, expose it in debug mode only for now
         if not self._settings.debug:

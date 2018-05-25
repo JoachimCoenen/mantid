@@ -45,11 +45,11 @@ class DirectBeam(BaseWidget):
         self._content.beam_radius_edit.setValidator(QtGui.QDoubleValidator(self._content.beam_radius_edit))
 
         # Connections
-        self.connect(self._content.sample_browse, QtCore.SIGNAL("clicked()"), self._sample_browse)
-        self.connect(self._content.direct_browse, QtCore.SIGNAL("clicked()"), self._direct_browse)
+        self._content.sample_browse.clicked.connect(self._sample_browse)
+        self._content.direct_browse.clicked.connect(self._direct_browse)
 
-        self.connect(self._content.sample_plot, QtCore.SIGNAL("clicked()"), self._sample_plot_clicked)
-        self.connect(self._content.direct_plot, QtCore.SIGNAL("clicked()"), self._direct_plot_clicked)
+        self._content.sample_plot.clicked.connect(self._sample_plot_clicked)
+        self._content.direct_plot.clicked.connect(self._direct_plot_clicked)
 
         if not self._in_mantidplot:
             self._content.sample_plot.hide()
@@ -125,15 +125,15 @@ class BeamSpreader(BaseWidget):
         self._content.spreader_trans_spread_edit.setValidator(QtGui.QDoubleValidator(self._content.spreader_trans_spread_edit))
 
         # Connections
-        self.connect(self._content.sample_scatt_browse, QtCore.SIGNAL("clicked()"), self._sample_scatt_browse)
-        self.connect(self._content.sample_spread_browse, QtCore.SIGNAL("clicked()"), self._sample_spread_browse)
-        self.connect(self._content.direct_scatt_browse, QtCore.SIGNAL("clicked()"), self._direct_scatt_browse)
-        self.connect(self._content.direct_spread_browse, QtCore.SIGNAL("clicked()"), self._direct_spread_browse)
+        self._content.sample_scatt_browse.clicked.connect(self._sample_scatt_browse)
+        self._content.sample_spread_browse.clicked.connect(self._sample_spread_browse)
+        self._content.direct_scatt_browse.clicked.connect(self._direct_scatt_browse)
+        self._content.direct_spread_browse.clicked.connect(self._direct_spread_browse)
 
-        self.connect(self._content.sample_scatt_plot, QtCore.SIGNAL("clicked()"), self._sample_scatt_plot_clicked)
-        self.connect(self._content.sample_spread_plot, QtCore.SIGNAL("clicked()"), self._sample_spread_plot_clicked)
-        self.connect(self._content.direct_scatt_plot, QtCore.SIGNAL("clicked()"), self._direct_scatt_plot_clicked)
-        self.connect(self._content.direct_spread_plot, QtCore.SIGNAL("clicked()"), self._direct_spread_plot_clicked)
+        self._content.sample_scatt_plot.clicked.connect(self._sample_scatt_plot_clicked)
+        self._content.sample_spread_plot.clicked.connect(self._sample_spread_plot_clicked)
+        self._content.direct_scatt_plot.clicked.connect(self._direct_scatt_plot_clicked)
+        self._content.direct_spread_plot.clicked.connect(self._direct_spread_plot_clicked)
 
         if not self._in_mantidplot:
             self._content.sample_scatt_plot.hide()
@@ -243,14 +243,14 @@ class SampleDataWidget(BaseWidget):
         self._content.thickness_edit.setValidator(QtGui.QDoubleValidator(self._content.thickness_edit))
 
         # Connections
-        self.connect(self._content.data_file_browse_button, QtCore.SIGNAL("clicked()"), self._data_file_browse)
-        self.connect(self._content.calculate_chk, QtCore.SIGNAL("clicked(bool)"), self._calculate_clicked)
-        self.connect(self._content.direct_beam_chk, QtCore.SIGNAL("clicked()"), self._direct_beam)
-        self.connect(self._content.beam_spreader_chk, QtCore.SIGNAL("clicked()"), self._beam_spreader)
-        self.connect(self._content.dark_current_button, QtCore.SIGNAL("clicked()"), self._dark_current_browse)
+        self._content.data_file_browse_button.clicked.connect(self._data_file_browse)
+        self._content.calculate_chk.clicked[bool].connect(self._calculate_clicked)
+        self._content.direct_beam_chk.clicked.connect(self._direct_beam)
+        self._content.beam_spreader_chk.clicked.connect(self._beam_spreader)
+        self._content.dark_current_button.clicked.connect(self._dark_current_browse)
 
-        self.connect(self._content.data_file_plot_button, QtCore.SIGNAL("clicked()"), self._data_file_plot)
-        self.connect(self._content.dark_current_plot_button, QtCore.SIGNAL("clicked()"), self._dark_plot_clicked)
+        self._content.data_file_plot_button.clicked.connect(self._data_file_plot)
+        self._content.dark_current_plot_button.clicked.connect(self._dark_plot_clicked)
 
         if not self._in_mantidplot:
             self._content.dark_current_plot_button.hide()

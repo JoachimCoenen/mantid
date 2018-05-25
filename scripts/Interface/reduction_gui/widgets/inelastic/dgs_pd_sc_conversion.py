@@ -61,9 +61,9 @@ class PdAndScConversionWidget(BaseWidget):
 
     def _connect_validated_lineedit(self, ui_ctrl):
         call_back = partial(self._validate_edit, ctrl=ui_ctrl)
-        self.connect(ui_ctrl, QtCore.SIGNAL("editingFinished()"), call_back)
-        self.connect(ui_ctrl, QtCore.SIGNAL("textEdited(QString)"), call_back)
-        self.connect(ui_ctrl, QtCore.SIGNAL("textChanged(QString)"), call_back)
+        ui_ctrl.editingFinished.connect(call_back)
+        ui_ctrl.textEdited[str].connect(call_back)
+        ui_ctrl.textChanged[str].connect(call_back)
 
     def _validate_edit(self, ctrl=None):
         is_valid = True

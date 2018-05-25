@@ -6,9 +6,8 @@ from PyQt5.QtCore import QAbstractTableModel, pyqtSignal, QModelIndex, Qt
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.dns.dns_reduction import DNSScriptElement
 
-from functionalStyleGUI import FunctionalStyleGUI
 
-class DNSSetupWidget(BaseWidget):
+class DNSSetup1Widget(BaseWidget):
     """
     Widget that presents the options for DNS-Reduction
     """
@@ -518,7 +517,7 @@ class DNSSetupWidget(BaseWidget):
         self.sampleFilePre     = tip(QLineEdit(),           self.TIP_sampleFilePre)
         self.sampleFileSuff    = tip(QLineEdit(),           self.TIP_sampleFileSuff)
         self.runsView          = tip(self.TableViews(self), self.TIP_runsView)
-        self.runNumbersModel   = DNSSetupWidget.DataTable(self)
+        self.runNumbersModel   = DNSSetup1Widget.DataTable(self)
 
         self.runsView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.runsView.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -526,7 +525,7 @@ class DNSSetupWidget(BaseWidget):
 
         # mask detectors
         self.maskAngleView  = tip(self.TableViews(self), self.TIP_maskAngle)
-        self.maskAngleModel = DNSSetupWidget.MaskDetTable(self)
+        self.maskAngleModel = DNSSetup1Widget.MaskDetTable(self)
 
         self.maskAngleView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.maskAngleView.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)

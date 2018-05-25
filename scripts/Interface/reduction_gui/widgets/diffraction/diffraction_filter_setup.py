@@ -124,8 +124,8 @@ class FilterSetupWidget(BaseWidget):
         self.connect(self._content.load_button, QtCore.SIGNAL("clicked()"),
                      self._run_number_changed)
 
-        # self.connect(self._content.run_number_edit, QtCore.SIGNAL("textChanged(QString)"), self._run_number_changed)
-        self.connect(self._content.run_number_edit, QtCore.SIGNAL("returnPressed()"), self._run_number_changed)
+        # self._content.run_number_edit.textChanged[str].connect(self._run_number_changed)
+        self._content.run_number_edit.returnPressed.connect(self._run_number_changed)
 
         self.connect(self._content.plot_log_button, QtCore.SIGNAL("clicked()"),
                      self._plot_log_clicked)
