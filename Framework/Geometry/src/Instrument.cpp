@@ -1,4 +1,5 @@
 #include "MantidGeometry/Instrument.h"
+#include "MantidGeometry/Instrument/InfoComponentVisitor.h"
 #include "MantidGeometry/Instrument/ParComponentFactory.h"
 #include "MantidGeometry/Instrument/DetectorGroup.h"
 #include "MantidGeometry/Instrument/ReferenceFrame.h"

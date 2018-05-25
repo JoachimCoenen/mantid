@@ -187,6 +187,7 @@ void checkDetectorInfoSize(const Instrument &instr,
 * @param instr :: Shared pointer to an instrument.
 */
 void ExperimentInfo::setInstrument(const Instrument_const_sptr &instr) {
+
   m_spectrumInfoWrapper = nullptr;
 
   // Detector IDs that were previously dropped because they were not part of the
@@ -207,6 +208,13 @@ void ExperimentInfo::setInstrument(const Instrument_const_sptr &instr) {
     m_parmap = boost::make_shared<ParameterMap>();
   }
   m_parmap->setInstrument(sptr_instrument.get());
+}
+
+Instrument_sptr ExperimentInfo::makeParameterizedInstrument() const {
+  populateIfNotLoaded();
+  checkDetectorInfoSize(*sptr_instrument, *m_detectorInfo);
+  return Geometry::ParComponentFactory::createInstrument(sptr_instrument,
+                                                         m_parmap);
 }
 
 /** Get a shared pointer to the parametrized instrument associated with this

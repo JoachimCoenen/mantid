@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include <string>
+
 namespace Mantid {
 namespace Kernel {
 

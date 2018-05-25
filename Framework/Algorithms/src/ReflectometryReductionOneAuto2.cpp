@@ -281,6 +281,7 @@ void ReflectometryReductionOneAuto2::exec() {
   if (correctDetectors) {
     inputWS = correctDetectorPositions(instructions, inputWS, 2 * theta);
   }
+  alg->setProperty("ThetaIn", theta);
 
   // Optional properties
 

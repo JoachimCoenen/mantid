@@ -18,6 +18,39 @@ using namespace Mantid::DataObjects;
 using namespace Mantid::API;
 using namespace Mantid::Crystal::FindSXPeaksHelper;
 
+namespace {
+// Anonymous namespace
+using namespace Mantid;
+using WsIndexToDetIds = std::unordered_map<size_t, std::vector<detid_t>>;
+
+WsIndexToDetIds mapDetectorsToWsIndexes(const API::DetectorInfo &detectorInfo,
+                                        const detid2index_map &mapping) {
+  const auto &detectorIds = detectorInfo.detectorIDs();
+  WsIndexToDetIds indexToDetMapping;
+
+  indexToDetMapping.reserve(detectorIds.size());
+  for (const auto detectorID : detectorIds) {
+    auto detMapEntry = mapping.find(detectorID);
+    if (detMapEntry == mapping.end()) {
+      throw std::runtime_error(
+          "Detector ID " + std::to_string(detectorID) +
+          " was not found in the workspace index mapping.");
+    }
+
+    const size_t wsIndex = detMapEntry->second;
+    auto indexMapEntry = indexToDetMapping.find(wsIndex);
+    if (indexMapEntry == indexToDetMapping.end()) {
+      // Create a new vector if one does not exist
+      indexToDetMapping[wsIndex] = std::vector<detid_t>{detectorID};
+    } else {
+      // Otherwise add the detector ID to the current list
+      indexToDetMapping[wsIndex].push_back(detectorID);
+    }
+  }
+  return indexToDetMapping;
+}
+}
+
 namespace Mantid {
 namespace Crystal {
 
@@ -34,6 +67,9 @@ DECLARE_ALGORITHM(FindSXPeaks)
 
 using namespace Kernel;
 using namespace API;
+
+// Type def the index to detector mapping
+using WsIndexToDetIds = std::unordered_map<size_t, std::vector<detid_t>>;
 
 FindSXPeaks::FindSXPeaks()
     : API::Algorithm(), m_MinRange(DBL_MAX), m_MaxRange(-DBL_MAX),
@@ -274,6 +310,10 @@ void FindSXPeaks::exec() {
 
   // Calculate the primary flight path.
   const auto &spectrumInfo = localworkspace->spectrumInfo();
+  const auto &detectorInfo = localworkspace->detectorInfo();
+
+  const WsIndexToDetIds wsIndexToDetIdMap = mapDetectorsToWsIndexes(
+      detectorInfo, localworkspace->getDetectorIDToWorkspaceIndexMap());
 
   // Get the background strategy
   auto backgroundStrategy = getBackgroundStrategy();
@@ -323,6 +363,38 @@ void FindSXPeaks::exec() {
 
   setProperty("OutputWorkspace", m_peaks);
   progress.report();
+}
+
+/**
+  * Calculates the average phi value if the workspace contains
+  * multiple detectors per spectrum, or returns the value
+  * of phi if it is a single detector to spectrum mapping.
+  * @param detectorMapping :: The mapping of workspace index to detector id(s)
+  * @param spectrumInfo :: The spectrum info of this workspace
+  * @param wsIndex :: The index to return the phi value of
+  * @return :: The averaged or exact value of phi
+  */
+double FindSXPeaks::calculatePhi(const WsIndexToDetIds &detectorMapping,
+                                 const SpectrumInfo &spectrumInfo,
+                                 size_t wsIndex) {
+  double phi = std::numeric_limits<double>::infinity();
+  const size_t numDetectors = detectorMapping.at(wsIndex).size();
+  const auto &det = spectrumInfo.detector(wsIndex);
+  if (numDetectors == 1) {
+    phi = det.getPhi();
+  } else {
+    // Have to average the value for phi
+    auto detectorGroup = dynamic_cast<const Geometry::DetectorGroup *>(&det);
+    if (!detectorGroup) {
+      throw std::runtime_error("Could not cast to detector group");
+    }
+    detectorGroup->getPhi();
+  }
+
+  if (phi < 0) {
+    phi += 2.0 * M_PI;
+  }
+  return phi;
 }
 
 /**

@@ -9,13 +9,15 @@ from reduction_gui.instruments.eqsans_interface_dev import EQSANSInterface
 from reduction_gui.instruments.dgs_interface_dev import DgsInterface
 from reduction_gui.instruments.diffraction_interface_dev import DiffractionInterface
 from reduction_gui.instruments.toftof_interface_dev import TOFTOFInterface
+from reduction_gui.instruments.dns_interface_dev import DNSInterface
 
 INSTRUMENT_DICT = {"HFIR": {"BIOSANS": HFIRInterface,
                             "GPSANS": HFIRInterface},
                    "ISIS": {"MAPS": DgsInterface,
                             "MARI": DgsInterface,
                             "MERLIN": DgsInterface},
-                   "MLZ":  {"TOFTOF": TOFTOFInterface},
+                   "MLZ":  {"TOFTOF": TOFTOFInterface,
+			    "DNS": DNSInterface},
                    "SNS":  {"ARCS": DgsInterface,
                             "CNCS": DgsInterface,
                             "EQSANS": EQSANSInterface,

@@ -107,6 +107,15 @@ class AbstractInst(object):
                 """
         raise NotImplementedError("apply_absorb_corrections Not implemented for this instrument yet")
 
+    def _apply_absorb_corrections(self, run_details, ws_to_correct):
+        """
+                Generates absorption corrections to compensate for the container. The overriding instrument
+                should handle the difference between a vanadium workspace and regular workspace
+                :param ws_to_correct: A reference vanadium workspace to match the binning of or correct
+                :return: A workspace containing the corrections
+                """
+        raise NotImplementedError("apply_absorb_corrections Not implemented for this instrument yet")
+
     def _generate_output_file_name(self, run_number_string):
         """
         Generates the filename which is used to uniquely identify and save the workspace. This should include any

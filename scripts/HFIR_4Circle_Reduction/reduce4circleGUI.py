@@ -347,6 +347,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # set the detector geometry
         self.do_set_detector_size()
 
+        # set the detector geometry
+        self.do_set_detector_size()
+
         # Sub window
         self._baseTitle = 'Title is not initialized'
 
@@ -457,6 +460,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # hide and disable some push buttons for future implemetation
         self.ui.pushButton_viewScan3D.hide()
         self.ui.pushButton_plotSelectedData.hide()
+
+        # background points
+        self.ui.lineEdit_backgroundPts.setText('1, 1')
 
         return
 
@@ -1234,7 +1240,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # save file
         self._myControl.save_roi_to_file(None, None, mask_name, roi_file_name)
 
-        return
+        return hkl, vec_q
 
     def do_export_selected_peaks_to_integrate(self):
         """
@@ -2100,6 +2106,26 @@ class MainWindow(QtWidgets.QMainWindow):
         peak_info_list = self._build_peak_info_list(zero_hkl=False, is_spice=False)
         if peak_info_list is None:
             return
+
+        # Refine UB matrix
+        try:
+            self._myControl.refine_ub_matrix_indexed_peaks(peak_info_list)
+        except AssertionError as error:
+            self.pop_one_button_dialog(str(error))
+            return
+
+        # show result
+        self._show_refined_ub_result()
+
+        return
+
+    def do_refine_ub_cal_indexed_peaks(self):
+        """
+        refine UB matrix by indexed peaks with HKL calculated
+        :return:
+        """
+        # refine UB matrix by indexed peak
+        peak_info_list = self._build_peak_info_list(zero_hkl=False, is_spice=False)
 
         # Refine UB matrix
         try:

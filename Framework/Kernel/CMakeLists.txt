@@ -245,6 +245,7 @@ set ( INC_FILES
 	inc/MantidKernel/NDRandomNumberGenerator.h
 	inc/MantidKernel/NearestNeighbours.h
 	inc/MantidKernel/NetworkProxy.h
+        inc/MantidKernel/NearestNeighbours.h
 	inc/MantidKernel/NeutronAtom.h
 	inc/MantidKernel/NexusDescriptor.h
   inc/MantidKernel/normal_distribution.h

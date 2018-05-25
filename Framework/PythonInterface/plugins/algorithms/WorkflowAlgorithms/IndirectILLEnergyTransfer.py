@@ -344,6 +344,18 @@ class IndirectILLEnergyTransfer(PythonAlgorithm):
             ConvertSpectrumAxis(InputWorkspace=ws,OutputWorkspace=ws,
                                 EMode='Indirect',Target=target,EFixed=self._efixed)
 
+        target = None
+        if self._spectrum_axis == '2Theta':
+            target = 'Theta'
+        elif self._spectrum_axis == 'Q':
+            target = 'ElasticQ'
+        elif self._spectrum_axis == 'Q2':
+            target = 'ElasticQSquared'
+
+        if self._spectrum_axis != 'SpectrumNumber':
+            ConvertSpectrumAxis(InputWorkspace=ws,OutputWorkspace=ws,
+                                EMode='Indirect',Target=target,EFixed=self._efixed)
+
     def _group_detectors_with_range(self, ws):
         """
         Groups (sums) the multi-detector's pixels according to given range

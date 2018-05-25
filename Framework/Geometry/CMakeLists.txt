@@ -324,6 +324,7 @@ set ( TEST_FILES
 	IMDDimensionFactoryTest.h
 	IMDDimensionTest.h
 	IndexingUtilsTest.h
+	InfoComponentVisitorTest.h
 	InstrumentDefinitionParserTest.h
 	InstrumentRayTracerTest.h
 	InstrumentTest.h

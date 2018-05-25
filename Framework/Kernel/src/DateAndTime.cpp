@@ -11,6 +11,17 @@
 #include <ostream>
 #include <stdexcept>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/date_time/time.hpp>
+#include <boost/date_time/date.hpp>
+
+#include <math.h>
+#include <exception>
+#include <limits>
+#include <memory>
+#include <ostream>
+#include <stdexcept>
+
 namespace Mantid {
 
 using namespace Types::Core;

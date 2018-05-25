@@ -213,7 +213,7 @@
            <bool>true</bool>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QtWidget" name="tab">
            <attribute name="title">
@@ -5796,6 +5796,11 @@ p, li { white-space: pre-wrap; }
    <class>MatrixTable</class>
    <extends>QTableWidget</extends>
    <header>HFIR_4Circle_Reduction/hfctables.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MatrixTable</class>
+   <extends>QTableWidget</extends>
+   <header>hfctables.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

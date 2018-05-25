@@ -42,7 +42,7 @@ valid-to="2100-01-31 23:59:59" last-modified="2017-09-07 15:10:50">
   <type name="sample-position" is="SamplePos" />
   <!-- Detector IDs -->
   <idlist idname="detectors">
-    <id start="1" end="16384" />
+    <id start="2" end="16385" />
   </idlist>
   <!-- Detector list def -->
   <component type="detectors" idlist="detectors">

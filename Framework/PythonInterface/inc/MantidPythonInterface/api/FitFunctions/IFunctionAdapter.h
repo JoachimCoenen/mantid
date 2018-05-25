@@ -47,6 +47,12 @@ public:
   /// Disable assignment operator
   IFunctionAdapter &operator=(const IFunctionAdapter &) = delete;
 
+  /// The PyObject must be supplied to construct the object
+  IFunctionAdapter(const IFunctionAdapter &) = delete;
+
+  /// Disable assignment operator
+  IFunctionAdapter &operator=(const IFunctionAdapter &) = delete;
+
   /// Returns the name of the function
   std::string name() const override;
   /// Specify a category for the function

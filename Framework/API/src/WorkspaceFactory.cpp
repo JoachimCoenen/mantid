@@ -140,6 +140,22 @@ void WorkspaceFactoryImpl::initializeFromParent(
   }
 }
 
+/** Initialize a workspace from its parent
+ * This sets values such as title, instrument, units, sample, spectramap.
+ * This does NOT copy any data.
+ *
+ * @param parent :: the parent workspace
+ * @param child :: the child workspace
+ * @param differentSize :: A flag to indicate if the two workspace will be
+ *different sizes
+ */
+void WorkspaceFactoryImpl::initializeFromParent(
+    const MatrixWorkspace &parent, MatrixWorkspace &child,
+    const bool differentSize) const {
+  initializeFromParentWithoutLogs(parent, child, differentSize);
+  child.m_run = parent.m_run;
+}
+
 /** Creates a new instance of the class with the given name, and allocates
  * memory for the arrays
  *

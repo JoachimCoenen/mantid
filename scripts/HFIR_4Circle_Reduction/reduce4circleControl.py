@@ -1049,6 +1049,9 @@ class CWSCDReductionControl(object):
                                                                 'it is of type %s now.' % (str(pt_number),
                                                                                            type(pt_number))
 
+        # print '[DB...BAT] Retrieve: Exp {0} Scan {1} Peak Info Object. Current keys are {0}.' \
+        #       ''.format(exp_number, scan_number, self._myPeakInfoDict.keys())
+
         # construct key
         if pt_number is None:
             p_key = (exp_number, scan_number)
@@ -1058,6 +1061,8 @@ class CWSCDReductionControl(object):
         # Check for existence
         if p_key in self._myPeakInfoDict:
             ret_value = self._myPeakInfoDict[p_key]
+            # print '[DB...BAT] Retrieved: Exp {0} Scan {1} Peak Info Object {2}.'.format(exp_number, scan_number,
+            #                                                                             hex(id(ret_value)))
         else:
             ret_value = None
 

@@ -67,8 +67,6 @@ public:
                                const std::string &description) override;
   /// Get parameter by name.
   double getParameter(const std::string &name) const override;
-  /// Check if function has a parameter with this name.
-  bool hasParameter(const std::string &name) const override;
   /// Total number of parameters
   size_t nParams() const override;
   /// Returns the index of parameter name
@@ -128,8 +126,6 @@ public:
 protected:
   /// overwrite IFunction base class method, which declare function parameters
   void init() override;
-  /// Set the source function
-  void setSource(IFunction_sptr source) const;
 
   /// Test if a name (parameter's or attribute's) belongs to m_source
   virtual bool isSourceName(const std::string &aName) const;
@@ -138,11 +134,11 @@ protected:
   /// Update target function if necessary.
   void checkTargetFunction() const;
   /// Function that calculates parameters of the target function.
-  mutable IFunction_sptr m_source;
+  IFunction_sptr m_source;
   /// Function that actually calculates the output.
   mutable IFunction_sptr m_target;
   /// Cached number of parameters in m_source.
-  mutable size_t m_nOwnParams;
+  size_t m_nOwnParams;
   /// Flag indicating that updateTargetFunction() is required.
   mutable bool m_dirty;
 };

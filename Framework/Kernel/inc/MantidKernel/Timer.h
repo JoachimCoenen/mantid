@@ -7,7 +7,6 @@
 #include "MantidKernel/DllConfig.h"
 #include <chrono>
 #include <iosfwd>
-#include <string>
 
 namespace Mantid {
 namespace Kernel {

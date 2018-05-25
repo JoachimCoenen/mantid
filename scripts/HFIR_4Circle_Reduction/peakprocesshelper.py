@@ -69,6 +69,18 @@ class PeakProcessRecord(object):
         # Figure print
         self._fingerPrint = '{0:.7f}.{1}'.format(time.time(), random.randint(0, 10000000))
 
+        # peak integration result
+        self._integrationDict = None
+        self._ptIntensityDict = None
+
+        # some motor/goniometer information for further correction
+        self._movingMotorTuple = None
+
+        # Figure print
+        self._fingerPrint = '{0:.7f}.{1}'.format(time.time(), random.randint(0, 10000000))
+
+        # print '[DB...BAT] Create PeakProcessRecord for Exp {0} Scan {1} ({2} | {3}).' \
+        #       ''.format(self._myExpNumber, self._myScanNumber, self._fingerPrint, hex(id(self)))
         return
 
     def calculate_peak_center(self, allow_bad_monitor=True):
@@ -236,6 +248,112 @@ class PeakProcessRecord(object):
 
         return intensity, std_dev
 
+    def generate_integration_report(self):
+        """
+        generate a dictionary for this PeakInfo
+        :return:
+        """
+        # print '[DB...BAT] PeakInfo (Scan: {0}, ID: {1}) generate report.  Spice HKL: {2}' \
+        #       ''.format(self._myScanNumber, hex(id(self)), self._spiceHKL)
+
+        report = dict()
+
+        if self._spiceHKL is not None:
+            report['SPICE HKL'] = str_format(self._spiceHKL)
+        else:
+            report['SPICE HKL'] = ''
+        if self._calculatedHKL is not None:
+            report['Mantid HKL'] = str_format(self._calculatedHKL)
+        else:
+            report['Mantid HKL'] = None
+        if self._integrationDict:
+            report['Mask'] = self._integrationDict['mask']
+            report['Raw Intensity'] = self._integrationDict['simple intensity']
+            report['Raw Intensity Error'] = self._integrationDict['simple error']
+            report['Intensity 2'] = self._integrationDict['intensity 2']
+            report['Intensity 2 Error'] = self._integrationDict['error 2']
+            report['Gauss Intensity'] = self._integrationDict['gauss intensity']
+            report['Gauss Error'] = self._integrationDict['gauss error']
+            report['Estimated Background'] = self._integrationDict['simple background']
+            if 'gauss parameters' in self._integrationDict:
+                report['Fitted Background'] = self._integrationDict['gauss parameters']['B']
+                report['Fitted A'] = self._integrationDict['gauss parameters']['A']
+                report['Fitted Sigma'] = self._integrationDict['gauss parameters']['s']
+            else:
+                report['Fitted Background'] = ''
+                report['Fitted A'] = ''
+                report['Fitted Sigma'] = ''
+        else:
+            report['Raw Intensity'] = ''
+            report['Raw Intensity Error'] = ''
+            report['Intensity 2'] = ''
+            report['Intensity 2 Error'] = ''
+            report['Gauss Intensity'] = ''
+            report['Gauss Error'] = ''
+            report['Lorentz'] = ''
+            report['Estimated Background'] = ''
+            report['Fitted Background'] = ''
+            report['Fitted A'] = ''
+            report['Fitted Sigma'] = ''
+            report['Mask'] = ''
+
+        report['Lorentz'] = self._lorenzFactor
+        if self._movingMotorTuple is None:
+            report['Motor'] = ''
+            report['Motor Step'] = None
+        else:
+            report['Motor'] = self._movingMotorTuple[0]
+            report['Motor Step'] = self._movingMotorTuple[1]
+        report['K-vector'] = self._kShiftVector
+        report['Absorption Correction'] = self._absorptionCorrection
+
+        return report
+
+    def get_intensity(self, algorithm_type, lorentz_corrected):
+        """
+        get the integrated intensity with specified integration algorithm and whether
+        the result should be corrected by Lorentz correction factor
+        :param algorithm_type:
+        :param lorentz_corrected:
+        :return:
+        """
+        # check
+        if self._integrationDict is None and self._myIntensity is None:
+            raise RuntimeError('PeakInfo of Exp {0} Scan {1} ({2} | {3}) has not integrated setup.'
+                               ''.format(self._myExpNumber, self._myScanNumber, self._fingerPrint, hex(id(self))))
+        elif self._myIntensity is not None:
+            # return ZERO intensity due to previously found error
+            return self._myIntensity, 0.
+
+        try:
+            if algorithm_type == 0 or algorithm_type.startswith('simple'):
+                # simple
+                intensity = self._integrationDict['simple intensity']
+                std_dev = self._integrationDict['simple error']
+            elif algorithm_type == 1 or algorithm_type.count('mixed') > 0:
+                # intensity 2: mixed simple and gaussian
+                intensity = self._integrationDict['intensity 2']
+                std_dev = self._integrationDict['error 2']
+            elif algorithm_type == 2 or algorithm_type.count('gauss') > 0:
+                # gaussian
+                intensity = self._integrationDict['gauss intensity']
+                std_dev = self._integrationDict['gauss error']
+            else:
+                raise RuntimeError('Type {0} not supported yet.')
+        except KeyError as key_err:
+            err_msg = 'Some key(s) does not exist in dictionary with keys {0}. FYI: {1}' \
+                      ''.format(self._integrationDict.keys(), key_err)
+            raise RuntimeError(err_msg)
+
+        if intensity is None:
+            intensity = 0.
+            std_dev = 0.
+        elif lorentz_corrected:
+            intensity *= self._lorenzFactor
+            std_dev *= self._lorenzFactor
+
+        return intensity, std_dev
+
     def get_peak_centre(self):
         """ get weighted peak centre
         :return: Qx, Qy, Qz (3-double-tuple)
@@ -277,6 +395,9 @@ class PeakProcessRecord(object):
             self.retrieve_hkl_from_spice_table()
             ret_hkl = self._spiceHKL
         # END-IF-ELSE
+
+            # print '[DB...BAT] PeakInfo (Scan: {0}, ID: {1}) SPICE HKL: {2}' \
+            #       ''.format(self._myScanNumber, hex(id(self)), self._spiceHKL)
 
         return ret_hkl
 

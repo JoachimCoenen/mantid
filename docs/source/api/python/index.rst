@@ -11,10 +11,7 @@ If you are new to Python in Mantid then we advise first looking at our `Mantid t
 For tutorials on how to use python in MantidPlot please see `MantidPlot: Python Scripting <https://www.mantidproject.org/MantidPlot:_Python_Scripting>`_.
 
 
-Reference
----------
-.. toctree::
-   :maxdepth: 1
+For tutorials on how to use python in MantidPlot please see `MantidPlot: Python Scripting <https://www.mantidproject.org/MantidPlot:_Python_Scripting>`_.
 
    mantid <mantid/index>
    mantidplot <mantidplot/index>

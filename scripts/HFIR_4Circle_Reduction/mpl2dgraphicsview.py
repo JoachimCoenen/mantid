@@ -171,6 +171,9 @@ class Qt4Mpl2dCanvas(FigureCanvas):
         # Buffer of data
         self._currentArray2D = None
 
+        # Buffer of data
+        self._currentArray2D = None
+
         # image management data structure
         self._currIndex = 0
         self._imagePlotDict = dict()
