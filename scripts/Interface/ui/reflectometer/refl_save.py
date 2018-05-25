@@ -237,9 +237,9 @@ class Ui_SaveWindow(object):
         QtCore.QMetaObject.connectSlotsByName(SaveWindow)
 
     def retranslateUi(self, SaveWindow):
-        SaveWindow.setWindowTitle(QtWidgets.QApplication.translate("SaveWindow", "SaveWindow", None, QtWidgets.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtWidgets.QApplication.translate("SaveWindow", "Save", None, QtWidgets.QApplication.UnicodeUTF8))
-        self.pushButton_2.setText(QtWidgets.QApplication.translate("SaveWindow", "Refresh", None, QtWidgets.QApplication.UnicodeUTF8))
+        SaveWindow.setWindowTitle(QtWidgets.QApplication.translate("SaveWindow", "SaveWindow", None))
+        self.pushButton.setText(QtWidgets.QApplication.translate("SaveWindow", "Save", None))
+        self.pushButton_2.setText(QtWidgets.QApplication.translate("SaveWindow", "Refresh", None))
 
     def _get_saveable_workspace_names(self):
         names = mtd.getObjectNames()

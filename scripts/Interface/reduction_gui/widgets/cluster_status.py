@@ -62,7 +62,7 @@ class RemoteJobsWidget(BaseWidget):
         compute_resources = ConfigService.Instance().getFacility().computeResources()
         self._content.resource_combo.clear()
         for res in compute_resources:
-            self._content.resource_combo.addItem(QtWidgets.QApplication.translate("Dialog", res, None, QtWidgets.QApplication.UnicodeUTF8))
+            self._content.resource_combo.addItem(QtWidgets.QApplication.translate("Dialog", res, None))
 
         self._clear_table()
 

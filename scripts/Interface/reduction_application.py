@@ -322,7 +322,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
                 instruments = sorted(INSTRUMENT_DICT.keys())
                 instruments.reverse()
                 for facility in instruments:
-                    self.facility_combo.addItem(QtWidgets.QApplication.translate("Dialog", facility, None, QtWidgets.QApplication.UnicodeUTF8))
+                    self.facility_combo.addItem(QtWidgets.QApplication.translate("Dialog", facility, None))
 
                 self._facility_changed(instruments[0])
                 self.connect(self.facility_combo, QtCore.SIGNAL("activated(QString)"), self._facility_changed)
@@ -332,7 +332,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
                 instr_list = sorted(INSTRUMENT_DICT[unicode(facility)].keys())
                 for item in instr_list:
                     if self.instrument_list is None or item in self.instrument_list:
-                        self.instr_combo.addItem(QtWidgets.QApplication.translate("Dialog", item, None, QtWidgets.QApplication.UnicodeUTF8))
+                        self.instr_combo.addItem(QtWidgets.QApplication.translate("Dialog", item, None))
 
         if self.general_settings.debug:
             dialog = InstrDialog()
@@ -359,7 +359,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
                 self.setupUi(self)
                 self.resource_combo.clear()
                 for res in compute_resources:
-                    self.resource_combo.addItem(QtWidgets.QApplication.translate("Dialog", res, None, QtWidgets.QApplication.UnicodeUTF8))
+                    self.resource_combo.addItem(QtWidgets.QApplication.translate("Dialog", res, None))
 
         # Fill out the defaults
         dialog = ClusterDialog(self._compute_resources)
