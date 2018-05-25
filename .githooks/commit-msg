@@ -20,6 +20,7 @@
 #  - stop at "diff --git" (git commit -v)
 # Later versions of git gui on Windows don't set this properly
 exit 0
+
 if [ -z "$GIT_DIR" ]; then
   GIT_DIR=$(git rev-parse --git-dir)
 fi
