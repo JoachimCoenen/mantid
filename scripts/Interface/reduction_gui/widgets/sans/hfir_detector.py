@@ -1,7 +1,7 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 import sys
 from reduction_gui.reduction.sans.hfir_detector_script import Detector
@@ -33,9 +33,9 @@ class DetectorWidget(BaseWidget):
                  data_proxy=None, use_sample_dc=False, options_callback=None):
         super(DetectorWidget, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class DetFrame(QtGui.QFrame, ui.sans.ui_hfir_detector.Ui_Frame):
+        class DetFrame(QtWidgets.QFrame, ui.sans.ui_hfir_detector.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DetFrame(self)
@@ -228,7 +228,7 @@ class DetectorWidget(BaseWidget):
         self._use_sample_center_changed(self._content.use_sample_center_checkbox.isChecked())
 
         if len(popup_warning)>0:
-            QtGui.QMessageBox.warning(self, "Turn ON advanced interface", popup_warning)
+            QtWidgets.QMessageBox.warning(self, "Turn ON advanced interface", popup_warning)
 
     def get_state(self):
         """

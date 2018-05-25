@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 import os
 import types
 from reduction_gui.settings.application_settings import GeneralSettings
@@ -31,7 +31,7 @@ def process_file_parameter(f):
     return processed_function
 
 
-class BaseWidget(QtGui.QWidget):
+class BaseWidget(QtWidgets.QWidget):
     """
         Base widget for reduction UI
     """
@@ -39,9 +39,9 @@ class BaseWidget(QtGui.QWidget):
     name = ""
 
     def __init__(self, parent=None, state=None, settings=None, data_type=None, ui_class=None, data_proxy=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
-        self._layout = QtGui.QHBoxLayout()
+        self._layout = QtWidgets.QHBoxLayout()
         self.setLayout(self._layout)
         if ui_class is not None:
             self._content = ui_class(self)
@@ -117,7 +117,7 @@ class BaseWidget(QtGui.QWidget):
             @param title: string to use as title
             @param multi: multiselection is enabled if True
         """
-        dirname = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+        dirname = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
 
         return dirname
 
@@ -133,7 +133,7 @@ class BaseWidget(QtGui.QWidget):
         if title is None:
             title = "Data file - Choose a data file"
         if multi:
-            qflist = QtGui.QFileDialog.getOpenFileNames(self, title,
+            qflist = QtWidgets.QFileDialog.getOpenFileNames(self, title,
                                                         self._settings.data_path,
                                                         data_type)
             if len(qflist)>0:
@@ -146,7 +146,7 @@ class BaseWidget(QtGui.QWidget):
             else:
                 return None
         else:
-            fname = QtCore.QFileInfo(QtGui.QFileDialog.getOpenFileName(self, title,
+            fname = QtCore.QFileInfo(QtWidgets.QFileDialog.getOpenFileName(self, title,
                                                                        self._settings.data_path,
                                                                        data_type)).filePath()
             if fname:
@@ -164,7 +164,7 @@ class BaseWidget(QtGui.QWidget):
             data_type = self._data_type
         if title is None:
             title = "Save file - Set a location and name"
-        fname = QtCore.QFileInfo(QtGui.QFileDialog.getSaveFileName(self, title,
+        fname = QtCore.QFileInfo(QtWidgets.QFileDialog.getSaveFileName(self, title,
                                                                    self._settings.data_path,
                                                                    data_type)).filePath()
         return str(fname)
@@ -234,6 +234,6 @@ class BaseWidget(QtGui.QWidget):
                             print(e)
                     else:
                         print(proxy.errors)
-                QtGui.QMessageBox.warning(self, "Data Error", "Mantid doesn't know how to load this file")
+                QtWidgets.QMessageBox.warning(self, "Data Error", "Mantid doesn't know how to load this file")
         else:
-            QtGui.QMessageBox.warning(self, "Data Error", "Mantid doesn't know how to load this file")
+            QtWidgets.QMessageBox.warning(self, "Data Error", "Mantid doesn't know how to load this file")

@@ -1,12 +1,12 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
 from .ui_converter import Ui_MainWindow #import line for the UI python class
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 import math
 import TofConverter.convertUnits
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     needsThetaInputList = ['Momentum transfer (Q Angstroms^-1)', 'd-spacing (Angstroms)']
     needsThetaOutputList = ['Momentum transfer (Q Angstroms^-1)', 'd-spacing (Angstroms)']
     needsFlightPathInputList = ['Time of flight (microseconds)']
@@ -46,7 +46,7 @@ class MainWindow(QtGui.QMainWindow):
             self.flightPathEnable(True)
 
     def __init__(self, parent=None):
-        QtGui.QMainWindow.__init__(self,parent)
+        QtWidgets.QMainWindow.__init__(self,parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.InputVal.setValidator(QtGui.QDoubleValidator(self.ui.InputVal))
@@ -98,11 +98,11 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.convertedVal.clear()
             self.ui.convertedVal.insert(str(self.output))
         except UnboundLocalError as ule:
-            QtGui.QMessageBox.warning(self, "TofConverter", str(ule))
+            QtWidgets.QMessageBox.warning(self, "TofConverter", str(ule))
             return
         except ArithmeticError as ae:
-            QtGui.QMessageBox.warning(self, "TofConverter", str(ae))
+            QtWidgets.QMessageBox.warning(self, "TofConverter", str(ae))
             return
         except RuntimeError as re:
-            QtGui.QMessageBox.warning(self, "TofConverter", str(re))
+            QtWidgets.QMessageBox.warning(self, "TofConverter", str(re))
             return

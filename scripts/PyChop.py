@@ -5,14 +5,14 @@ Module to import and run the PyChop GUI for use either on the commandline or as 
 """
 
 import sys
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from PyChop import PyChopGui
 
 if __name__ == '__main__':
-    if QtGui.QApplication.instance():
-        app = QtGui.QApplication.instance()
+    if QtWidgets.QApplication.instance():
+        app = QtWidgets.QApplication.instance()
     else:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
     window = PyChopGui.PyChopGui()
     window.show()
     try: # check if started from within mantidplot

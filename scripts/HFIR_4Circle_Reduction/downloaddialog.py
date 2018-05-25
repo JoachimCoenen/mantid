@@ -2,8 +2,8 @@
 # Dialog to set up HTTP data downloading server and download HB3A data to local
 ##########
 import os
-from PyQt4 import QtCore
-from PyQt4 import QtGui
+from PyQt5 import QtCore
+from PyQt5 import QtGui
 import HFIR_4Circle_Reduction.fourcircle_utility as hb3a_util
 from HFIR_4Circle_Reduction import ui_httpserversetup as ui_http
 
@@ -15,7 +15,7 @@ except AttributeError:
         return s
 
 
-class DataDownloadDialog(QtGui.QDialog):
+class DataDownloadDialog(QtWidgets.QDialog):
     """ dialog for set up HTTP server and download files to local computer
     This feature will be valid until SNS disables the HTTP server for HFIR data
     """
@@ -80,7 +80,7 @@ class DataDownloadDialog(QtGui.QDialog):
         """ Browse local cache directory
         :return:
         """
-        local_cache_dir = str(QtGui.QFileDialog.getExistingDirectory(self,
+        local_cache_dir = str(QtWidgets.QFileDialog.getExistingDirectory(self,
                                                                      'Get Local Cache Directory',
                                                                      self._homeSrcDir))
 
@@ -212,7 +212,7 @@ class DataDownloadDialog(QtGui.QDialog):
         """
         assert isinstance(message, str), 'Input message %s must a string but not %s.' \
                                          '' % (str(message), type(message))
-        QtGui.QMessageBox.information(self, '4-circle Data Reduction', message)
+        QtWidgets.QMessageBox.information(self, '4-circle Data Reduction', message)
 
         return
 

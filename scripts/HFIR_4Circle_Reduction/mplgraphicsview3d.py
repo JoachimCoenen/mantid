@@ -4,7 +4,7 @@ from six.moves import range
 import numpy as np
 import os
 
-from PyQt4.QtGui import QSizePolicy
+from PyQt5.QtGui import QSizePolicy
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure

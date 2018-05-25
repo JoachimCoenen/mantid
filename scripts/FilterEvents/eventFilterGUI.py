@@ -3,9 +3,9 @@ from __future__ import (absolute_import, division, print_function)
 import numpy
 
 from FilterEvents.ui_MainWindow import Ui_MainWindow #import line for the UI python class
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 from matplotlib.pyplot import setp
 
@@ -38,7 +38,7 @@ class MyPopErrorMsg(QWidget):
         """ Init
         """
         import FilterEvents.ui_ErrorMessage as errui
-        QWidget.__init__(self)
+        QtWidget.__init__(self)
 
         self.ui = errui.Ui_Dialog()
         self.ui.setupUi(self)
@@ -71,7 +71,7 @@ class MyPopErrorMsg(QWidget):
         return
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     """ Class of Main Window (top)
     """
 
@@ -81,14 +81,14 @@ class MainWindow(QtGui.QMainWindow):
         """ Intialization and set up
         """
         # Base class
-        QtGui.QMainWindow.__init__(self,parent)
+        QtWidgets.QMainWindow.__init__(self,parent)
 
         # Mantid configuration
         config = ConfigService.Instance()
         self._instrument = config["default.instrument"]
 
         # Central widget
-        self.centralwidget = QtGui.QWidget(self)
+        self.centralwidget = QtWidgets.QWidget(self)
 
         # UI Window (from Qt Designer)
         self.ui = Ui_MainWindow()
@@ -635,7 +635,7 @@ class MainWindow(QtGui.QMainWindow):
     def browse_File(self):
         """ Open a file dialog to get file
         """
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Input File Dialog',
+        filename = QtWidgets.QFileDialog.getOpenFileName(self, 'Input File Dialog',
                                                      self._defaultdir, "Data (*.nxs *.dat);;All files (*)")
 
         self.ui.lineEdit.setText(str(filename))

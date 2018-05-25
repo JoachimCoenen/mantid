@@ -12,7 +12,7 @@ from abc import ABCMeta, abstractmethod
 import os
 
 from six import with_metaclass
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from sans.gui_logic.gui_common import (GENERIC_SETTINGS, JSON_SUFFIX, load_file)
 import ui_settings_diagnostic_tab
@@ -21,7 +21,7 @@ if six.PY3:
     unicode = str
 
 
-class SettingsDiagnosticTab(QtGui.QWidget, ui_settings_diagnostic_tab.Ui_SettingsDiagnosticTab):
+class SettingsDiagnosticTab(QtWidgets.QWidget, ui_settings_diagnostic_tab.Ui_SettingsDiagnosticTab):
     class SettingsDiagnosticTabListener(with_metaclass(ABCMeta, object)):
         """
         Defines the elements which a presenter can listen to for the diagnostic tab
@@ -128,17 +128,17 @@ class SettingsDiagnosticTab(QtGui.QWidget, ui_settings_diagnostic_tab.Ui_Setting
             for key, val in sorted(value.iteritems()):
                 if key in self.excluded:
                     continue
-                child = QtGui.QTreeWidgetItem()
+                child = QtWidgets.QTreeWidgetItem()
                 child.setText(0, unicode(key))
                 item.addChild(child)
                 self.fill_tree_widget(child, val)
         elif type(value) is list:
             for val in value:
-                child = QtGui.QTreeWidgetItem()
+                child = QtWidgets.QTreeWidgetItem()
                 child.setText(1, unicode(val))
                 item.addChild(child)
         else:
-            child = QtGui.QTreeWidgetItem()
+            child = QtWidgets.QTreeWidgetItem()
             value = self.clean_class_type(value)
             child.setText(1, unicode(value))
             item.addChild(child)

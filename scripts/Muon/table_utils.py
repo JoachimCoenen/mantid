@@ -1,5 +1,5 @@
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 
 
@@ -10,26 +10,26 @@ adding information to tables.
 
 
 def setRowName(table,row,name):
-    text = QtGui.QTableWidgetItem((name))
+    text = QtWidgets.QTableWidgetItem((name))
     text.setFlags(QtCore.Qt.ItemIsEnabled)
     table.setItem(row,0, text)
 
 
 def addComboToTable(table,row,options):
-    combo=QtGui.QComboBox()
+    combo=QtWidgets.QComboBox()
     combo.addItems(options)
     table.setCellWidget(row,1,combo)
     return combo
 
 
 def addDoubleToTable(table,value,row):
-    numberWidget = QtGui.QTableWidgetItem(str(value))
+    numberWidget = QtWidgets.QTableWidgetItem(str(value))
     table.setItem(row,1, numberWidget)
     return numberWidget
 
 
 def addCheckBoxToTable(table,state,row):
-    box = QtGui.QTableWidgetItem()
+    box = QtWidgets.QTableWidgetItem()
     box.setFlags(QtCore.Qt.ItemIsUserCheckable |QtCore.Qt.ItemIsEnabled)
     if state:
         box.setCheckState(QtCore.Qt.Checked)
@@ -41,7 +41,7 @@ def addCheckBoxToTable(table,state,row):
 
 
 def addSpinBoxToTable(table,default,row):
-    box = QtGui.QSpinBox()
+    box = QtWidgets.QSpinBox()
     if default > 99:
         box.setMaximum(default*10)
     box.setValue(default)

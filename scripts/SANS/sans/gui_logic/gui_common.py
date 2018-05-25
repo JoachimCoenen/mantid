@@ -1,5 +1,5 @@
 from sans.common.enums import SANSInstrument, ISISReductionMode, DetectorType
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import os
 
 
@@ -185,6 +185,6 @@ def load_file(line_edit_field, filter_for_dialog, q_settings_group_key, q_settin
 
 
 def open_file_dialog(line_edit, filter_text, directory):
-    file_name = QtGui.QFileDialog.getOpenFileName(None, 'Open', directory, filter_text)
+    file_name = QtWidgets.QFileDialog.getOpenFileName(None, 'Open', directory, filter_text)
     if file_name:
         line_edit.setText(file_name)

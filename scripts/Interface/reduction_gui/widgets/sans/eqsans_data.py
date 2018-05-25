@@ -1,7 +1,7 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 import os
 from reduction_gui.reduction.sans.eqsans_data_script import DataSets
@@ -24,9 +24,9 @@ class DataSetsWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None, data_proxy=None):
         super(DataSetsWidget, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class DataFrame(QtGui.QFrame, ui.sans.ui_eqsans_sample_data.Ui_Frame):
+        class DataFrame(QtWidgets.QFrame, ui.sans.ui_eqsans_sample_data.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataFrame(self)
@@ -65,7 +65,7 @@ class DataSetsWidget(BaseWidget):
         self.connect(self._content.sample_plot_button, QtCore.SIGNAL("clicked()"), self._sample_plot)
 
         # Calculate/Fix radio button
-        g1 = QtGui.QButtonGroup(self)
+        g1 = QtWidgets.QButtonGroup(self)
         g1.addButton(self._content.calculate_radio)
         g1.addButton(self._content.fix_trans_radio)
         g1.setExclusive(True)
@@ -104,7 +104,7 @@ class DataSetsWidget(BaseWidget):
         self.connect(self._content.bck_sample_plot_button, QtCore.SIGNAL("clicked()"), self._bck_sample_plot)
 
         # Calculate/Fix radio button
-        g2 = QtGui.QButtonGroup(self)
+        g2 = QtWidgets.QButtonGroup(self)
         g2.addButton(self._content.bck_calculate_radio)
         g2.addButton(self._content.bck_fix_trans_radio)
         g2.setExclusive(True)
@@ -225,7 +225,7 @@ class DataSetsWidget(BaseWidget):
         self._bck_calculate_clicked(state.background.calculate_transmission)
 
         if len(popup_warning)>0:
-            QtGui.QMessageBox.warning(self, "Turn ON debug mode", popup_warning)
+            QtWidgets.QMessageBox.warning(self, "Turn ON debug mode", popup_warning)
 
     def get_state(self):
         """
@@ -402,7 +402,7 @@ class DataSetsWidget(BaseWidget):
         if len(str(fname).strip())>0:
             dataproxy = self._data_proxy(fname)
             if len(dataproxy.errors)>0:
-                #QtGui.QMessageBox.warning(self, "Error", dataproxy.errors[0])
+                #QtWidgets.QMessageBox.warning(self, "Error", dataproxy.errors[0])
                 return
 
             self._settings.last_data_ws = dataproxy.data_ws

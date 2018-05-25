@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 import os
 import numpy as np
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar2
@@ -12,7 +12,7 @@ import matplotlib.image
 from matplotlib import pyplot as plt
 
 
-class Mpl2dGraphicsView(QtGui.QWidget):
+class Mpl2dGraphicsView(QtWidgets.QWidget):
     """ A combined graphics view including matplotlib canvas and
     a navigation tool bar for 2D image specifically
     """
@@ -21,14 +21,14 @@ class Mpl2dGraphicsView(QtGui.QWidget):
         """ Initialization
         """
         # Initialize parent
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         # set up canvas
         self._myCanvas = Qt4Mpl2dCanvas(self)
         self._myToolBar = MyNavigationToolbar(self, self._myCanvas)
 
         # set up layout
-        self._vBox = QtGui.QVBoxLayout(self)
+        self._vBox = QtWidgets.QVBoxLayout(self)
         self._vBox.addWidget(self._myCanvas)
         self._vBox.addWidget(self._myToolBar)
 
@@ -162,7 +162,7 @@ class Qt4Mpl2dCanvas(FigureCanvas):
         self.setParent(parent)
 
         # Set size policy to be able to expanding and resizable with frame
-        FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         # legend and color bar

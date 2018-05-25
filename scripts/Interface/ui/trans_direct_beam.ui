@@ -16,7 +16,7 @@
   <property name="title">
    <string>Direct Beam</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
+  <widget class="QtWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>

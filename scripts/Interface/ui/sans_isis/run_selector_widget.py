@@ -1,13 +1,13 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 import ui_run_selector_widget
-from PyQt4.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 from mantidqtpython import MantidQt
 
 
-class RunSelectorWidget(QtGui.QWidget, ui_run_selector_widget.Ui_RunSelectorWidget):
+class RunSelectorWidget(QtWidgets.QWidget, ui_run_selector_widget.Ui_RunSelectorWidget):
     manageDirectories = pyqtSignal()
     browse = pyqtSignal()
     addRuns = pyqtSignal()
@@ -21,7 +21,7 @@ class RunSelectorWidget(QtGui.QWidget, ui_run_selector_widget.Ui_RunSelectorWidg
 
     def setupUi(self, other):
         ui_run_selector_widget.Ui_RunSelectorWidget.setupUi(self, other)
-        self.runList.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.runList.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def show_file_picker(self, extensions, search_directories):
         assert(len(extensions) > 0)
@@ -29,7 +29,7 @@ class RunSelectorWidget(QtGui.QWidget, ui_run_selector_widget.Ui_RunSelectorWidg
         default_directory = search_directories[0]
         directory = self._previous_or_default_directory(previous_directories, default_directory)
         file_filter = self._filter_for_extensions(extensions)
-        chosen_files = QtGui.QFileDialog.getOpenFileNames(self, "Select files", directory, file_filter)
+        chosen_files = QtWidgets.QFileDialog.getOpenFileNames(self, "Select files", directory, file_filter)
         if chosen_files:
             self._store_previous_directory(previous_directories, chosen_files[0])
         return [str(chosen_file) for chosen_file in chosen_files]
@@ -53,11 +53,11 @@ class RunSelectorWidget(QtGui.QWidget, ui_run_selector_widget.Ui_RunSelectorWidg
         MantidQt.API.ManageUserDirectories.openUserDirsDialog(self)
 
     def run_not_found(self):
-        QtGui.QMessageBox.warning(self, "Run Not Found!",
+        QtWidgets.QMessageBox.warning(self, "Run Not Found!",
                                   "Could not find one or more of the runs specified.")
 
     def invalid_run_query(self, message):
-        QtGui.QMessageBox.warning(self, "Invalid Run Query!", message)
+        QtWidgets.QMessageBox.warning(self, "Invalid Run Query!", message)
 
     def run_list(self):
         return str(self.runLineEdit.text())

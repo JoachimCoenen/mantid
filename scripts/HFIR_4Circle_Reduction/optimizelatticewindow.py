@@ -1,11 +1,11 @@
 #pylint: disable=C0103
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from . import ui_OptimizeLattice
 
 
-class OptimizeLatticeWindow(QtGui.QMainWindow):
+class OptimizeLatticeWindow(QtWidgets.QMainWindow):
     """
     Main window widget to set up parameters to optimize
     """
@@ -20,7 +20,7 @@ class OptimizeLatticeWindow(QtGui.QMainWindow):
         :return:
         """
         # init
-        QtGui.QMainWindow.__init__(self, parent)
+        QtWidgets.QMainWindow.__init__(self, parent)
 
         self.ui = ui_OptimizeLattice.Ui_MainWindow()
         self.ui.setupUi(self)

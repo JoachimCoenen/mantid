@@ -9,7 +9,7 @@ from abc import ABCMeta, abstractmethod
 from inspect import isclass
 
 from six import with_metaclass
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from mantid.kernel import (Logger, config)
 from mantidqtpython import MantidQt
@@ -72,7 +72,7 @@ def _make_run_summation_settings_presenter(summation_settings_view, parent_view)
 # ----------------------------------------------------------------------------------------------------------------------
 # Gui Classes
 # ----------------------------------------------------------------------------------------------------------------------
-class SANSDataProcessorGui(QtGui.QMainWindow, ui_sans_data_processor_window.Ui_SansDataProcessorWindow):
+class SANSDataProcessorGui(QtWidgets.QMainWindow, ui_sans_data_processor_window.Ui_SansDataProcessorWindow):
     data_processor_table = None
     INSTRUMENTS = None
     VARIABLE = "Variable"
@@ -121,7 +121,7 @@ class SANSDataProcessorGui(QtGui.QMainWindow, ui_sans_data_processor_window.Ui_S
         """
         Initialise the interface
         """
-        super(QtGui.QMainWindow, self).__init__()
+        super(QtWidgets.QMainWindow, self).__init__()
         self.setupUi(self)
 
         # Main presenter
@@ -201,23 +201,23 @@ class SANSDataProcessorGui(QtGui.QMainWindow, ui_sans_data_processor_window.Ui_S
         path = os.path.dirname(__file__)
         runs_icon_path = os.path.join(path, "icons", "run.png")
         runs_icon = QtGui.QIcon(runs_icon_path)
-        _ = QtGui.QListWidgetItem(runs_icon, "Runs", self.tab_choice_list)  # noqa
+        _ = QtWidgets.QListWidgetItem(runs_icon, "Runs", self.tab_choice_list)  # noqa
 
         settings_icon_path = os.path.join(path, "icons", "settings.png")
         settings_icon = QtGui.QIcon(settings_icon_path)
-        _ = QtGui.QListWidgetItem(settings_icon, "Settings", self.tab_choice_list)  # noqa
+        _ = QtWidgets.QListWidgetItem(settings_icon, "Settings", self.tab_choice_list)  # noqa
 
         centre_icon_path = os.path.join(path, "icons", "centre.png")
         centre_icon = QtGui.QIcon(centre_icon_path)
-        _ = QtGui.QListWidgetItem(centre_icon, "Beam Centre", self.tab_choice_list)  # noqa
+        _ = QtWidgets.QListWidgetItem(centre_icon, "Beam Centre", self.tab_choice_list)  # noqa
 
         add_runs_page_icon_path = os.path.join(path, "icons", "sum.png")
         add_runs_page_icon = QtGui.QIcon(add_runs_page_icon_path)
-        _ = QtGui.QListWidgetItem(add_runs_page_icon, "Sum Runs", self.tab_choice_list)  # noqa
+        _ = QtWidgets.QListWidgetItem(add_runs_page_icon, "Sum Runs", self.tab_choice_list)  # noqa
 
         diagnostic_icon_path = os.path.join(path, "icons", "diagnostic.png")
         diagnostic_icon = QtGui.QIcon(diagnostic_icon_path)
-        _ = QtGui.QListWidgetItem(diagnostic_icon, "Diagnostic Page", self.tab_choice_list)  # noqa
+        _ = QtWidgets.QListWidgetItem(diagnostic_icon, "Diagnostic Page", self.tab_choice_list)  # noqa
 
         # Set the 0th row enabled
         self.tab_choice_list.setCurrentRow(0)
@@ -1804,18 +1804,18 @@ class SANSDataProcessorGui(QtGui.QMainWindow, ui_sans_data_processor_window.Ui_S
         table workspaces with an appropriate number of columns and column types can be loaded.
         """
         if (workspace_list is not None and command.name() == "Open Table"):
-            submenu = QtGui.QMenu(command.name(), self)
+            submenu = QtWidgets.QMenu(command.name(), self)
             submenu.setIcon(QtGui.QIcon(command.icon()))
 
             for ws in workspace_list:
                 ws_command = MantidQt.MantidWidgets.DataProcessor.WorkspaceCommand(self.data_processor_table, ws)
-                action = QtGui.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
+                action = QtWidgets.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
                 action.triggered.connect(lambda: self._connect_action(ws_command))
                 submenu.addAction(action)
 
             menu.addMenu(submenu)
         else:
-            action = QtGui.QAction(QtGui.QIcon(command.icon()), command.name(), self)
+            action = QtWidgets.QAction(QtGui.QIcon(command.icon()), command.name(), self)
             action.setShortcut(command.shortcut())
             action.setStatusTip(command.tooltip())
             action.triggered.connect(lambda: self._connect_action(command))

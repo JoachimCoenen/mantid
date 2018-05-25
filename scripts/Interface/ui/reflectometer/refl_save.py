@@ -1,6 +1,6 @@
 #pylint: disable-all
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 from mantid.simpleapi import *
 from mantid.api import WorkspaceGroup, AnalysisDataService
@@ -35,129 +35,129 @@ class Ui_SaveWindow(object):
     def setupUi(self, SaveWindow):
         self.SavePath=""
         SaveWindow.setObjectName(_fromUtf8("SaveWindow"))
-        SaveWindow.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
+        SaveWindow.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding))
         SaveWindow.setAcceptDrops(True)
-        main_layout = QtGui.QHBoxLayout()
+        main_layout = QtWidgets.QHBoxLayout()
         SaveWindow.setLayout(main_layout)
-        self.centralWidget = QtGui.QWidget(SaveWindow)
+        self.centralWidget = QtWidgets.QWidget(SaveWindow)
         main_layout.addWidget(self.centralWidget)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
-        self.gridLayout_2 = QtGui.QGridLayout(self.centralWidget)
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.centralWidget)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
-        self.gridLayout = QtGui.QGridLayout()
-        self.gridLayout.setSizeConstraint(QtGui.QLayout.SetNoConstraint)
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
 
 # Path label and edit field
-        self.PathLabel = QtGui.QLabel("Save path: ",self.centralWidget)
+        self.PathLabel = QtWidgets.QLabel("Save path: ",self.centralWidget)
         self.gridLayout.addWidget(self.PathLabel,0,2,1,1)
-        self.lineEdit = QtGui.QLineEdit(self.centralWidget)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralWidget)
         font = QtGui.QFont()
         font.setWeight(75)
         font.setBold(False)
         self.lineEdit.setFont(font)
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.gridLayout.addWidget(self.lineEdit, 0, 3, 1, 3)
-        #print(QtGui.QMainWindow.findChild(QtGui.QMainWindow.QLabel,'RBEdit'))
+        #print(QtWidgets.QMainWindow.findChild(QtWidgets.QMainWindow.QLabel,'RBEdit'))
 
 # Prefix label and edit field
-        self.PrefixLabel = QtGui.QLabel("Prefix: ",self.centralWidget)
+        self.PrefixLabel = QtWidgets.QLabel("Prefix: ",self.centralWidget)
         self.gridLayout.addWidget(self.PrefixLabel,0,6,1,1)
-        self.lineEdit2 = QtGui.QLineEdit(self.centralWidget)
+        self.lineEdit2 = QtWidgets.QLineEdit(self.centralWidget)
         self.lineEdit2.setFont(font)
         self.lineEdit2.setObjectName(_fromUtf8("lineEdit2"))
         self.gridLayout.addWidget(self.lineEdit2, 0, 7, 1, 2)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lineEdit.sizePolicy().hasHeightForWidth())
         self.lineEdit.setSizePolicy(sizePolicy)
         self.lineEdit2.setSizePolicy(sizePolicy)
-        self.filterLabel = QtGui.QLabel("Filter: ",self.centralWidget)
+        self.filterLabel = QtWidgets.QLabel("Filter: ",self.centralWidget)
         self.gridLayout.addWidget(self.filterLabel,1,2,1,1)
-        self.filterEdit = QtGui.QLineEdit(self.centralWidget)
+        self.filterEdit = QtWidgets.QLineEdit(self.centralWidget)
         self.filterEdit.setFont(font)
         self.filterEdit.setObjectName(_fromUtf8("filterEdit"))
         self.gridLayout.addWidget(self.filterEdit, 1, 3, 1, 1)
 
-        self.regExCheckBox = QtGui.QCheckBox("RegEx", self.centralWidget)
+        self.regExCheckBox = QtWidgets.QCheckBox("RegEx", self.centralWidget)
         self.gridLayout.addWidget(self.regExCheckBox, 1, 4, 1, 1)
 
-        self.LogsLabel = QtGui.QLabel("List of logged parameters: ",self.centralWidget)
+        self.LogsLabel = QtWidgets.QLabel("List of logged parameters: ",self.centralWidget)
         self.gridLayout.addWidget(self.LogsLabel,1,6,1,3)
 
-        self.ListLabel = QtGui.QLabel("List of workspaces: ",self.centralWidget)
+        self.ListLabel = QtWidgets.QLabel("List of workspaces: ",self.centralWidget)
 
 # List of workspaces
-        self.listWidget = QtGui.QListWidget(self.centralWidget)
-        self.listWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.listWidget = QtWidgets.QListWidget(self.centralWidget)
+        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
 
-        self.workspacesLayout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom)
+        self.workspacesLayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.TopToBottom)
         self.workspacesLayout.addWidget(self.ListLabel)
         self.workspacesLayout.addWidget(self.listWidget)
         self.gridLayout.addLayout(self.workspacesLayout,2,2,1,3)
 
 # List of Logged Parameters
-        self.listWidget2 = QtGui.QListWidget(self.centralWidget)
-        self.listWidget2.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.listWidget2 = QtWidgets.QListWidget(self.centralWidget)
+        self.listWidget2.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
         self.gridLayout.addWidget(self.listWidget2, 2, 6, 1, 3)
 
-        spacerItem = QtGui.QSpacerItem(20, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem, 2, 5, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(20, 20, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.gridLayout.addItem(spacerItem1, 4, 2, 1, 1)
-        spacerItem2 = QtGui.QSpacerItem(20, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem2, 2, 0, 1, 1)
-        self.pushButton = QtGui.QPushButton(self.centralWidget)
+        self.pushButton = QtWidgets.QPushButton(self.centralWidget)
 
 # Save Title
-        self.titleCheckBox = QtGui.QCheckBox("Title", self.centralWidget)
+        self.titleCheckBox = QtWidgets.QCheckBox("Title", self.centralWidget)
         #self.gridLayout.addWidget(self.titleCheckBox, 3, 6, 1, 1)
 
 # Tab check box
-        #self.tabCheckBox = QtGui.QCheckBox("tab", self.centralWidget)
+        #self.tabCheckBox = QtWidgets.QCheckBox("tab", self.centralWidget)
         #self.gridLayout.addWidget(self.titleCheckBox, 3, 6, 1, 1)
 
 # Comma check box
-        #self.commaCheckBox = QtGui.QCheckBox("comma", self.centralWidget)
+        #self.commaCheckBox = QtWidgets.QCheckBox("comma", self.centralWidget)
         #self.gridLayout.addWidget(self.commaCheckBox, 3, 6, 1, 1)
 
 
 # Space check box
-        #self.spaceCheckBox = QtGui.QCheckBox("space", self.centralWidget)
+        #self.spaceCheckBox = QtWidgets.QCheckBox("space", self.centralWidget)
         #self.gridLayout.addWidget(self.commaCheckBox, 3, 6, 1, 1)
 
 # Save XError
-        self.xErrorCheckBox = QtGui.QCheckBox("Q resolution", self.centralWidget)
+        self.xErrorCheckBox = QtWidgets.QCheckBox("Q resolution", self.centralWidget)
         #self.gridLayout.addWidget(self.xErrorCheckBox, 3, 7, 1, 1)
 
 # separator
-        #self.separatorLabel = QtGui.QLabel("Separator: ", self.centralWidget)
+        #self.separatorLabel = QtWidgets.QLabel("Separator: ", self.centralWidget)
         #self.gridLayout.addWidget(self.separatorLabel,4,6,1,1)
-        #self.separatorEdit = QtGui.QLineEdit(self.centralWidget)
+        #self.separatorEdit = QtWidgets.QLineEdit(self.centralWidget)
         #self.separatorEdit.setObjectName(_fromUtf8("separatorEdit"))
         #self.gridLayout.addWidget(self.separatorEdit, 4, 7, 1, 1)
 
-        self.groupBox = QtGui.QGroupBox("Custom format options")
-        self.vbox = QtGui.QVBoxLayout()
-        self.hbox = QtGui.QHBoxLayout()
+        self.groupBox = QtWidgets.QGroupBox("Custom format options")
+        self.vbox = QtWidgets.QVBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         self.vbox.addWidget(self.titleCheckBox)
         self.vbox.addWidget(self.xErrorCheckBox)
 
-        self.groupBox2 = QtGui.QGroupBox("Separator")
-        #self.buttonGroup=QtGui.QButtonGroup("Separator:", self.groupBox)
-        self.radio1=QtGui.QRadioButton("Comma", self.centralWidget)
-        self.radio2=QtGui.QRadioButton("Space", self.centralWidget)
-        self.radio3=QtGui.QRadioButton("Tab", self.centralWidget)
+        self.groupBox2 = QtWidgets.QGroupBox("Separator")
+        #self.buttonGroup=QtWidgets.QButtonGroup("Separator:", self.groupBox)
+        self.radio1=QtWidgets.QRadioButton("Comma", self.centralWidget)
+        self.radio2=QtWidgets.QRadioButton("Space", self.centralWidget)
+        self.radio3=QtWidgets.QRadioButton("Tab", self.centralWidget)
 
         self.radio1.setChecked(1)
         self.hbox.addWidget(self.radio1)
@@ -176,19 +176,19 @@ class Ui_SaveWindow(object):
         self.gridLayout.addWidget(self.groupBox, 3, 6, 3, 3)
 
 # spectralist
-        self.spectraLabel = QtGui.QLabel("Spectra list: ", self.centralWidget)
+        self.spectraLabel = QtWidgets.QLabel("Spectra list: ", self.centralWidget)
         self.gridLayout.addWidget(self.spectraLabel,4,2,1,1)
-        self.spectraEdit = QtGui.QLineEdit(self.centralWidget)
+        self.spectraEdit = QtWidgets.QLineEdit(self.centralWidget)
         self.spectraEdit.setObjectName(_fromUtf8("spectraEdit"))
         self.gridLayout.addWidget(self.spectraEdit, 4, 3, 1, 1)
 
 # file format selector
-        self.fileFormatLabel = QtGui.QLabel("File format: ", self.centralWidget)
+        self.fileFormatLabel = QtWidgets.QLabel("File format: ", self.centralWidget)
         self.gridLayout.addWidget(self.fileFormatLabel,5,2,1,1)
-        self.comboBox = QtGui.QComboBox(self.centralWidget)
+        self.comboBox = QtWidgets.QComboBox(self.centralWidget)
         self.comboBox.setToolTip("Please select the file format")
         self.comboBox.setStatusTip("Please select the file format")
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
@@ -204,17 +204,17 @@ class Ui_SaveWindow(object):
         self.comboBox.addItem(_fromUtf8("ILL Cosmos (*.mft)"))
         self.gridLayout.addWidget(self.comboBox, 5, 3, 1, 1)
 
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
         self.pushButton.setSizePolicy(sizePolicy)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.gridLayout.addWidget(self.pushButton, 8, 2, 1, 1)
-        spacerItem3 = QtGui.QSpacerItem(20, 28, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 28, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.gridLayout.addItem(spacerItem3, 8, 3, 1, 1)
-        self.pushButton_2 = QtGui.QPushButton(self.centralWidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
@@ -237,9 +237,9 @@ class Ui_SaveWindow(object):
         QtCore.QMetaObject.connectSlotsByName(SaveWindow)
 
     def retranslateUi(self, SaveWindow):
-        SaveWindow.setWindowTitle(QtGui.QApplication.translate("SaveWindow", "SaveWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("SaveWindow", "Save", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setText(QtGui.QApplication.translate("SaveWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
+        SaveWindow.setWindowTitle(QtWidgets.QApplication.translate("SaveWindow", "SaveWindow", None, QtWidgets.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtWidgets.QApplication.translate("SaveWindow", "Save", None, QtWidgets.QApplication.UnicodeUTF8))
+        self.pushButton_2.setText(QtWidgets.QApplication.translate("SaveWindow", "Refresh", None, QtWidgets.QApplication.UnicodeUTF8))
 
     def _get_saveable_workspace_names(self):
         names = mtd.getObjectNames()
@@ -319,7 +319,7 @@ class Ui_SaveWindow(object):
         prefix = str(self.lineEdit2.text())
         if not (self.lineEdit.text() and os.path.exists(self.lineEdit.text())):
             logger.notice("Directory specified doesn't exist or was invalid for your operating system")
-            QtGui.QMessageBox.critical(self.lineEdit, 'Could not save',
+            QtWidgets.QMessageBox.critical(self.lineEdit, 'Could not save',
                                        "Directory specified doesn't exist or was invalid for your operating system")
             return
         for idx in self.listWidget.selectedItems():

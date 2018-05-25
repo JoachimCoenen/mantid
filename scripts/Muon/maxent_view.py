@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Muon import table_utils
 
 
-class MaxEntView(QtGui.QWidget):
+class MaxEntView(QtWidgets.QWidget):
 
     """
     The view for the MaxEnt widget. This
@@ -18,10 +18,10 @@ class MaxEntView(QtGui.QWidget):
 
     def __init__(self, parent=None):
         super(MaxEntView, self).__init__(parent)
-        self.grid = QtGui.QVBoxLayout(self)
+        self.grid = QtWidgets.QVBoxLayout(self)
         self.run = None
         # make table
-        self.table = QtGui.QTableWidget(self)
+        self.table = QtWidgets.QTableWidget(self)
         self.table.resize(800, 800)
 
         self.table.setRowCount(11)
@@ -83,9 +83,9 @@ class MaxEntView(QtGui.QWidget):
         self.table.resizeRowsToContents()
 
         # advanced options table
-        self.advancedLabel = QtGui.QLabel("\n  Advanced Options")
+        self.advancedLabel = QtWidgets.QLabel("\n  Advanced Options")
         # make table
-        self.tableA = QtGui.QTableWidget(self)
+        self.tableA = QtWidgets.QTableWidget(self)
         self.tableA.resize(800, 800)
 
         self.tableA.setRowCount(7)
@@ -126,20 +126,20 @@ class MaxEntView(QtGui.QWidget):
         # this is if complex data is unhidden
         self.table.setMinimumSize(40, 203)
         self.tableA.setMinimumSize(40, 207)
-        self.horizontalSpacer1 = QtGui.QSpacerItem(
+        self.horizontalSpacer1 = QtWidgets.QSpacerItem(
             20,
             30,
-            QtGui.QSizePolicy.Expanding,
-            QtGui.QSizePolicy.Expanding)
-        self.horizontalSpacer2 = QtGui.QSpacerItem(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding)
+        self.horizontalSpacer2 = QtWidgets.QSpacerItem(
             20,
             70,
-            QtGui.QSizePolicy.Expanding,
-            QtGui.QSizePolicy.Expanding)
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding)
         # make buttons
-        self.button = QtGui.QPushButton('Calculate MaxEnt', self)
+        self.button = QtWidgets.QPushButton('Calculate MaxEnt', self)
         self.button.setStyleSheet("background-color:lightgrey")
-        self.cancel = QtGui.QPushButton('Cancel', self)
+        self.cancel = QtWidgets.QPushButton('Cancel', self)
         self.cancel.setStyleSheet("background-color:lightgrey")
         self.cancel.setEnabled(False)
         # connects
@@ -147,7 +147,7 @@ class MaxEntView(QtGui.QWidget):
         self.cancel.clicked.connect(self.cancelClick)
         self.table.cellClicked.connect(self.phaseBoxClick)
         # button layout
-        self.buttonLayout = QtGui.QHBoxLayout()
+        self.buttonLayout = QtWidgets.QHBoxLayout()
         self.buttonLayout.addWidget(self.button)
         self.buttonLayout.addWidget(self.cancel)
         # add to layout

@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_diagnose_detectors_script import DiagnoseDetectorsScript
 import reduction_gui.widgets.util as util
@@ -17,9 +17,9 @@ class DiagnoseDetectorsWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None):
         super(DiagnoseDetectorsWidget, self).__init__(parent, state, settings, data_type=data_type)
 
-        class DiagDetsFrame(QtGui.QFrame, ui.inelastic.ui_dgs_diagnose_detectors.Ui_DiagDetsFrame):
+        class DiagDetsFrame(QtWidgets.QFrame, ui.inelastic.ui_dgs_diagnose_detectors.Ui_DiagDetsFrame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DiagDetsFrame(self)

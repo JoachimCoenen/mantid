@@ -1,6 +1,6 @@
 # pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from ui.reflectometer.ui_refl_options_window import Ui_OptionsDialog
 
 try:
@@ -10,7 +10,7 @@ except AttributeError:
         return s
 
 
-class ReflOptions(QtGui.QDialog, Ui_OptionsDialog):
+class ReflOptions(QtWidgets.QDialog, Ui_OptionsDialog):
     """
     Member variables
     """
@@ -23,7 +23,7 @@ class ReflOptions(QtGui.QDialog, Ui_OptionsDialog):
         """
         Initialise the interface
         """
-        super(QtGui.QDialog, self).__init__()
+        super(QtWidgets.QDialog, self).__init__()
 
         # Initialize member variables
         self.__alg_use = def_alg_use

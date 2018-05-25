@@ -1,7 +1,7 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 import os
 from reduction_gui.reduction.sans.eqsans_options_script import ReductionOptions
@@ -35,9 +35,9 @@ class SANSInstrumentWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, name="EQSANS", data_type=None, data_proxy=None):
         super(SANSInstrumentWidget, self).__init__(parent, state, settings, data_type=data_type, data_proxy=data_proxy)
 
-        class SummaryFrame(QtGui.QFrame, ui.sans.ui_eqsans_instrument.Ui_Frame):
+        class SummaryFrame(QtWidgets.QFrame, ui.sans.ui_eqsans_instrument.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._summary = SummaryFrame(self)
@@ -97,7 +97,7 @@ class SANSInstrumentWidget(BaseWidget):
         self.connect(self._summary.dark_plot_button, QtCore.SIGNAL("clicked()"), self._dark_plot_clicked)
 
         # Output directory
-        g2 = QtGui.QButtonGroup(self)
+        g2 = QtWidgets.QButtonGroup(self)
         g2.addButton(self._summary.select_output_dir_radio)
         g2.addButton(self._summary.use_data_dir_radio)
         g2.setExclusive(True)
@@ -107,7 +107,7 @@ class SANSInstrumentWidget(BaseWidget):
         self._output_dir_clicked()
 
         # Lin/log option
-        g3 = QtGui.QButtonGroup(self)
+        g3 = QtWidgets.QButtonGroup(self)
         g3.addButton(self._summary.log_binning_radio)
         g3.addButton(self._summary.lin_binning_radio)
         g3.setExclusive(True)
@@ -235,10 +235,10 @@ class SANSInstrumentWidget(BaseWidget):
             self._settings.emit_key_value("OUTPUT_DIR", str(self._summary.output_dir_edit.text()))
 
     def _output_dir_browse(self):
-        output_dir = QtGui.QFileDialog.getExistingDirectory(self, "Output Directory - Choose a directory",
+        output_dir = QtWidgets.QFileDialog.getExistingDirectory(self, "Output Directory - Choose a directory",
                                                             os.path.expanduser('~'),
-                                                            QtGui.QFileDialog.ShowDirsOnly
-                                                            | QtGui.QFileDialog.DontResolveSymlinks)
+                                                            QtWidgets.QFileDialog.ShowDirsOnly
+                                                            | QtWidgets.QFileDialog.DontResolveSymlinks)
         if output_dir:
             self._summary.output_dir_edit.setText(output_dir)
             self._settings.emit_key_value("OUTPUT_DIR", output_dir)
@@ -494,9 +494,9 @@ class SANSInstrumentWidget(BaseWidget):
         return m
 
     def _show_help(self):
-        class HelpDialog(QtGui.QDialog, ui.sans.ui_eqsans_info.Ui_Dialog):
+        class HelpDialog(QtWidgets.QDialog, ui.sans.ui_eqsans_info.Ui_Dialog):
             def __init__(self, parent=None):
-                QtGui.QDialog.__init__(self, parent)
+                QtWidgets.QDialog.__init__(self, parent)
                 self.setupUi(self)
         dialog = HelpDialog(self)
         dialog.exec_()

@@ -5,7 +5,7 @@ import numpy
 from wand.image import Image
 from wand.drawing import Drawing
 from wand.color import Color
-from PyQt4.QtCore import QByteArray, QBuffer
+from PyQt5.QtCore import QByteArray, QBuffer
 
 
 def animate_slice(sliceviewer, name, start, end, filename, num_frames=10, font_size=24):

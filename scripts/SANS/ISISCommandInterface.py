@@ -29,7 +29,7 @@ except (Exception, Warning):
     # the result is that attempting to plot will raise an exception
 
 try:
-    from PyQt4.QtGui import qApp
+    from PyQt5.QtGui import qApp
 
     def appwidgets():
         return qApp.allWidgets()

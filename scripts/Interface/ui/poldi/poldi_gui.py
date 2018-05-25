@@ -4,7 +4,7 @@ try:
 except ImportError:
     canMantidPlot = False
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from mantid.simpleapi import *
 from mantidqtpython import MantidQt
 from ui.poldi.ui_poldi_window import Ui_PoldiWindow
@@ -64,7 +64,7 @@ class MainPresenter(MantidQt.MantidWidgets.DataProcessor.DataProcessorMainPresen
         self.gui.add_actions_to_menus(workspace_list)
 
 
-class PoldiGui(QtGui.QMainWindow, Ui_PoldiWindow):
+class PoldiGui(QtWidgets.QMainWindow, Ui_PoldiWindow):
 
     data_processor_table = None
     main_presenter = None
@@ -73,7 +73,7 @@ class PoldiGui(QtGui.QMainWindow, Ui_PoldiWindow):
         """
         Initialise the interface
         """
-        super(QtGui.QMainWindow, self).__init__()
+        super(QtWidgets.QMainWindow, self).__init__()
         self.setupUi(self)
 
     def setup_layout(self):
@@ -145,7 +145,7 @@ class PoldiGui(QtGui.QMainWindow, Ui_PoldiWindow):
         self.menuFile.clear()
 
         # Demo (unrelated to the data processor widget)
-        demo = QtGui.QAction('&Demo', self)
+        demo = QtWidgets.QAction('&Demo', self)
         demo.triggered.connect(lambda: self._demo_clicked())
         self.menuFile.addAction(demo)
 
@@ -188,18 +188,18 @@ class PoldiGui(QtGui.QMainWindow, Ui_PoldiWindow):
         """
 
         if (workspace_list is not None and command.name() == "Open Table"):
-            submenu = QtGui.QMenu(command.name(), self)
+            submenu = QtWidgets.QMenu(command.name(), self)
             submenu.setIcon(QtGui.QIcon(command.icon()))
 
             for ws in workspace_list:
                 ws_command = MantidQt.MantidWidgets.DataProcessor.WorkspaceCommand(self.data_processor_table, ws)
-                action = QtGui.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
+                action = QtWidgets.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
                 action.triggered.connect(lambda: self._connect_action(ws_command))
                 submenu.addAction(action)
 
             menu.addMenu(submenu)
         else:
-            action = QtGui.QAction(QtGui.QIcon(command.icon()), command.name(), self)
+            action = QtWidgets.QAction(QtGui.QIcon(command.icon()), command.name(), self)
             action.setShortcut(command.shortcut())
             action.setStatusTip(command.tooltip())
             action.triggered.connect(lambda: self._connect_action(command))

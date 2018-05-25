@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>SANS Reduction</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QtWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
@@ -35,7 +35,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QtWidget" name="tab">
        <attribute name="title">
         <string>No Instrument Selected</string>
        </attribute>

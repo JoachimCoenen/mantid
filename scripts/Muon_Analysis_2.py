@@ -3,14 +3,14 @@ from __future__ import (absolute_import, division, print_function)
 
 import sys
 
-import PyQt4.QtGui as QtGui
-import PyQt4.QtCore as QtCore
+import PyQt5.QtGui as QtGui
+import PyQt5.QtCore as QtCore
 
 from Muon.GUI.dummy_label.dummy_label_widget import DummyLabelWidget
 from Muon.GUI.dock.dock_widget import DockWidget
 
 
-class MuonAnalysis2Gui(QtGui.QMainWindow):
+class MuonAnalysis2Gui(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super(MuonAnalysis2Gui, self).__init__(parent)
@@ -20,7 +20,7 @@ class MuonAnalysis2Gui(QtGui.QMainWindow):
 
         helpWidget = DummyLabelWidget("Help dummy", self)
 
-        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
         splitter.addWidget(loadWidget.widget)
         splitter.addWidget(self.dockWidget.widget)
         splitter.addWidget(helpWidget.widget)
@@ -34,10 +34,10 @@ class MuonAnalysis2Gui(QtGui.QMainWindow):
 
 
 def qapp():
-    if QtGui.QApplication.instance():
-        _app = QtGui.QApplication.instance()
+    if QtWidgets.QApplication.instance():
+        _app = QtWidgets.QApplication.instance()
     else:
-        _app = QtGui.QApplication(sys.argv)
+        _app = QtWidgets.QApplication(sys.argv)
     return _app
 
 
@@ -48,5 +48,5 @@ try:
     ex.show()
     app.exec_()
 except RuntimeError as error:
-    ex = QtGui.QWidget()
-    QtGui.QMessageBox.warning(ex, "Muon Analysis version 2", str(error))
+    ex = QtWidgets.QWidget()
+    QtWidgets.QMessageBox.warning(ex, "Muon Analysis version 2", str(error))

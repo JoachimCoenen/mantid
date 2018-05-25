@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import sys
 from functools import partial
 from reduction_gui.settings.application_settings import GeneralSettings
@@ -31,9 +31,9 @@ class RemoteJobsWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None):
         super(RemoteJobsWidget, self).__init__(parent, state, settings)
 
-        class DataFrame(QtGui.QFrame, ui.ui_cluster_status.Ui_Frame):
+        class DataFrame(QtWidgets.QFrame, ui.ui_cluster_status.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataFrame(self)
@@ -47,7 +47,7 @@ class RemoteJobsWidget(BaseWidget):
 
     def initialize_content(self):
         # Add functionality to copy and paste
-        self.copyAction = QtGui.QAction("Copy", self)
+        self.copyAction = QtWidgets.QAction("Copy", self)
         self.copyAction.setShortcut("Ctrl+C")
         self.addAction(self.copyAction)
         self.connect(self.copyAction, QtCore.SIGNAL("triggered()"), self.copyCells)
@@ -62,13 +62,13 @@ class RemoteJobsWidget(BaseWidget):
         compute_resources = ConfigService.Instance().getFacility().computeResources()
         self._content.resource_combo.clear()
         for res in compute_resources:
-            self._content.resource_combo.addItem(QtGui.QApplication.translate("Dialog", res, None, QtGui.QApplication.UnicodeUTF8))
+            self._content.resource_combo.addItem(QtWidgets.QApplication.translate("Dialog", res, None, QtWidgets.QApplication.UnicodeUTF8))
 
         self._clear_table()
 
     def tableWidgetContext(self, point):
         '''Create a menu for the tableWidget and associated actions'''
-        tw_menu = QtGui.QMenu("Menu", self)
+        tw_menu = QtWidgets.QMenu("Menu", self)
         tw_menu.addAction(self.copyAction)
         tw_menu.exec_(self.mapToGlobal(point))
 
@@ -93,7 +93,7 @@ class RemoteJobsWidget(BaseWidget):
                     selected_text += '\t'
             selected_text += '\n'
 
-        QtGui.QApplication.clipboard().setText(selected_text)
+        QtWidgets.QApplication.clipboard().setText(selected_text)
 
     def paintEvent(self, event):
         """
@@ -195,18 +195,18 @@ class RemoteJobsWidget(BaseWidget):
             self._content.job_table.setRowHidden(i, False)
 
             # Job ID
-            item = QtGui.QTableWidgetItem(str(job_list[i][0]))
+            item = QtWidgets.QTableWidgetItem(str(job_list[i][0]))
             item.setFlags(QtCore.Qt.ItemIsSelectable |QtCore.Qt.ItemIsEnabled )
             self._content.job_table.setItem(i, 0, item)
             job_id = str(job_list[i][0])
 
             # Title
-            item = QtGui.QTableWidgetItem(str(job_list[i][2]))
+            item = QtWidgets.QTableWidgetItem(str(job_list[i][2]))
             item.setFlags(QtCore.Qt.ItemIsSelectable |QtCore.Qt.ItemIsEnabled )
             self._content.job_table.setItem(i, 1, item)
 
             # Status
-            item = QtGui.QTableWidgetItem(str(job_list[i][1]))
+            item = QtWidgets.QTableWidgetItem(str(job_list[i][1]))
             item.setFlags(QtCore.Qt.ItemIsSelectable |QtCore.Qt.ItemIsEnabled )
             self._content.job_table.setItem(i, 2, item)
             is_running = str(job_list[i][1]).lower()=='running'
@@ -215,7 +215,7 @@ class RemoteJobsWidget(BaseWidget):
             time_displayed = str(job_list[i][3]).replace('T', ' ')
             if DateAndTime(job_list[i][3]) == unavailable:
                 time_displayed = ''
-            item = QtGui.QTableWidgetItem(time_displayed)
+            item = QtWidgets.QTableWidgetItem(time_displayed)
             item.setFlags(QtCore.Qt.ItemIsSelectable |QtCore.Qt.ItemIsEnabled )
             self._content.job_table.setItem(i, 3, item)
 
@@ -223,12 +223,12 @@ class RemoteJobsWidget(BaseWidget):
             time_displayed = end_time.replace('T', ' ')
             if job_end == unavailable:
                 time_displayed = ''
-            item = QtGui.QTableWidgetItem(time_displayed)
+            item = QtWidgets.QTableWidgetItem(time_displayed)
             item.setFlags(QtCore.Qt.ItemIsSelectable |QtCore.Qt.ItemIsEnabled )
             self._content.job_table.setItem(i, 4, item)
 
             # create an cell widget
-            btn = QtGui.QPushButton(self._content.job_table)
+            btn = QtWidgets.QPushButton(self._content.job_table)
             if is_running:
                 btn.setText('Abort')
                 btn.setToolTip('Cleanly abort this job')

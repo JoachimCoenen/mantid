@@ -1,13 +1,13 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from Muon.GUI.dummy.dummy_widget import DummyWidget
 from Muon.GUI.dummy_label.dummy_label_widget import DummyLabelWidget
 from Muon.GUI.dock.dock_view import DockView
 
 
-class DockWidget(QtGui.QWidget):
+class DockWidget(QtWidgets.QWidget):
 
     """
     This is a special case of the widget class structure.
@@ -20,7 +20,7 @@ class DockWidget(QtGui.QWidget):
 
     def __init__(self, parent=None):
         super(DockWidget, self).__init__(parent)
-        self.dockWidget = QtGui.QWidget()
+        self.dockWidget = QtWidgets.QWidget()
 
         self.dock_view = DockView(self)
 
@@ -38,7 +38,7 @@ class DockWidget(QtGui.QWidget):
         self.dock_view.makeTabs()
         self.dock_view.keepDocksOpen()
 
-        QHbox = QtGui.QHBoxLayout()
+        QHbox = QtWidgets.QHBoxLayout()
         QHbox.addWidget(self.dock_view)
 
         self.dockWidget.setLayout(QHbox)

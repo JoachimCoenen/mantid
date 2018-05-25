@@ -3,7 +3,7 @@
 #so this file provides any extra GUI tweaks not easily doable in the designer
 #for the time being this also includes non-GUI behaviour
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from ui.reflectometer.ui_refl_columns import Ui_chooseColumnsDialog
 
 try:
@@ -13,7 +13,7 @@ except AttributeError:
         return s
 
 
-class ReflChoose(QtGui.QDialog, Ui_chooseColumnsDialog):
+class ReflChoose(QtWidgets.QDialog, Ui_chooseColumnsDialog):
 
     visiblestates = {}
 
@@ -21,14 +21,14 @@ class ReflChoose(QtGui.QDialog, Ui_chooseColumnsDialog):
         """
         Initialise the interface
         """
-        super(QtGui.QDialog, self).__init__()
+        super(QtWidgets.QDialog, self).__init__()
         self.setupUi(self)
         self.visiblestates.clear()
         self.listColumns.itemChanged.connect(self.on_listColumns_itemChanged)
         self.buttonsColumns.clicked.connect(self.on_buttonsColumns_Clicked)
         for key, value in col_headers.iteritems():
             header = table.horizontalHeaderItem(key).text()
-            item = QtGui.QListWidgetItem(header)
+            item = QtWidgets.QListWidgetItem(header)
             if value:
                 item.setCheckState(2)
             else:
@@ -40,6 +40,6 @@ class ReflChoose(QtGui.QDialog, Ui_chooseColumnsDialog):
         self.visiblestates[colno] = (item.checkState() > 0)
 
     def on_buttonsColumns_Clicked(self, button):
-        if self.buttonsColumns.button(QtGui.QDialogButtonBox.RestoreDefaults) == button:
+        if self.buttonsColumns.button(QtWidgets.QDialogButtonBox.RestoreDefaults) == button:
             for i in range(self.listColumns.count()):
                 self.listColumns.item(i).setCheckState(2)

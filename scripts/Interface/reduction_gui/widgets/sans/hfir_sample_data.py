@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 import six
 import os
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 from reduction_gui.reduction.sans.hfir_sample_script import SampleData
 from reduction_gui.widgets.base_widget import BaseWidget
@@ -22,9 +22,9 @@ class DirectBeam(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None, data_proxy=None):
         super(DirectBeam, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class DirectBeamFrame(QtGui.QGroupBox, ui.sans.ui_trans_direct_beam.Ui_GroupBox):
+        class DirectBeamFrame(QtWidgets.QGroupBox, ui.sans.ui_trans_direct_beam.Ui_GroupBox):
             def __init__(self, parent=None):
-                QtGui.QGroupBox.__init__(self, parent)
+                QtWidgets.QGroupBox.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DirectBeamFrame(self)
@@ -101,9 +101,9 @@ class BeamSpreader(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None, data_proxy=None):
         super(BeamSpreader, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class SpreaderFrame(QtGui.QGroupBox, ui.sans.ui_trans_spreader.Ui_GroupBox):
+        class SpreaderFrame(QtWidgets.QGroupBox, ui.sans.ui_trans_spreader.Ui_GroupBox):
             def __init__(self, parent=None):
-                QtGui.QGroupBox.__init__(self, parent)
+                QtWidgets.QGroupBox.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = SpreaderFrame(self)
@@ -214,9 +214,9 @@ class SampleDataWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None, data_proxy=None):
         super(SampleDataWidget, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class DataFrame(QtGui.QFrame, ui.sans.ui_hfir_sample_data.Ui_Frame):
+        class DataFrame(QtWidgets.QFrame, ui.sans.ui_hfir_sample_data.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataFrame(self)
@@ -428,7 +428,7 @@ class SampleDataWidget(BaseWidget):
         if len(str(fname).strip())>0:
             dataproxy = self._data_proxy(fname)
             if len(dataproxy.errors)>0:
-                #QtGui.QMessageBox.warning(self, "Error", dataproxy.errors[0])
+                #QtWidgets.QMessageBox.warning(self, "Error", dataproxy.errors[0])
                 return
 
             self._settings.last_data_ws = dataproxy.data_ws

@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from reduction_gui.settings.application_settings import GeneralSettings
 from reduction_gui.widgets.base_widget import BaseWidget
 import ui.ui_data_catalog
@@ -26,9 +26,9 @@ class SANSCatalogWidget(BaseWidget):
 
         self._catalog_cls = catalog_cls
 
-        class DataFrame(QtGui.QFrame, ui.ui_data_catalog.Ui_Frame):
+        class DataFrame(QtWidgets.QFrame, ui.ui_data_catalog.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataFrame(self)
@@ -44,7 +44,7 @@ class SANSCatalogWidget(BaseWidget):
         self._settings.data_updated.connect(self._data_updated)
 
     def initialize_content(self):
-        self.copyAction = QtGui.QAction("Copy",  self)
+        self.copyAction = QtWidgets.QAction("Copy",  self)
         self.copyAction.setShortcut("Ctrl+C")
         self.addAction(self.copyAction)
 
@@ -61,7 +61,7 @@ class SANSCatalogWidget(BaseWidget):
 
     def tableWidgetContext(self, point):
         '''Create a menu for the tableWidget and associated actions'''
-        tw_menu = QtGui.QMenu("Menu", self)
+        tw_menu = QtWidgets.QMenu("Menu", self)
         tw_menu.addAction(self.copyAction)
         tw_menu.exec_(self.mapToGlobal(point))
 
@@ -113,7 +113,7 @@ class SANSCatalogWidget(BaseWidget):
                     selected_text += '\t'
             selected_text += '\n'
 
-        QtGui.QApplication.clipboard().setText(selected_text)
+        QtWidgets.QApplication.clipboard().setText(selected_text)
 
     def _update_content(self, process_files=True):
         self._settings.catalog_data_path = str(self._content.directory_edit.text())
@@ -136,7 +136,7 @@ class SANSCatalogWidget(BaseWidget):
                 self._content.data_set_table.insertRow(row)
                 for i in range(len(data)):
                     if data[i] is not None:
-                        item = QtGui.QTableWidgetItem(str(data[i]))
+                        item = QtWidgets.QTableWidgetItem(str(data[i]))
                         item.setFlags( QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled )
                         self._content.data_set_table.setItem(row, i, item)
 
@@ -161,7 +161,7 @@ class SANSCatalogWidget(BaseWidget):
         for row, data in enumerate(rows):
             for i in range(len(data)):
                 if data[i] is not None:
-                    item = QtGui.QTableWidgetItem(str(data[i]))
+                    item = QtWidgets.QTableWidgetItem(str(data[i]))
                     item.setFlags( QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled )
                     self._content.data_set_table.setItem(row, i, item)
 
@@ -169,7 +169,7 @@ class SANSCatalogWidget(BaseWidget):
         self._content.data_set_table.resizeColumnsToContents()
 
     def _browse_directory(self):
-        dir = QtGui.QFileDialog.getExistingDirectory(self, "Open Directory",
+        dir = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Directory",
                                                      self._settings.data_path)
         if dir:
                 # Store the location of the loaded file

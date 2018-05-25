@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from functools import partial
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_sample_data_setup_script import SampleSetupScript
@@ -27,9 +27,9 @@ class SampleSetupWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None):
         super(SampleSetupWidget, self).__init__(parent, state, settings, data_type=data_type)
 
-        class SamSetFrame(QtGui.QFrame, ui.inelastic.ui_dgs_sample_setup.Ui_Frame):
+        class SamSetFrame(QtWidgets.QFrame, ui.inelastic.ui_dgs_sample_setup.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = SamSetFrame(self)
@@ -150,10 +150,10 @@ class SampleSetupWidget(BaseWidget):
             self._content.grouping_edit.setText(fname)
 
     def _savedir_browse(self):
-        save_dir = QtGui.QFileDialog.getExistingDirectory(self, "Output Directory - Choose a directory",
+        save_dir = QtWidgets.QFileDialog.getExistingDirectory(self, "Output Directory - Choose a directory",
                                                           os.path.expanduser('~'),
-                                                          QtGui.QFileDialog.ShowDirsOnly
-                                                          | QtGui.QFileDialog.DontResolveSymlinks)
+                                                          QtWidgets.QFileDialog.ShowDirsOnly
+                                                          | QtWidgets.QFileDialog.DontResolveSymlinks)
         if save_dir:
             self._content.savedir_edit.setText(save_dir)
 

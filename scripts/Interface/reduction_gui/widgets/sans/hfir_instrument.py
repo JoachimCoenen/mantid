@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name,protected-access
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 import os
 from reduction_gui.reduction.sans.hfir_options_script import ReductionOptions
@@ -47,9 +47,9 @@ class SANSInstrumentWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, name="BIOSANS", data_proxy=None):
         super(SANSInstrumentWidget, self).__init__(parent, state, settings, data_proxy=data_proxy)
 
-        class SummaryFrame(QtGui.QFrame, ui.sans.ui_hfir_instrument.Ui_Frame):
+        class SummaryFrame(QtWidgets.QFrame, ui.sans.ui_hfir_instrument.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._summary = SummaryFrame(self)

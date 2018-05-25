@@ -13,14 +13,14 @@ import sys
 import re
 import numpy as np
 from .PyChop2 import PyChop2
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.widgets import Slider
 
 
-class PyChopGui(QtGui.QMainWindow):
+class PyChopGui(QtWidgets.QMainWindow):
     """
     GUI Class using PyQT for PyChop to help users plan inelastic neutron experiments
     at spallation sources by calculating the resolution and flux at a given neutron energies.
@@ -153,9 +153,9 @@ class PyChopGui(QtGui.QMainWindow):
             if self.instSciAct.isChecked():
                 self.update_script()
         except ValueError as err:
-            msg = QtGui.QMessageBox()
+            msg = QtWidgets.QMessageBox()
             msg.setText(str(err))
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msg.exec_()
 
     def calculate(self):
@@ -299,9 +299,9 @@ class PyChopGui(QtGui.QMainWindow):
         if val is None:
             val = float(self.flxedt.text()) / self.maxE[self.engine.instname] * 100
             if val < self.minE[self.engine.instname]:
-                msg = QtGui.QMessageBox()
+                msg = QtWidgets.QMessageBox()
                 msg.setText("Max Ei must be greater than %2.1f" % (self.minE[self.engine.instname]))
-                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
                 msg.exec_()
                 val = (self.minE[self.engine.instname]+0.1) / self.maxE[self.engine.instname] * 100
             self.flxslder.set_val(val)
@@ -398,9 +398,9 @@ class PyChopGui(QtGui.QMainWindow):
             flux = self.engine.getFlux()
             res = self.engine.getResolution(en)
         except ValueError as err:
-            msg = QtGui.QMessageBox()
+            msg = QtWidgets.QMessageBox()
             msg.setText(str(err))
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msg.exec_()
             raise ValueError(err)
         obj = self.engine.getObject()
@@ -474,10 +474,10 @@ class PyChopGui(QtGui.QMainWindow):
             generatedText = self.genText()
         except ValueError:
             return
-        self.txtwin = QtGui.QDialog()
-        self.txtedt = QtGui.QTextEdit()
-        self.txtbtn = QtGui.QPushButton('OK')
-        self.txtwin.layout = QtGui.QVBoxLayout(self.txtwin)
+        self.txtwin = QtWidgets.QDialog()
+        self.txtedt = QtWidgets.QTextEdit()
+        self.txtbtn = QtWidgets.QPushButton('OK')
+        self.txtwin.layout = QtWidgets.QVBoxLayout(self.txtwin)
         self.txtwin.layout.addWidget(self.txtedt)
         self.txtwin.layout.addWidget(self.txtbtn)
         self.txtbtn.clicked.connect(self.txtwin.deleteLater)
@@ -496,7 +496,7 @@ class PyChopGui(QtGui.QMainWindow):
         """
         Saves the generated text to a file (opens file dialog).
         """
-        fname = QtGui.QFileDialog.getSaveFileName(self, 'Open file', '')
+        fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Open file', '')
         fid = open(fname, 'w')
         fid.write(self.genText())
         fid.close()
@@ -540,10 +540,10 @@ class PyChopGui(QtGui.QMainWindow):
             helpTxt += "all graphs will be updated. If the 'Hold current plot'\ncheck box is ticked, additional settings will be\n"
             helpTxt += "overplotted on the existing graphs if they are\ndifferent from previous settings.\n\nMore in-depth help "
             helpTxt += "can be obtained from the\nMantid help pages."
-            self.hlpwin = QtGui.QDialog()
-            self.hlpedt = QtGui.QLabel(helpTxt)
-            self.hlpbtn = QtGui.QPushButton('OK')
-            self.hlpwin.layout = QtGui.QVBoxLayout(self.hlpwin)
+            self.hlpwin = QtWidgets.QDialog()
+            self.hlpedt = QtWidgets.QLabel(helpTxt)
+            self.hlpbtn = QtWidgets.QPushButton('OK')
+            self.hlpwin.layout = QtWidgets.QVBoxLayout(self.hlpwin)
             self.hlpwin.layout.addWidget(self.hlpedt)
             self.hlpwin.layout.addWidget(self.hlpbtn)
             self.hlpbtn.clicked.connect(self.hlpwin.deleteLater)
@@ -586,21 +586,21 @@ class PyChopGui(QtGui.QMainWindow):
         self.singles = []
         self.widgets = {}
 
-        self.leftPanel = QtGui.QVBoxLayout()
-        self.rightPanel = QtGui.QVBoxLayout()
-        self.tabs = QtGui.QTabWidget(self)
-        self.fullWindow = QtGui.QGridLayout()
+        self.leftPanel = QtWidgets.QVBoxLayout()
+        self.rightPanel = QtWidgets.QVBoxLayout()
+        self.tabs = QtWidgets.QTabWidget(self)
+        self.fullWindow = QtWidgets.QGridLayout()
         for widget in self.widgetslist:
             if 'pair' in widget[0]:
-                self.droplabels.append(QtGui.QLabel(widget[2]))
+                self.droplabels.append(QtWidgets.QLabel(widget[2]))
                 if 'combo' in widget[3]:
-                    self.dropboxes.append(QtGui.QComboBox(self))
+                    self.dropboxes.append(QtWidgets.QComboBox(self))
                     self.dropboxes[-1].activated['QString'].connect(widget[5])
                     for item in widget[4]:
                         self.dropboxes[-1].addItem(item)
                     self.widgets[widget[-1]] = {'Combo':self.dropboxes[-1], 'Label':self.droplabels[-1]}
                 elif 'edit' in widget[3]:
-                    self.dropboxes.append(QtGui.QLineEdit(self))
+                    self.dropboxes.append(QtWidgets.QLineEdit(self))
                     self.dropboxes[-1].returnPressed.connect(widget[5])
                     self.widgets[widget[-1]] = {'Edit':self.dropboxes[-1], 'Label':self.droplabels[-1]}
                 else:
@@ -612,10 +612,10 @@ class PyChopGui(QtGui.QMainWindow):
                     self.dropboxes[-1].hide()
             elif 'single' in widget[0]:
                 if 'check' in widget[3]:
-                    self.singles.append(QtGui.QCheckBox(widget[2], self))
+                    self.singles.append(QtWidgets.QCheckBox(widget[2], self))
                     self.singles[-1].stateChanged.connect(widget[4])
                 elif 'button' in widget[3]:
-                    self.singles.append(QtGui.QPushButton(widget[2]))
+                    self.singles.append(QtWidgets.QPushButton(widget[2]))
                     self.singles[-1].clicked.connect(widget[4])
                 else:
                     raise RuntimeError('Bug in code - widget %s is not recognised.' % (widget[3]))
@@ -624,7 +624,7 @@ class PyChopGui(QtGui.QMainWindow):
                     self.singles[-1].hide()
                 self.widgets[widget[-1]] = self.singles[-1]
             elif 'spacer' in widget[0]:
-                self.leftPanel.addItem(QtGui.QSpacerItem(0, 35))
+                self.leftPanel.addItem(QtWidgets.QSpacerItem(0, 35))
             else:
                 raise RuntimeError('Bug in code - widget class %s is not recognised.' % (widget[0]))
 
@@ -637,8 +637,8 @@ class PyChopGui(QtGui.QMainWindow):
         self.resaxes.set_xlabel('Energy Transfer (meV)')
         self.resaxes.set_ylabel(r'$\Delta$E (meV FWHM)')
         self.resfig_controls = NavigationToolbar(self.rescanvas, self)
-        self.restab = QtGui.QWidget(self.tabs)
-        self.restabbox = QtGui.QVBoxLayout()
+        self.restab = QtWidgets.QWidget(self.tabs)
+        self.restabbox = QtWidgets.QVBoxLayout()
         self.restabbox.addWidget(self.rescanvas)
         self.restabbox.addWidget(self.resfig_controls)
         self.restab.setLayout(self.restabbox)
@@ -660,19 +660,19 @@ class PyChopGui(QtGui.QMainWindow):
         self.flxslder = Slider(self.flxsldax, 'Ei (meV)', 0, 100, valinit=100)
         self.flxslder.valtext.set_visible(False)
         self.flxslder.on_changed(self.update_slider)
-        self.flxedt = QtGui.QLineEdit()
+        self.flxedt = QtWidgets.QLineEdit()
         self.flxedt.setText('1000')
         self.flxedt.returnPressed.connect(self.update_slider)
-        self.flxtab = QtGui.QWidget(self.tabs)
-        self.flxsldbox = QtGui.QHBoxLayout()
+        self.flxtab = QtWidgets.QWidget(self.tabs)
+        self.flxsldbox = QtWidgets.QHBoxLayout()
         self.flxsldbox.addWidget(self.flxsldcv)
         self.flxsldbox.addWidget(self.flxedt)
-        self.flxsldwdg = QtGui.QWidget()
+        self.flxsldwdg = QtWidgets.QWidget()
         self.flxsldwdg.setLayout(self.flxsldbox)
         sz = self.flxsldwdg.maximumSize()
         sz.setHeight(50)
         self.flxsldwdg.setMaximumSize(sz)
-        self.flxtabbox = QtGui.QVBoxLayout()
+        self.flxtabbox = QtWidgets.QVBoxLayout()
         self.flxtabbox.addWidget(self.flxcanvas)
         self.flxtabbox.addWidget(self.flxsldwdg)
         self.flxtabbox.addWidget(self.flxfig_controls)
@@ -688,8 +688,8 @@ class PyChopGui(QtGui.QMainWindow):
         self.frqaxes1.set_xlabel('Chopper Frequency (Hz)')
         self.frqaxes2.set_ylabel('Elastic Resolution FWHM (meV)')
         self.frqfig_controls = NavigationToolbar(self.frqcanvas, self)
-        self.frqtab = QtGui.QWidget(self.tabs)
-        self.frqtabbox = QtGui.QVBoxLayout()
+        self.frqtab = QtWidgets.QWidget(self.tabs)
+        self.frqtabbox = QtWidgets.QVBoxLayout()
         self.frqtabbox.addWidget(self.frqcanvas)
         self.frqtabbox.addWidget(self.frqfig_controls)
         self.frqtab.setLayout(self.frqtabbox)
@@ -702,17 +702,17 @@ class PyChopGui(QtGui.QMainWindow):
         self.repaxes.set_xlabel(r'TOF ($\mu$sec)')
         self.repaxes.set_ylabel('Distance (m)')
         self.repfig_controls = NavigationToolbar(self.repcanvas, self)
-        self.reptab = QtGui.QWidget(self.tabs)
-        self.reptabbox = QtGui.QVBoxLayout()
+        self.reptab = QtWidgets.QWidget(self.tabs)
+        self.reptabbox = QtWidgets.QVBoxLayout()
         self.reptabbox.addWidget(self.repcanvas)
         self.reptabbox.addWidget(self.repfig_controls)
         self.reptab.setLayout(self.reptabbox)
 
-        self.scrtab = QtGui.QWidget(self.tabs)
-        self.scredt = QtGui.QTextEdit()
-        self.scrcls = QtGui.QPushButton("Clear")
+        self.scrtab = QtWidgets.QWidget(self.tabs)
+        self.scredt = QtWidgets.QTextEdit()
+        self.scrcls = QtWidgets.QPushButton("Clear")
         self.scrcls.clicked.connect(lambda: self.scredt.clear())
-        self.scrbox = QtGui.QVBoxLayout()
+        self.scrbox = QtWidgets.QVBoxLayout()
         self.scrbox.addWidget(self.scredt)
         self.scrbox.addWidget(self.scrcls)
         self.scrtab.setLayout(self.scrbox)
@@ -727,22 +727,22 @@ class PyChopGui(QtGui.QMainWindow):
         self.scrtabID = 4
         self.rightPanel.addWidget(self.tabs)
 
-        self.menuOptions = QtGui.QMenu('Options')
-        self.instSciAct = QtGui.QAction('Instrument Scientist Mode', self.menuOptions, checkable=True)
+        self.menuOptions = QtWidgets.QMenu('Options')
+        self.instSciAct = QtWidgets.QAction('Instrument Scientist Mode', self.menuOptions, checkable=True)
         self.instSciAct.triggered.connect(self.instSciCB)
         self.menuOptions.addAction(self.instSciAct)
-        self.eiPlots = QtGui.QAction('Press Enter in Ei box updates plots', self.menuOptions, checkable=True)
+        self.eiPlots = QtWidgets.QAction('Press Enter in Ei box updates plots', self.menuOptions, checkable=True)
         self.menuOptions.addAction(self.eiPlots)
         self.menuBar().addMenu(self.menuOptions)
 
         self.fullWindow.addLayout(self.leftPanel, 0, 0)
         self.fullWindow.addLayout(self.rightPanel, 0, 1)
-        self.helpbtn = QtGui.QPushButton("?", self)
+        self.helpbtn = QtWidgets.QPushButton("?", self)
         self.helpbtn.setMaximumWidth(30)
         self.helpbtn.clicked.connect(self.onHelp)
         self.fullWindow.addWidget(self.helpbtn, 1, 0, 1, -1)
 
-        self.mainWidget = QtGui.QWidget()
+        self.mainWidget = QtWidgets.QWidget()
         self.mainWidget.setLayout(self.fullWindow)
         self.setCentralWidget(self.mainWidget)
         self.setWindowTitle('PyChopGUI')
@@ -765,7 +765,7 @@ def show():
     app_created = False
     app = QtCore.QCoreApplication.instance()
     if app is None:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         app_created = True
     app.references = set()
     window = PyChopGui()
@@ -777,10 +777,10 @@ def show():
 
 
 if __name__ == '__main__':
-    if QtGui.QApplication.instance():
-        app = QtGui.QApplication.instance()
+    if QtWidgets.QApplication.instance():
+        app = QtWidgets.QApplication.instance()
     else:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
     window = PyChopGui()
     window.show()
     try: # check if started from within mantidplot

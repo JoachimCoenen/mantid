@@ -34,7 +34,7 @@ import HFIR_4Circle_Reduction.PeaksIntegrationReport as PeaksIntegrationReport
 # import line for the UI python class
 from HFIR_4Circle_Reduction.ui_MainWindow import Ui_MainWindow
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 if six.PY3:
     unicode = str
@@ -58,7 +58,7 @@ IndexFromUB = 'From Calculation By UB'
 MAGNETIC_TOL = 0.2
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     """ Class of Main Window (top)
     """
     TabPage = {'View Raw Data': 2,
@@ -71,7 +71,7 @@ class MainWindow(QtGui.QMainWindow):
         """ Initialization and set up
         """
         # Base class
-        QtGui.QMainWindow.__init__(self,parent)
+        QtWidgets.QMainWindow.__init__(self,parent)
 
         # UI Window (from Qt Designer)
         self.ui = Ui_MainWindow()
@@ -394,11 +394,11 @@ class MainWindow(QtGui.QMainWindow):
         # Radio buttons
         self.ui.radioButton_ubFromTab1.setChecked(True)
         # group for the source of UB matrix to import
-        ub_source_group = QtGui.QButtonGroup(self)
+        ub_source_group = QtWidgets.QButtonGroup(self)
         ub_source_group.addButton(self.ui.radioButton_ubFromList)
         ub_source_group.addButton(self.ui.radioButton_ubFromTab1)
         # group for the UB matrix's style
-        ub_style_group = QtGui.QButtonGroup(self)
+        ub_style_group = QtWidgets.QButtonGroup(self)
         ub_style_group.addButton(self.ui.radioButton_ubMantidStyle)
         ub_style_group.addButton(self.ui.radioButton_ubSpiceStyle)
 
@@ -554,7 +554,7 @@ class MainWindow(QtGui.QMainWindow):
         :return:
         """
         # read project file name
-        project_file_name = str(QtGui.QFileDialog.getSaveFileName(self, 'Specify Project File', os.getcwd()))
+        project_file_name = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Specify Project File', os.getcwd()))
         # NEXT ISSUE - consider to allow incremental project saving technique
         if os.path.exists(project_file_name):
             yes = gutil.show_message(self, 'Project file %s does exist. This is supposed to be '
@@ -614,7 +614,7 @@ class MainWindow(QtGui.QMainWindow):
         Load project
         :return:
         """
-        project_file_name = str(QtGui.QFileDialog.getOpenFileName(self, 'Choose Project File', os.getcwd()))
+        project_file_name = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Project File', os.getcwd()))
         if len(project_file_name) == 0:
             # return if cancelled
             return
@@ -960,7 +960,7 @@ class MainWindow(QtGui.QMainWindow):
             default_pp_dir = os.path.expanduser('~')
 
         # use FileDialog to get the directory and set to preprocessedDir
-        pp_dir = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Directory', default_pp_dir))
+        pp_dir = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Get Directory', default_pp_dir))
         self.ui.lineEdit_preprocessedDir.setText(pp_dir)
 
         return
@@ -968,7 +968,7 @@ class MainWindow(QtGui.QMainWindow):
     def do_browse_local_spice_data(self):
         """ Browse local source SPICE data directory
         """
-        src_spice_dir = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Directory',
+        src_spice_dir = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Get Directory',
                                                                    self._homeSrcDir))
         # Set local data directory to controller
         status, error_message = self._myControl.set_local_data_dir(src_spice_dir)
@@ -986,7 +986,7 @@ class MainWindow(QtGui.QMainWindow):
         Browse and set up working directory
         :return:
         """
-        work_dir = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Working Directory', self._homeDir))
+        work_dir = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Get Working Directory', self._homeDir))
         status, error_message = self._myControl.set_working_directory(work_dir)
         if status is False:
             self.pop_one_button_dialog(error_message)
@@ -1225,7 +1225,7 @@ class MainWindow(QtGui.QMainWindow):
             return
 
         # get the output file name
-        roi_file_name = str(QtGui.QFileDialog.getSaveFileName(self, 'Output mask/ROI file name',
+        roi_file_name = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Output mask/ROI file name',
                                                               self._myControl._workDir,
                                                               'XML Files (*.xml);;All Files (*.*)'))
         if len(roi_file_name) == 0:
@@ -1265,7 +1265,7 @@ class MainWindow(QtGui.QMainWindow):
             return
 
         # get the file name
-        fp_name = str(QtGui.QFileDialog.getSaveFileName(self, 'Save to Fullprof File'))
+        fp_name = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save to Fullprof File'))
 
         # return due to cancel
         if len(fp_name) == 0:
@@ -1689,7 +1689,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # get the csv file
         file_filter = 'CSV Files (*.csv);;All Files (*)'
-        csv_file_name = str(QtGui.QFileDialog.getOpenFileName(self, 'Open Exp-Scan Survey File', self._homeDir,
+        csv_file_name = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open Exp-Scan Survey File', self._homeDir,
                                                               file_filter))
         if csv_file_name is None or len(csv_file_name) == 0:
             # return if file selection is cancelled
@@ -1888,7 +1888,7 @@ class MainWindow(QtGui.QMainWindow):
         # scan_number = par_val_list[1]
 
         # get the user specified name from ...
-        roi_name, ok = QtGui.QInputDialog.getText(self, 'Input Mask Name', 'Enter mask name:')
+        roi_name, ok = QtWidgets.QInputDialog.getText(self, 'Input Mask Name', 'Enter mask name:')
 
         # return if cancelled
         if not ok:
@@ -2342,7 +2342,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         # Get file name
         file_filter = 'CSV Files (*.csv);;All Files (*)'
-        out_file_name = str(QtGui.QFileDialog.getSaveFileName(self, 'Save scan survey result',
+        out_file_name = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save scan survey result',
                                                               self._homeDir, file_filter))
 
         # Save file
@@ -2356,7 +2356,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         # get file name
         file_filter = 'Data Files (*.dat);;All Files (*)'
-        ub_file_name = str(QtGui.QFileDialog.getSaveFileName(self, 'ASCII File To Save UB Matrix', self._homeDir,
+        ub_file_name = str(QtWidgets.QFileDialog.getSaveFileName(self, 'ASCII File To Save UB Matrix', self._homeDir,
                                                              file_filter))
 
         # early return if user cancels selecting a file name to save
@@ -2753,7 +2753,7 @@ class MainWindow(QtGui.QMainWindow):
         :return:
         """
         file_filter = 'Data Files (*.dat);;Text Files (*.txt);;All Files (*)'
-        file_name = QtGui.QFileDialog.getOpenFileName(self, 'Open UB ASCII File', self._homeDir,
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self, 'Open UB ASCII File', self._homeDir,
                                                       file_filter)
         # quit if cancelled
         if file_name is None:
@@ -3451,7 +3451,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         assert isinstance(message, str), 'Input message %s must a string but not %s.' \
                                          '' % (str(message), type(message))
-        QtGui.QMessageBox.information(self, '4-circle Data Reduction', message)
+        QtWidgets.QMessageBox.information(self, '4-circle Data Reduction', message)
 
         return
 
@@ -3532,7 +3532,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         # get the XML file to load
         file_filter = 'XML Files (*.xml);;All Files (*)'
-        mask_file_name = str(QtGui.QFileDialog.getOpenFileName(self, 'Open Masking File',
+        mask_file_name = str(QtWidgets.QFileDialog.getOpenFileName(self, 'Open Masking File',
                                                                self._myControl.get_working_directory(),
                                                                file_filter))
 

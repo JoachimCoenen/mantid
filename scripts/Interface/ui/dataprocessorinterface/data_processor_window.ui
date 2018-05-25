@@ -16,7 +16,7 @@
   <property name="windowTitle">
    <string>Data Processor Interface (Reflectometry)</string>
   </property>
-  <widget class="QWidget" name="widgetMainRow">
+  <widget class="QtWidget" name="widgetMainRow">
    <layout class="QVBoxLayout" name="layoutBase">
    </layout>
    <zorder>splitterList</zorder>

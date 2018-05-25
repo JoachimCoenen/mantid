@@ -1,11 +1,11 @@
 from __future__ import (absolute_import, division, print_function)
 import os
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from . import ui_PeakIntegrationSpreadSheet
 
 
-class PeaksIntegrationReportDialog(QtGui.QDialog):
+class PeaksIntegrationReportDialog(QtWidgets.QDialog):
     """
     Dialog to report the details of peaks integration
     """
@@ -38,7 +38,7 @@ class PeaksIntegrationReportDialog(QtGui.QDialog):
         :return:
         """
         default_dir = os.getcwd()
-        output_file = str(QtGui.QFileDialog.getSaveFileName(self, 'Export table to csv file', default_dir,
+        output_file = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Export table to csv file', default_dir,
                                                             'Data Files (*.dat);;All  Files (*.*)'))
 
         # return if cancelled

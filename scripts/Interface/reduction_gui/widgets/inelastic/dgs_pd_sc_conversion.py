@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from functools import partial
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_pd_sc_conversion_script import PdAndScConversionScript
@@ -20,9 +20,9 @@ class PdAndScConversionWidget(BaseWidget):
         super(PdAndScConversionWidget, self).__init__(parent, state, settings,
                                                       data_type=data_type)
 
-        class PdAndScConversionFrame(QtGui.QFrame, ui.inelastic.ui_dgs_pd_sc_conversion.Ui_PdScConversionFrame):
+        class PdAndScConversionFrame(QtWidgets.QFrame, ui.inelastic.ui_dgs_pd_sc_conversion.Ui_PdScConversionFrame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = PdAndScConversionFrame(self)

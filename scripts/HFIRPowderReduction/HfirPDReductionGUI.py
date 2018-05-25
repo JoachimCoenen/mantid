@@ -15,7 +15,7 @@ except ImportError:
     import urllib
 
 from .ui_MainWindow import Ui_MainWindow  # import line for the UI python class
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -131,7 +131,7 @@ class MultiScanTabState(object):
 
 
 # pylint: disable=too-many-public-methods,too-many-branches,too-many-locals,too-many-statements
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     """ Class of Main Window (top)
     """
 
@@ -147,7 +147,7 @@ class MainWindow(QtGui.QMainWindow):
         """ Initialization and set up
         """
         # Base class
-        QtGui.QMainWindow.__init__(self, parent)
+        QtWidgets.QMainWindow.__init__(self, parent)
 
         # UI Window (from Qt Designer)
         self.ui = Ui_MainWindow()
@@ -450,7 +450,7 @@ class MainWindow(QtGui.QMainWindow):
             home = os.getcwd()
 
         # pop out a dialog
-        dirs = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Directory', home))
+        dirs = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Get Directory', home))
 
         # set to line edit
         if dirs != home:
@@ -465,7 +465,7 @@ class MainWindow(QtGui.QMainWindow):
         # Get file name
         filefilter = "Text (*.txt);;Data (*.dat);;All files (*)"
         curDir = os.getcwd()
-        excldetfnames = QtGui.QFileDialog.getOpenFileNames(self, 'Open File(s)', curDir, filefilter)
+        excldetfnames = QtWidgets.QFileDialog.getOpenFileNames(self, 'Open File(s)', curDir, filefilter)
         try:
             excldetfname = excldetfnames[0]
             self.ui.lineEdit_excludedDetFileName.setText(excldetfname)
@@ -489,7 +489,7 @@ class MainWindow(QtGui.QMainWindow):
         """ Browse local data storage
         """
         msg = "Browse local data storage location. Implement ASAP"
-        QtGui.QMessageBox.information(self, "Click!", msg)
+        QtWidgets.QMessageBox.information(self, "Click!", msg)
 
     def doChangeSrcLocation(self):
         """ Source file location is changed
@@ -522,7 +522,7 @@ class MainWindow(QtGui.QMainWindow):
         """" Check source data server's availability
         """
         msg = "Check source data server! Implement ASAP"
-        QtGui.QMessageBox.information(self, "Click!", msg)
+        QtWidgets.QMessageBox.information(self, "Click!", msg)
 
     def doClearCanvas(self):
         """ Clear canvas
@@ -667,7 +667,7 @@ class MainWindow(QtGui.QMainWindow):
                 # browse vanadium correction file
                 file_filter = "Text (*.txt);;Data (*.dat);;All files (*)"
                 current_dir = os.getcwd()
-                van_corr_filenames = QtGui.QFileDialog.getOpenFileNames(self, 'Open File(s)', current_dir, file_filter)
+                van_corr_filenames = QtWidgets.QFileDialog.getOpenFileNames(self, 'Open File(s)', current_dir, file_filter)
                 if len(van_corr_filenames) > 0:
                     van_corr_filename = van_corr_filenames[0]
                     self.ui.lineEdit_vcorrFileName.setText(str(van_corr_filename))
@@ -724,7 +724,7 @@ class MainWindow(QtGui.QMainWindow):
         if i_tab == 5:
             # 'advanced'
             msg = "Tab {0} does not support 'Load Data'. Request is ambiguous.".format(tab_text)
-            QtGui.QMessageBox.information(self, "Click!", msg)
+            QtWidgets.QMessageBox.information(self, "Click!", msg)
             return
 
         # Get exp number and scan number
@@ -1361,7 +1361,7 @@ class MainWindow(QtGui.QMainWindow):
                 homedir = os.getcwd()
             # launch a dialog to get data
             filefilter = "All files (*);;Fullprof (*.dat);;GSAS (*.gsa)"
-            sfilename = str(QtGui.QFileDialog.getSaveFileName(self, 'Save File', homedir, filefilter))
+            sfilename = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', homedir, filefilter))
         except NotImplementedError as e:
             self._logError(str(e))
         else:
@@ -1372,7 +1372,7 @@ class MainWindow(QtGui.QMainWindow):
         """
         homedir = os.getcwd()
         filefilter = "Fullprof (*.dat)"
-        sfilename = str(QtGui.QFileDialog.getSaveFileName(self, 'Save File In Fullprof', homedir, filefilter))
+        sfilename = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save File In Fullprof', homedir, filefilter))
 
         self._myControl.saveMergedScan(sfilename, mergeindex=self._lastMergeIndex)
 
@@ -1386,7 +1386,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # Get base file name
         homedir = os.getcwd()
-        savedir = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Directory To Save Fullprof', homedir))
+        savedir = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Get Directory To Save Fullprof', homedir))
 
         for scanno in scanslist:
             sfilename = os.path.join(savedir, "HB2A_Exp%d_Scan%d_FP.dat" % (expno, scanno))
@@ -1405,7 +1405,7 @@ class MainWindow(QtGui.QMainWindow):
 
         homedir = os.getcwd()
         filefilter = "Fullprof (*.dat)"
-        sfilename = str(QtGui.QFileDialog.getSaveFileName(self, 'Save File In Fullprof', homedir, filefilter))
+        sfilename = str(QtWidgets.QFileDialog.getSaveFileName(self, 'Save File In Fullprof', homedir, filefilter))
 
         self._myControl.saveProcessedVanadium(expno, scanno, sfilename)
 
@@ -1527,18 +1527,18 @@ class MainWindow(QtGui.QMainWindow):
                 print(msg)
             elif button == 2:
                 msg = "Mouse 2: You've clicked on a bar with coords:\n %f, %f\n and button %d" % (x, y, button)
-                QtGui.QMessageBox.information(self, "Click!", msg)
+                QtWidgets.QMessageBox.information(self, "Click!", msg)
 
             elif button == 3:
                 # right click of mouse will pop up a context-menu
                 # menu should be self.ui.menu?
-                menu = QtGui.QMenu(self)
+                menu = QtWidgets.QMenu(self)
 
-                addAction = QtGui.QAction('Add', self)
+                addAction = QtWidgets.QAction('Add', self)
                 addAction.triggered.connect(self.addSomething)
                 menu.addAction(addAction)
 
-                rmAction = QtGui.QAction('Remove', self)
+                rmAction = QtWidgets.QAction('Remove', self)
                 rmAction.triggered.connect(self.rmSomething)
                 menu.addAction(rmAction)
 
@@ -1948,7 +1948,7 @@ class MainWindow(QtGui.QMainWindow):
         except NotImplementedError as e:
             errmsg = '[Error] Unable to retrieve processed vanadium spectrum for exp %d scan %d. ' \
                      'Reason: %s' % (exp, scan, str(e))
-            QtGui.QMessageBox.information(self, "Return!", errmsg)
+            QtWidgets.QMessageBox.information(self, "Return!", errmsg)
 
             return
 
@@ -2286,20 +2286,20 @@ class MainWindow(QtGui.QMainWindow):
     def _logError(self, errinfo):
         """ Log error information
         """
-        QtGui.QMessageBox.information(self, "Click!", errinfo)
+        QtWidgets.QMessageBox.information(self, "Click!", errinfo)
 
     def _logNotice(self, loginfo):
         """ Log error information
         """
         msg = '[Notice] %s' % loginfo
         print(msg)
-        # QtGui.QMessageBox.information(self, "Click!", msg)
+        # QtWidgets.QMessageBox.information(self, "Click!", msg)
 
     def _logWarning(self, warning_info):
         """ Log error information
         """
         msg = "[Warning]: %s" % (warning_info)
-        QtGui.QMessageBox.information(self, "OK!", msg)
+        QtWidgets.QMessageBox.information(self, "OK!", msg)
 
     def _getFloat(self, lineedit):
         """ Get integer from line edit

@@ -1,6 +1,6 @@
 # pylint: disable=invalid-name, protected-access, super-on-old-class
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import os
 from reduction_gui.settings.application_settings import GeneralSettings
 from reduction_gui.widgets.base_widget import BaseWidget
@@ -30,9 +30,9 @@ class StitcherWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None):
         super(StitcherWidget, self).__init__(parent, state, settings)
 
-        class DataFrame(QtGui.QFrame, ui.ui_stitcher.Ui_Frame):
+        class DataFrame(QtWidgets.QFrame, ui.ui_stitcher.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataFrame(self)
@@ -105,7 +105,7 @@ class StitcherWidget(BaseWidget):
         self.connect(self._content.save_result_button, QtCore.SIGNAL("clicked()"), self._save_result)
 
         # Create button group for data set selection
-        g = QtGui.QButtonGroup(self)
+        g = QtWidgets.QButtonGroup(self)
         g.addButton(self._content.low_radio)
         g.addButton(self._content.medium_radio)
         g.addButton(self._content.high_radio)
@@ -260,7 +260,7 @@ class StitcherWidget(BaseWidget):
             except (AttributeError, ImportError, NameError, TypeError, ValueError, Warning):
                 data_object = None
                 util.set_valid(dataset_control.lineEdit(), False)
-                QtGui.QMessageBox.warning(self, "Error loading file",
+                QtWidgets.QMessageBox.warning(self, "Error loading file",
                                           "Could not load %s.\nMake sure you pick the XML output from the reduction." % file_in)
                 return
             if min_control is not None and max_control is not None \
@@ -324,7 +324,7 @@ class StitcherWidget(BaseWidget):
             except (AttributeError, ImportError, NameError, TypeError, ValueError, Warning):
                 self._high_q_data = None
                 util.set_valid(self._content.high_q_combo.lineEdit(), False)
-                QtGui.QMessageBox.warning(self, "Error loading file",
+                QtWidgets.QMessageBox.warning(self, "Error loading file",
                                           "Could not load %s.\nMake sure you pick the XML output from the reduction." % file_in)
                 return
             self._content.high_scale_edit.setText("1.0")
@@ -340,7 +340,7 @@ class StitcherWidget(BaseWidget):
         title = "Data file - Choose a reduced I(Q) file"
         if not os.path.isdir(str(self._output_dir)):
             self._output_dir = os.path.expanduser("~")
-        fname = QtCore.QFileInfo(QtGui.QFileDialog.getOpenFileName(self, title,
+        fname = QtCore.QFileInfo(QtWidgets.QFileDialog.getOpenFileName(self, title,
                                                                    self._output_dir,
                                                                    "Reduced XML files (*.xml);; Reduced Nexus files"
                                                                    " (*.nxs);; All files (*)")).filePath()
@@ -493,7 +493,7 @@ class StitcherWidget(BaseWidget):
         if self._stitcher is not None:
             if not os.path.isdir(self._output_dir):
                 self._output_dir = os.path.expanduser("~")
-            fname_qstr = QtGui.QFileDialog.getSaveFileName(self, "Save combined I(Q)",
+            fname_qstr = QtWidgets.QFileDialog.getSaveFileName(self, "Save combined I(Q)",
                                                            self._output_dir,
                                                            "Data Files (*.xml)")
             fname = str(QtCore.QFileInfo(fname_qstr).filePath())

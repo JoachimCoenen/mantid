@@ -1,9 +1,9 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 
-class TransformView(QtGui.QWidget):
+class TransformView(QtWidgets.QWidget):
     """
     Creates the view for the transformation tab.
     At the top is the transform selection widget
@@ -13,7 +13,7 @@ class TransformView(QtGui.QWidget):
         super(TransformView,self).__init__(parent)
         # set selector
         self.selection = groupedViews.getTransformSelection()
-        self.Layout = QtGui.QGridLayout()
+        self.Layout = QtWidgets.QGridLayout()
         self.Layout.addWidget(self.selection,1,0)
         # add the transform widgets to the tab
         self.methods = groupedViews.getTransformMethods()

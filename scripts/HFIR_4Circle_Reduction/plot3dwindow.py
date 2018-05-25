@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 from six.moves import range
 import sys
 import numpy as np
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from . import ui_View3DWidget
 from HFIR_4Circle_Reduction import guiutility
@@ -11,7 +11,7 @@ from HFIR_4Circle_Reduction import guiutility
 __author__ = 'wzz'
 
 
-class Plot3DWindow(QtGui.QMainWindow):
+class Plot3DWindow(QtWidgets.QMainWindow):
     """
     Main window to view merged data in 3D
     """
@@ -23,7 +23,7 @@ class Plot3DWindow(QtGui.QMainWindow):
         :return:
         """
         # Init
-        QtGui.QMainWindow.__init__(self, parent)
+        QtWidgets.QMainWindow.__init__(self, parent)
 
         self.ui = ui_View3DWidget.Ui_MainWindow()
         self.ui.setupUi(self)

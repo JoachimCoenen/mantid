@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_data_corrections_script import DataCorrectionsScript
 import reduction_gui.widgets.util as util
@@ -21,9 +21,9 @@ class DataCorrectionsWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None):
         super(DataCorrectionsWidget, self).__init__(parent, state, settings, data_type=data_type)
 
-        class DataCorrsFrame(QtGui.QFrame, ui.inelastic.ui_dgs_data_corrections.Ui_DataCorrsFrame):
+        class DataCorrsFrame(QtWidgets.QFrame, ui.inelastic.ui_dgs_data_corrections.Ui_DataCorrsFrame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = DataCorrsFrame(self)
@@ -44,7 +44,7 @@ class DataCorrectionsWidget(BaseWidget):
         self._content.tof_end_edit.setValidator(QtGui.QIntValidator(self._content.tof_end_edit))
 
         # Make group for incident beam normalisation radio buttons
-        self.incident_beam_norm_grp = QtGui.QButtonGroup()
+        self.incident_beam_norm_grp = QtWidgets.QButtonGroup()
         self.incident_beam_norm_grp.addButton(self._content.none_rb, 0)
         self.incident_beam_norm_grp.addButton(self._content.current_rb, 1)
         self.incident_beam_norm_grp.addButton(self._content.monitor1_rb, 2)

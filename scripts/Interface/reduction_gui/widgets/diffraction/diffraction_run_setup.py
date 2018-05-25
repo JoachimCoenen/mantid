@@ -3,7 +3,7 @@
 # This is my first attempt to make a tab from quasi-scratch
 ################################################################################
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from reduction_gui.widgets.base_widget import BaseWidget
 from mantid.kernel import Logger
 
@@ -36,12 +36,12 @@ class RunSetupWidget(BaseWidget):
         """
         super(RunSetupWidget, self).__init__(parent, state, settings, data_type=data_type)
 
-        class RunSetFrame(QtGui.QFrame, ui.diffraction.ui_diffraction_run_setup.Ui_Frame):
+        class RunSetFrame(QtWidgets.QFrame, ui.diffraction.ui_diffraction_run_setup.Ui_Frame):
             """ Define class linked to UI Frame
             """
 
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
         # END-DEF RunSetFrame
 
@@ -534,9 +534,9 @@ class RunSetupWidget(BaseWidget):
         return
 
     def _show_help(self):
-        class HelpDialog(QtGui.QDialog, ui.diffraction.ui_diffraction_info.Ui_Dialog):
+        class HelpDialog(QtWidgets.QDialog, ui.diffraction.ui_diffraction_info.Ui_Dialog):
             def __init__(self, parent=None):
-                QtGui.QDialog.__init__(self, parent)
+                QtWidgets.QDialog.__init__(self, parent)
                 self.setupUi(self)
         dialog = HelpDialog(self)
         dialog.exec_()

@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import reduction_gui.widgets.util as util
 from reduction_gui.reduction.sans.hfir_background_script import Background
 from reduction_gui.widgets.base_widget import BaseWidget
@@ -54,9 +54,9 @@ class BackgroundWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, show_transmission=True, data_type=None, data_proxy=None):
         super(BackgroundWidget, self).__init__(parent, state, settings, data_type, data_proxy=data_proxy)
 
-        class BckFrame(QtGui.QFrame, ui.sans.ui_hfir_background.Ui_Frame):
+        class BckFrame(QtWidgets.QFrame, ui.sans.ui_hfir_background.Ui_Frame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = BckFrame(self)

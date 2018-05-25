@@ -1,13 +1,13 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import mantid.simpleapi as mantid
 
 from Muon import table_utils
 
 
-class FFTView(QtGui.QWidget):
+class FFTView(QtWidgets.QWidget):
     """
     creates the layout for the FFT GUI
     """
@@ -18,10 +18,10 @@ class FFTView(QtGui.QWidget):
 
     def __init__(self, parent = None):
         super(FFTView, self).__init__(parent)
-        self.grid = QtGui.QGridLayout(self)
+        self.grid = QtWidgets.QGridLayout(self)
 
         #make table
-        self.FFTTable = QtGui.QTableWidget(self)
+        self.FFTTable = QtWidgets.QTableWidget(self)
         self.FFTTable.resize(800, 800)
         self.FFTTable.setRowCount(9)
         self.FFTTable.setColumnCount(2)
@@ -67,8 +67,8 @@ class FFTView(QtGui.QWidget):
 
         self.FFTTable.resizeRowsToContents()
         #make advanced table options
-        self.advancedLabel = QtGui.QLabel("\n Advanced Options")
-        self.FFTTableA = QtGui.QTableWidget(self)
+        self.advancedLabel = QtWidgets.QLabel("\n Advanced Options")
+        self.FFTTableA = QtWidgets.QTableWidget(self)
         self.FFTTableA.resize(800, 800)
         self.FFTTableA.setRowCount(4)
         self.FFTTableA.setColumnCount(2)
@@ -93,7 +93,7 @@ class FFTView(QtGui.QWidget):
         self.FFTTableA.resizeRowsToContents()
 
         #make button
-        self.button = QtGui.QPushButton('Calculate FFT', self)
+        self.button = QtWidgets.QPushButton('Calculate FFT', self)
         self.button.setStyleSheet("background-color:lightgrey")
         #connects
         self.FFTTable.cellClicked.connect(self.tableClick)
@@ -105,8 +105,8 @@ class FFTView(QtGui.QWidget):
         table_utils.setTableHeaders(self.FFTTable)
         table_utils.setTableHeaders(self.FFTTableA)
 
-        self.horizontalSpacer1 = QtGui.QSpacerItem(20, 94, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.horizontalSpacer2 = QtGui.QSpacerItem(20, 280, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.horizontalSpacer1 = QtWidgets.QSpacerItem(20, 94, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.horizontalSpacer2 = QtWidgets.QSpacerItem(20, 280, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         # add to layout
         self.grid.addWidget(self.FFTTable)
         self.grid.addItem(self.horizontalSpacer1)

@@ -1,11 +1,11 @@
 import sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import ui_errorreport
-from PyQt4.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 from mantidqtpython import MantidQt
 
 
-class CrashReportPage(QtGui.QWidget, ui_errorreport.Ui_Errorreport):
+class CrashReportPage(QtWidgets.QWidget, ui_errorreport.Ui_Errorreport):
     action = pyqtSignal(bool, int, str, str)
 
     def __init__(self, parent=None):
@@ -13,7 +13,7 @@ class CrashReportPage(QtGui.QWidget, ui_errorreport.Ui_Errorreport):
         self.setupUi(self)
         self.setFixedSize(self.width(), self.height())
 
-        self.action.connect(QtGui.QApplication.instance().errorHandling)
+        self.action.connect(QtWidgets.QApplication.instance().errorHandling)
 
         self.icon.setPixmap(QtGui.QPixmap(":/crying_mantid.png"))
 
@@ -70,7 +70,7 @@ class CrashReportPage(QtGui.QWidget, ui_errorreport.Ui_Errorreport):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+    app = QtWidgets.QApplication(sys.argv)  # A new instance of QApplication
     form = CrashReportPage()            # We set the form to be our ExampleApp (design)
     form.show()                         # Show the form
     app.exec_()                         # and execute the app

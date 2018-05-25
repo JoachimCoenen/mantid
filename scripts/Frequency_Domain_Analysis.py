@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import sys
 
-import PyQt4.QtGui as QtGui
+import PyQt5.QtGui as QtGui
 
 from Muon import model_constructor
 from Muon import transform_presenter
@@ -11,7 +11,7 @@ from Muon import transform_view
 from Muon import view_constructor
 
 
-class FrequencyDomainAnalysisGui(QtGui.QMainWindow):
+class FrequencyDomainAnalysisGui(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(FrequencyDomainAnalysisGui,self).__init__(parent)
 
@@ -29,10 +29,10 @@ class FrequencyDomainAnalysisGui(QtGui.QMainWindow):
 
 
 def qapp():
-    if QtGui.QApplication.instance():
-        _app = QtGui.QApplication.instance()
+    if QtWidgets.QApplication.instance():
+        _app = QtWidgets.QApplication.instance()
     else:
-        _app = QtGui.QApplication(sys.argv)
+        _app = QtWidgets.QApplication(sys.argv)
     return _app
 
 
@@ -43,5 +43,5 @@ try:
     ex.show()
     app.exec_()
 except RuntimeError as error:
-    ex = QtGui.QWidget()
-    QtGui.QMessageBox.warning(ex,"Frequency Domain Analysis",str(error))
+    ex = QtWidgets.QWidget()
+    QtWidgets.QMessageBox.warning(ex,"Frequency Domain Analysis",str(error))

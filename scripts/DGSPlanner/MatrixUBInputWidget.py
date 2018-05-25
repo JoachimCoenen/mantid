@@ -1,11 +1,11 @@
 #pylint: disable=invalid-name,no-name-in-module,too-many-public-methods
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import mantid
 from DGSPlanner.ValidateOL import ValidateUB
 try:
-    from PyQt4.QtCore import QString
+    from PyQt5.QtCore import QString
 except ImportError:
     QString = type("")
 
@@ -70,19 +70,19 @@ class UBTableModel(QtCore.QAbstractTableModel):
         self.endResetModel()
 
 
-class MatrixUBInputWidget(QtGui.QWidget):
+class MatrixUBInputWidget(QtWidgets.QWidget):
     # pylint: disable=too-few-public-methods
     def __init__(self,ol,parent=None):
         # pylint: disable=unused-argument,super-on-old-class
         super(MatrixUBInputWidget,self).__init__(parent)
-        self.setLayout(QtGui.QVBoxLayout())
-        self._tableView = QtGui.QTableView(self)
+        self.setLayout(QtWidgets.QVBoxLayout())
+        self._tableView = QtWidgets.QTableView(self)
         self._tableView.horizontalHeader().hide()
         self._tableView.verticalHeader().hide()
-        self._tableView.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        self._tableView.verticalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        self.LoadIsawUBButton=QtGui.QPushButton("LoadIsawUB")
-        self.layout().addWidget(QtGui.QLabel('UB matrix'))
+        self._tableView.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self._tableView.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.LoadIsawUBButton=QtWidgets.QPushButton("LoadIsawUB")
+        self.layout().addWidget(QtWidgets.QLabel('UB matrix'))
         self.layout().addWidget(self._tableView)
         self.layout().addWidget(self.LoadIsawUBButton)
         self.ol=ol
@@ -99,7 +99,7 @@ class MatrixUBInputWidget(QtGui.QWidget):
     def loadIsawUBDialog(self):
         # pylint: disable=bare-except
         try:
-            fname = QtGui.QFileDialog.getOpenFileName(self, 'Open ISAW UB file',filter=QString('Mat file (*.mat);;All Files (*)'))
+            fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open ISAW UB file',filter=QString('Mat file (*.mat);;All Files (*)'))
             __tempws=mantid.simpleapi.CreateSingleValuedWorkspace(0.)
             mantid.simpleapi.LoadIsawUB(__tempws,str(fname))
             ol=mantid.geometry.OrientedLattice(__tempws.sample().getOrientedLattice())
@@ -112,7 +112,7 @@ class MatrixUBInputWidget(QtGui.QWidget):
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     inputol=mantid.geometry.OrientedLattice(2,3,4,90,90,90)
 
     mainForm=MatrixUBInputWidget(inputol)

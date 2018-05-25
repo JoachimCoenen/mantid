@@ -1,4 +1,4 @@
-from PyQt4.QtCore import pyqtSlot, QThreadPool
+from PyQt5.QtCore import pyqtSlot, QThreadPool
 from abc import ABCMeta, abstractmethod
 from six import with_metaclass
 from worker import Worker

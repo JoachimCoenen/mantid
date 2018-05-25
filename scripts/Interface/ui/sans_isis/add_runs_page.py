@@ -1,9 +1,9 @@
-from PyQt4 import QtGui
-from PyQt4.QtCore import pyqtSignal
+from PyQt5 import QtGui
+from PyQt5.QtCore import pyqtSignal
 import ui_add_runs_page
 
 
-class AddRunsPage(QtGui.QWidget, ui_add_runs_page.Ui_AddRunsPage):
+class AddRunsPage(QtWidgets.QWidget, ui_add_runs_page.Ui_AddRunsPage):
     sum = pyqtSignal()
     outFileChanged = pyqtSignal()
 
@@ -26,7 +26,7 @@ class AddRunsPage(QtGui.QWidget, ui_add_runs_page.Ui_AddRunsPage):
         self.outputDirectoryLabel.setText("Output Directory: {}".format(out_file_directory))
 
     def no_save_directory(self):
-        QtGui.QMessageBox.warning(self, "No Save Directory Set!",
+        QtWidgets.QMessageBox.warning(self, "No Save Directory Set!",
                                   "You must set the mantid output directory before suming files.")
 
     def set_out_file_name(self, out_file_name):

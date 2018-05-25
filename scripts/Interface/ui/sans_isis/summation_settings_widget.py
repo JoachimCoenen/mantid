@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import pyqtSignal
+from PyQt5 import QtGui
+from PyQt5.QtCore import pyqtSignal
 
 import ui_summation_settings_widget
 from sans.gui_logic.models.binning_type import BinningType
@@ -13,7 +13,7 @@ def set_checked_without_signal(checkable, should_be_checked):
     checkable.blockSignals(False)
 
 
-class SummationSettingsWidget(QtGui.QWidget, ui_summation_settings_widget.Ui_SummationSettingsWidget):
+class SummationSettingsWidget(QtWidgets.QWidget, ui_summation_settings_widget.Ui_SummationSettingsWidget):
     binningTypeChanged = pyqtSignal(int)
     preserveEventsChanged = pyqtSignal(bool)
     binSettingsChanged = pyqtSignal()

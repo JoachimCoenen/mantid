@@ -1,8 +1,8 @@
 #pylint: disable=W0403,R0913,R0902
 from __future__ import (absolute_import, division, print_function)
 import os
-from PyQt4 import QtCore
-from PyQt4.QtCore import QThread
+from PyQt5 import QtCore
+from PyQt5.QtCore import QThread
 
 import HFIR_4Circle_Reduction.reduce4circleControl as r4c
 from HFIR_4Circle_Reduction import peak_integration_utility

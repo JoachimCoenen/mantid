@@ -12,7 +12,7 @@ import os
 import re
 from operator import itemgetter
 import itertools
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from mantid.simpleapi import *
 from isis_reflectometry.quick import *
 from isis_reflectometry.convert_to_wavelength import ConvertToWavelength
@@ -37,7 +37,7 @@ except AttributeError:
 canMantidPlot = True
 
 
-class ReflGui(QtGui.QMainWindow, Ui_windowRefl):
+class ReflGui(QtWidgets.QMainWindow, Ui_windowRefl):
     current_instrument = None
     current_table = None
     current_polarisation_method = None
@@ -54,11 +54,11 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         """
         Initialise the interface
         """
-        super(QtGui.QMainWindow, self).__init__()
+        super(QtWidgets.QMainWindow, self).__init__()
         self.setupUi(self)
         self.show_deprecation_warning()
         self.loading = False
-        self.clip = QtGui.QApplication.clipboard()
+        self.clip = QtWidgets.QApplication.clipboard()
         self.shown_cols = {}
         self.mod_flag = False
         self.run_cols = [0, 5, 10]
@@ -151,30 +151,30 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         """
         Show a custom message box asking if the user wants to save, or discard their changes or cancel back to the interface
         """
-        msgBox = QtGui.QMessageBox()
+        msgBox = QtWidgets.QMessageBox()
         msgBox.setText("The table has been modified. Do you want to save your changes?")
 
-        accept_btn = QtGui.QPushButton('Save')
-        cancel_btn = QtGui.QPushButton('Cancel')
-        discard_btn = QtGui.QPushButton('Discard')
+        accept_btn = QtWidgets.QPushButton('Save')
+        cancel_btn = QtWidgets.QPushButton('Cancel')
+        discard_btn = QtWidgets.QPushButton('Discard')
 
-        msgBox.addButton(accept_btn, QtGui.QMessageBox.AcceptRole)
-        msgBox.addButton(cancel_btn, QtGui.QMessageBox.RejectRole)
-        msgBox.addButton(discard_btn, QtGui.QMessageBox.NoRole)
+        msgBox.addButton(accept_btn, QtWidgets.QMessageBox.AcceptRole)
+        msgBox.addButton(cancel_btn, QtWidgets.QMessageBox.RejectRole)
+        msgBox.addButton(discard_btn, QtWidgets.QMessageBox.NoRole)
 
-        msgBox.setIcon(QtGui.QMessageBox.Question)
+        msgBox.setIcon(QtWidgets.QMessageBox.Question)
         msgBox.setDefaultButton(accept_btn)
         msgBox.setEscapeButton(cancel_btn)
         msgBox.exec_()
         btn = msgBox.clickedButton()
         saved = None
         if btn.text() == accept_btn.text():
-            ret = QtGui.QMessageBox.AcceptRole
+            ret = QtWidgets.QMessageBox.AcceptRole
             saved = self._save()
         elif btn.text() == cancel_btn.text():
-            ret = QtGui.QMessageBox.RejectRole
+            ret = QtWidgets.QMessageBox.RejectRole
         else:
-            ret = QtGui.QMessageBox.NoRole
+            ret = QtWidgets.QMessageBox.NoRole
 
         return ret, saved
 
@@ -186,13 +186,13 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         if self.mod_flag:
             event.ignore()
             ret, saved = self._save_check()
-            if ret == QtGui.QMessageBox.AcceptRole:
+            if ret == QtWidgets.QMessageBox.AcceptRole:
                 if saved:
                     self.mod_flag = False
                 event.accept()
-            elif ret == QtGui.QMessageBox.RejectRole:
+            elif ret == QtWidgets.QMessageBox.RejectRole:
                 event.ignore()
-            elif ret == QtGui.QMessageBox.NoRole:
+            elif ret == QtWidgets.QMessageBox.NoRole:
                 self.mod_flag = False
                 event.accept()
 
@@ -267,7 +267,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         self.current_polarisation_method = self.polarisation_options['None']
         self.comboPolarCorrect.setEnabled(self.current_instrument in self.polarisation_instruments)
         self.splitterList.setSizes([200, 800])
-        self.labelStatus = QtGui.QLabel("Ready")
+        self.labelStatus = QtWidgets.QLabel("Ready")
         self.statusMain.addWidget(self.labelStatus)
         self._initialise_table()
         self._populate_runs_list()
@@ -302,7 +302,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         # first check if the table has been changed before clearing it
         if self.mod_flag:
             ret, _saved = self._save_check()
-            if ret == QtGui.QMessageBox.RejectRole:
+            if ret == QtWidgets.QMessageBox.RejectRole:
                 return
         self.current_table = None
 
@@ -312,21 +312,21 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         for column in range(self.tableMain.columnCount()):
             for row in range(self.tableMain.rowCount()):
                 if column in self.run_cols:
-                    item = QtGui.QTableWidgetItem()
+                    item = QtWidgets.QTableWidgetItem()
                     item.setText('')
                     item.setToolTip('Runs can be colon delimited to coadd them')
                     self.tableMain.setItem(row, column, item)
                 elif column in self.angle_cols:
-                    item = QtGui.QTableWidgetItem()
+                    item = QtWidgets.QTableWidgetItem()
                     item.setText('')
                     item.setToolTip('Angles are in degrees')
                     self.tableMain.setItem(row, column, item)
                 elif column == self.stitch_col:
-                    check = QtGui.QCheckBox()
+                    check = QtWidgets.QCheckBox()
                     check.setCheckState(False)
                     check.setToolTip('If checked, the runs in this row will be stitched together')
-                    item = QtGui.QWidget()
-                    layout = QtGui.QHBoxLayout(item)
+                    item = QtWidgets.QWidget()
+                    layout = QtWidgets.QHBoxLayout(item)
                     layout.addWidget(check)
                     layout.setAlignment(QtCore.Qt.AlignCenter)
                     layout.setSpacing(0)
@@ -335,13 +335,13 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                     item.setContentsMargins(0, 0, 0, 0)
                     self.tableMain.setCellWidget(row, self.stitch_col, item)
                 elif column == self.plot_col:
-                    button = QtGui.QPushButton('Plot')
+                    button = QtWidgets.QPushButton('Plot')
                     button.setProperty("row", row)
                     self.__reset_plot_button(button)
                     button.setToolTip('Plot the workspaces produced by processing this row.')
                     button.clicked.connect(self._plot_row)
-                    item = QtGui.QWidget()
-                    layout = QtGui.QHBoxLayout(item)
+                    item = QtWidgets.QWidget()
+                    layout = QtWidgets.QHBoxLayout(item)
                     layout.addWidget(button)
                     layout.setAlignment(QtCore.Qt.AlignCenter)
                     layout.setSpacing(0)
@@ -350,7 +350,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                     item.setContentsMargins(0, 0, 0, 0)
                     self.tableMain.setCellWidget(row, self.plot_col, item)
                 else:
-                    item = QtGui.QTableWidgetItem()
+                    item = QtWidgets.QTableWidgetItem()
                     item.setText('')
                     self.tableMain.setItem(row, column, item)
             vis_state = settings.value(str(column), True, type=bool)
@@ -477,21 +477,21 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                     row = startrow
                     txt = cell.text()
                     while self.tableMain.item(row, 0).text() != '':
-                        item = QtGui.QTableWidgetItem()
+                        item = QtWidgets.QTableWidgetItem()
                         item.setText(txt)
                         self.tableMain.setItem(row, self.tableMain.column(cell), item)
                         row = row + 1
                         filled = filled + 1
                 if not filled:
-                    QtGui.QMessageBox.critical(self.tableMain,
+                    QtWidgets.QMessageBox.critical(self.tableMain,
                                                'Cannot perform Autofill',
                                                "No target cells to autofill. Rows to be filled should contain a run number in their "
                                                "first cell, and start from directly below the selected line.")
             else:
-                QtGui.QMessageBox.critical(self.tableMain, 'Cannot perform Autofill',
+                QtWidgets.QMessageBox.critical(self.tableMain, 'Cannot perform Autofill',
                                            "Selected cells must all be in the same row.")
         else:
-            QtGui.QMessageBox.critical(self.tableMain, 'Cannot perform Autofill', "There are no source cells selected.")
+            QtWidgets.QMessageBox.critical(self.tableMain, 'Cannot perform Autofill', "There are no source cells selected.")
 
     def _clear_cells(self):
         """
@@ -647,17 +647,17 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                 runnumbers = "+".join(["%s" % pair[0] for pair in group])
 
                 # set the runnumber
-                item = QtGui.QTableWidgetItem()
+                item = QtWidgets.QTableWidgetItem()
                 item.setText(str(runnumbers))
                 self.tableMain.setItem(row, col, item)
 
                 # Set the angle
-                item = QtGui.QTableWidgetItem()
+                item = QtWidgets.QTableWidgetItem()
                 item.setText(str(angle_key))
                 self.tableMain.setItem(row, col + 1, item)
 
                 # Set the transmission
-                item = QtGui.QTableWidgetItem()
+                item = QtWidgets.QTableWidgetItem()
                 item.setText(self.textRuns.text())
                 self.tableMain.setItem(row, col + 2, item)
 
@@ -666,7 +666,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                     col = 0
 
             # set dq/q
-            item = QtGui.QTableWidgetItem()
+            item = QtWidgets.QTableWidgetItem()
             item.setText(str(dqq))
             self.tableMain.setItem(row, 15, item)
 
@@ -715,10 +715,10 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
             for idx in rows:
                 rowIndexes.append(idx.row())
             if not len(rowIndexes):
-                reply = QtGui.QMessageBox.question(self.tableMain, 'Process all rows?',
+                reply = QtWidgets.QMessageBox.question(self.tableMain, 'Process all rows?',
                                                    "This will process all rows in the table. Continue?",
-                                                   QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-                if reply == QtGui.QMessageBox.No:
+                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                if reply == QtWidgets.QMessageBox.No:
                     logger.notice("Cancelled!")
                     willProcess = False
                 else:
@@ -769,12 +769,12 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                                 dqq = NRCalculateSlitResolution(Workspace=thetaRun, TwoTheta=2 * theta_in)
 
                                 # Put the calculated resolution into the table
-                                resItem = QtGui.QTableWidgetItem()
+                                resItem = QtWidgets.QTableWidgetItem()
                                 resItem.setText(str(dqq))
                                 self.tableMain.setItem(row, 15, resItem)
 
                                 # Update the value for theta_in in the table
-                                ttItem = QtGui.QTableWidgetItem()
+                                ttItem = QtWidgets.QTableWidgetItem()
                                 ttItem.setText(str(theta_in))
                                 self.tableMain.setItem(row, 1, ttItem)
 
@@ -813,16 +813,16 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                             qmax = round(qmax, 3)
                             wksp.append(wqBinnedAndScaled.name())
                             if self.tableMain.item(row, i * 5 + 1).text() == '':
-                                item = QtGui.QTableWidgetItem()
+                                item = QtWidgets.QTableWidgetItem()
                                 item.setText(str(theta))
                                 self.tableMain.setItem(row, i * 5 + 1, item)
                             if self.tableMain.item(row, i * 5 + 3).text() == '':
-                                item = QtGui.QTableWidgetItem()
+                                item = QtWidgets.QTableWidgetItem()
                                 item.setText(str(qmin))
                                 self.tableMain.setItem(row, i * 5 + 3, item)
                                 overlapLow.append(qmin)
                             if self.tableMain.item(row, i * 5 + 4).text() == '':
-                                item = QtGui.QTableWidgetItem()
+                                item = QtWidgets.QTableWidgetItem()
                                 item.setText(str(qmax))
                                 self.tableMain.setItem(row, i * 5 + 4, item)
                                 overlapHigh.append(qmax)
@@ -875,8 +875,8 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         """
         Plot the row belonging to the selected button
         """
-        if not isinstance(plotbutton, QtGui.QPushButton):
-            logger.error("Problem accessing cached data: Wrong data type passed, expected QtGui.QPushbutton")
+        if not isinstance(plotbutton, QtWidgets.QPushButton):
+            logger.error("Problem accessing cached data: Wrong data type passed, expected QtWidgets.QPushbutton")
             return
         import unicodedata
 
@@ -1177,14 +1177,14 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
             # this is an emergency autosave as the program is failing
             logger.error(
                 "The ISIS Reflectonomy GUI has encountered an error, it will now attempt to save a copy of your work.")
-            msgBox = QtGui.QMessageBox()
+            msgBox = QtWidgets.QMessageBox()
             msgBox.setText(
                 "The ISIS Reflectonomy GUI has encountered an error, it will now attempt to save a copy of your work.\n"
                 "Please check the log for details.")
-            msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
-            msgBox.setIcon(QtGui.QMessageBox.Critical)
-            msgBox.setDefaultButton(QtGui.QMessageBox.Ok)
-            msgBox.setEscapeButton(QtGui.QMessageBox.Ok)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msgBox.setIcon(QtWidgets.QMessageBox.Critical)
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
+            msgBox.setEscapeButton(QtWidgets.QMessageBox.Ok)
             msgBox.exec_()
             import datetime
             failtime = datetime.datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
@@ -1203,11 +1203,11 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
             if self.current_table:
                 filename = self.current_table
             else:
-                saveDialog = QtGui.QFileDialog(self.widgetMainRow.parent(), "Save Table")
-                saveDialog.setFileMode(QtGui.QFileDialog.AnyFile)
+                saveDialog = QtWidgets.QFileDialog(self.widgetMainRow.parent(), "Save Table")
+                saveDialog.setFileMode(QtWidgets.QFileDialog.AnyFile)
                 saveDialog.setNameFilter("Table Files (*.tbl);;All files (*)")
                 saveDialog.setDefaultSuffix("tbl")
-                saveDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+                saveDialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
                 if saveDialog.exec_():
                     filename = saveDialog.selectedFiles()[0]
                 else:
@@ -1218,11 +1218,11 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         """
         show the save as dialog and save to a .tbl file with that name
         """
-        saveDialog = QtGui.QFileDialog(self.widgetMainRow.parent(), "Save Table")
-        saveDialog.setFileMode(QtGui.QFileDialog.AnyFile)
+        saveDialog = QtWidgets.QFileDialog(self.widgetMainRow.parent(), "Save Table")
+        saveDialog.setFileMode(QtWidgets.QFileDialog.AnyFile)
         saveDialog.setNameFilter("Table Files (*.tbl);;All files (*)")
         saveDialog.setDefaultSuffix("tbl")
-        saveDialog.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+        saveDialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         if saveDialog.exec_():
             filename = saveDialog.selectedFiles()[0]
             self._save_table_contents(filename)
@@ -1232,15 +1232,15 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         Load a .tbl file from disk
         """
         self.loading = True
-        loadDialog = QtGui.QFileDialog(self.widgetMainRow.parent(), "Open Table")
-        loadDialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+        loadDialog = QtWidgets.QFileDialog(self.widgetMainRow.parent(), "Open Table")
+        loadDialog.setFileMode(QtWidgets.QFileDialog.ExistingFile)
         loadDialog.setNameFilter("Table Files (*.tbl);;All files (*)")
         if loadDialog.exec_():
             try:
                 # before loading make sure you give them a chance to save
                 if self.mod_flag:
                     ret, _saved = self._save_check()
-                    if ret == QtGui.QMessageBox.RejectRole:
+                    if ret == QtWidgets.QMessageBox.RejectRole:
                         # if they hit cancel abort the load
                         self.loading = False
                         return
@@ -1252,7 +1252,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                 for line in reader:
                     if row < 100:
                         for column in range(self.tableMain.columnCount() - 2):
-                            item = QtGui.QTableWidgetItem()
+                            item = QtWidgets.QTableWidgetItem()
                             item.setText(line[column])
                             self.tableMain.setItem(row, column, item)
                         row = row + 1
@@ -1269,15 +1269,15 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         filename = self.current_table
         if filename:
             if self.mod_flag:
-                msgBox = QtGui.QMessageBox()
+                msgBox = QtWidgets.QMessageBox()
                 msgBox.setText(
                     "The table has been modified. Are you sure you want to reload the table and lose your changes?")
-                msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-                msgBox.setIcon(QtGui.QMessageBox.Question)
-                msgBox.setDefaultButton(QtGui.QMessageBox.Yes)
-                msgBox.setEscapeButton(QtGui.QMessageBox.No)
+                msgBox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                msgBox.setIcon(QtWidgets.QMessageBox.Question)
+                msgBox.setDefaultButton(QtWidgets.QMessageBox.Yes)
+                msgBox.setEscapeButton(QtWidgets.QMessageBox.No)
                 ret = msgBox.exec_()
-                if ret == QtGui.QMessageBox.No:
+                if ret == QtWidgets.QMessageBox.No:
                     # if they hit No abort the reload
                     self.loading = False
                     return
@@ -1288,7 +1288,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
                 for line in reader:
                     if row < 100:
                         for column in range(self.tableMain.columnCount() - 2):
-                            item = QtGui.QTableWidgetItem()
+                            item = QtWidgets.QTableWidgetItem()
                             item.setText(line[column])
                             self.tableMain.setItem(row, column, item)
                         row = row + 1
@@ -1304,7 +1304,7 @@ We recommend you use ISIS Reflectometry instead, If this is not possible contact
         Shows the export dialog for saving workspaces to non mantid formats
         """
         try:
-            Dialog = QtGui.QDialog()
+            Dialog = QtWidgets.QDialog()
             u = Ui_SaveWindow()
             u.setupUi(Dialog)
             Dialog.exec_()

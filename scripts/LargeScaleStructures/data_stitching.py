@@ -10,7 +10,7 @@ from functools import cmp_to_key
 
 try:
     import mantidplot
-    from PyQt4 import QtCore
+    from PyQt5 import QtCore
     IS_IN_MANTIDPLOT = True
 except(ImportError, ImportWarning):
     IS_IN_MANTIDPLOT = False

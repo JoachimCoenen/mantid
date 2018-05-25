@@ -12,7 +12,7 @@ From mantidplot:
 .config/Mantid/MantidPlot.conf
 '''
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 if six.PY3:
     unicode = str

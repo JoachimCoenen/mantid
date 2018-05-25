@@ -6,14 +6,14 @@ from __future__ import (absolute_import, division, print_function)
 import sys
 
 from HFIRPowderReduction import HfirPDReductionGUI
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 
 def qapp():
-    if QtGui.QApplication.instance():
-        _app = QtGui.QApplication.instance()
+    if QtWidgets.QApplication.instance():
+        _app = QtWidgets.QApplication.instance()
     else:
-        _app = QtGui.QApplication(sys.argv)
+        _app = QtWidgets.QApplication(sys.argv)
     return _app
 
 

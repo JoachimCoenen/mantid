@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 import os
 import numpy as np
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
@@ -47,7 +47,7 @@ MplBasicColors = [
     "yellow"] #"white"]
 
 
-class MplFigureCanvas(QtGui.QWidget):
+class MplFigureCanvas(QtWidgets.QWidget):
     """ A combined graphics view including matplotlib canvas and
     a navigation tool bar
     """
@@ -56,14 +56,14 @@ class MplFigureCanvas(QtGui.QWidget):
         """ Initialization
         """
         # instantianize parent
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         # set up canvas
         self.canvas = Qt4MplCanvas(self)
         self.toolbar = MyNavigationToolbar(self.canvas, self.canvas)
 
         # set up layout
-        self.vbox = QtGui.QVBoxLayout(self)
+        self.vbox = QtWidgets.QVBoxLayout(self)
         self.vbox.addWidget(self.canvas)
         self.vbox.addWidget(self.toolbar)
 
@@ -253,7 +253,7 @@ class Qt4MplCanvas(FigureCanvas):
         self.setParent(parent)
 
         # Set size policy to be able to expanding and resizable with frame
-        FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Expanding)
 
         FigureCanvas.updateGeometry(self)
 
@@ -654,12 +654,12 @@ class MyNavigationToolbar(NavigationToolbar):
         FUTURE: direction='h'
         """
         self.canvas = canvas
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         #if direction=='h' :
-        #    self.layout = QtGui.QHBoxLayout(self)
+        #    self.layout = QtWidgets.QHBoxLayout(self)
         #else :
-        #    self.layout = QtGui.QVBoxLayout(self)
+        #    self.layout = QtWidgets.QVBoxLayout(self)
 
         #self.layout.setMargin(2)
         #self.layout.setSpacing(0)

@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_absolute_units_script import AbsoluteUnitsScript
 import reduction_gui.widgets.util as util
@@ -20,9 +20,9 @@ class AbsoluteUnitsWidget(BaseWidget):
     def __init__(self, parent=None, state=None, settings=None, data_type=None):
         super(AbsoluteUnitsWidget, self).__init__(parent, state, settings, data_type=data_type)
 
-        class AbsUnitsFrame(QtGui.QFrame, ui.inelastic.ui_dgs_absolute_units.Ui_AbsUnitsFrame):
+        class AbsUnitsFrame(QtWidgets.QFrame, ui.inelastic.ui_dgs_absolute_units.Ui_AbsUnitsFrame):
             def __init__(self, parent=None):
-                QtGui.QFrame.__init__(self, parent)
+                QtWidgets.QFrame.__init__(self, parent)
                 self.setupUi(self)
 
         self._content = AbsUnitsFrame(self)

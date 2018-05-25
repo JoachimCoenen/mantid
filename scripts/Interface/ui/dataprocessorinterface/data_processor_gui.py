@@ -4,7 +4,7 @@ try:
 except ImportError:
     canMantidPlot = False
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from mantidqtpython import MantidQt
 from ui.dataprocessorinterface.ui_data_processor_window import Ui_DataProcessorWindow
 
@@ -63,7 +63,7 @@ class MainPresenter(MantidQt.MantidWidgets.DataProcessor.DataProcessorMainPresen
         self.gui.add_actions_to_menus(workspace_list)
 
 
-class DataProcessorGui(QtGui.QMainWindow, Ui_DataProcessorWindow):
+class DataProcessorGui(QtWidgets.QMainWindow, Ui_DataProcessorWindow):
 
     data_processor_table = None
     main_presenter = None
@@ -72,7 +72,7 @@ class DataProcessorGui(QtGui.QMainWindow, Ui_DataProcessorWindow):
         """
         Initialise the interface
         """
-        super(QtGui.QMainWindow, self).__init__()
+        super(QtWidgets.QMainWindow, self).__init__()
         self.setupUi(self)
 
     def setup_layout(self):
@@ -194,18 +194,18 @@ class DataProcessorGui(QtGui.QMainWindow, Ui_DataProcessorWindow):
         """
 
         if (workspace_list is not None and command.name() == "Open Table"):
-            submenu = QtGui.QMenu(command.name(), self)
+            submenu = QtWidgets.QMenu(command.name(), self)
             submenu.setIcon(QtGui.QIcon(command.icon()))
 
             for ws in workspace_list:
                 ws_command = MantidQt.MantidWidgets.WorkspaceCommand(self.data_processor_table, ws)
-                action = QtGui.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
+                action = QtWidgets.QAction(QtGui.QIcon(ws_command.icon()), ws_command.name(), self)
                 action.triggered.connect(lambda: self._connect_action(ws_command))
                 submenu.addAction(action)
 
             menu.addMenu(submenu)
         else:
-            action = QtGui.QAction(QtGui.QIcon(command.icon()), command.name(), self)
+            action = QtWidgets.QAction(QtGui.QIcon(command.icon()), command.name(), self)
             action.setShortcut(command.shortcut())
             action.setStatusTip(command.tooltip())
             action.triggered.connect(lambda: self._connect_action(command))

@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function)
 
 from abc import ABCMeta, abstractmethod
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from six import with_metaclass
 import ui_diagnostics_page
 from sans.gui_logic.gui_common import (load_file, GENERIC_SETTINGS)
@@ -14,7 +14,7 @@ except AttributeError:
         return s
 
 
-class DiagnosticsPage(QtGui.QWidget, ui_diagnostics_page.Ui_DiagnosticsPage):
+class DiagnosticsPage(QtWidgets.QWidget, ui_diagnostics_page.Ui_DiagnosticsPage):
     class DiagnosticsPageListener(with_metaclass(ABCMeta, object)):
         """
         Defines the elements which a presenter can listen to for the beam centre finder
