@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QPushButton, QTableView, QHeaderView, QCh
     QLayout, QWidget, QSpacerItem, QHBoxLayout, QVBoxLayout, QLabel, QFrame, QGroupBox, QGridLayout, QButtonGroup, \
     QSizePolicy, QMessageBox, QAbstractItemView
 from PyQt5.QtCore import QAbstractTableModel, pyqtSignal, QModelIndex, Qt
+from PyQt5 import QtCore
 
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.dns.dns_reduction import DNSScriptElement
@@ -15,186 +16,6 @@ class DNSSetupWidget(BaseWidget):
 
     # Widget name
     name = "DNS Reduction"
-
-    class DataTable(QAbstractTableModel):
-        """
-        The list of data runs, names of the output workspaces and comments.
-        """
-
-        def __init__(self, parent):
-            QAbstractTableModel.__init__(self, parent)
-            self.tableData = []
-
-        def _numRows(self):
-            """
-            :return: number of rows with data
-            """
-            return len(self.tableData)
-
-        def _getRow(self, row):
-            """
-            :param row: int of the row to get 
-            :return: data of the row
-            """
-            return self.tableData[row] if row < self._numRows() else ("", "", "")
-
-        def _isRowEmpty(self, row):
-            """
-            :param row: int of the row to check
-            :return: bool if row is empty
-            """
-            (runs, outWs, comment) = self._getRow(row)
-            return not str(runs).strip() and not str(outWs).strip() and not str(comment).strip()
-
-        def _removeTrailingEmptyRows(self):
-            """
-            remove all rows at the end of the table that are empty
-            """
-            for row in reversed(range(self._numRows())):
-                if self._isRowEmpty(row):
-                    del self.tableData[row]
-                else:
-                    break
-
-        def _removeEmptyRows(self):
-            """
-            remove all empty rows 
-            """
-            for row in reversed(range(self._numRows())):
-                if self._isRowEmpty(row):
-                    del self.tableData[row]
-
-        def _ensureHasRows(self, numRows):
-            """
-            ensure the table has numRows
-            :param numRows:  number of rows that should exist
-            """
-            while self._numRows() < numRows:
-                self.tableData.append(("", "", ""))
-
-        def _setCellText(self, row, col, text):
-            """
-            set the text of a cell
-            :param row: row of the cell
-            :param col: column of the cell
-            :param text: text for the cell
-            """
-            self._ensureHasRows(row + 1)
-            (runNumbers, outWs, comment) = self.tableData[row]
-
-            text = str(text).strip()
-            if col == 0:
-                runNumbers = text
-            elif col == 1:
-                outWs = text
-            else:
-                comment = text
-
-            self.tableData[row] = (runNumbers, outWs, comment)
-
-        def _getCellText(self, row, col):
-            """
-            get the text of a cell
-            :param row: row of the cell
-            :param col: column of the cell
-            :return: text of the cell
-            """
-            return str(self._getRow(row)[col]).strip()
-
-        # reimplemented QAbstractTableModel methods
-
-        headers    = ("Run numbers", "Output Workspace", "Comment")
-        selectCell = pyqtSignal(QModelIndex)
-
-        def emptyCells(self, indexes):
-            """
-            empty the cells with the indexes
-            :param indexes: indexes of the cells to be emptied
-            """
-            for index in indexes:
-                row = index.row()
-                col = index.column()
-
-                self._setCellText(row, col, "")
-
-            self._removeEmptyRows()
-            self.beginResetModel()
-            self.endResetModel()
-            # indexes is never empty
-            self.selectCell.emit(indexes[0])
-
-        def rowCount(self, _=QModelIndex()):
-            """
-            number of rows
-            :return: returns the number of rows
-            """
-            # one additional row for new data
-            return self._numRows() + 1
-
-        def columnCount(self, _=QModelIndex()):
-            """
-            number of columns
-            :return: number of columns, is always 3
-            """
-            return 3
-
-        def headerData(self, selection, orientation, role):
-            """
-            header of the selection
-            :param selection: selected cells
-            :param orientation: orientation of selection
-            :param role: role of the selection
-            :return: header of the selection
-            """
-            if Qt.Horizontal == orientation and Qt.DisplayRole == role:
-                return self.headers[selection]
-            return None
-
-        def data(self, index, role):
-            """
-            data of the cell
-            :param index: index of the cell
-            :param role: role of the cell
-            :return: data of the cell
-            """
-            if Qt.DisplayRole == role or Qt.EditRole == role:
-                return self._getCellText(index.row(), index.column())
-            return None
-
-        def setData(self, index, text, _):
-            """
-            set text in the cell
-            :param index: index of the cell
-            :param text: text for the cell
-            :return: true if data is set
-            """
-            row = index.row()
-            col = index.column()
-
-            self._setCellText(row, col, text)
-            self._removeTrailingEmptyRows()
-
-            self.beginResetModel()
-            self.endResetModel()
-
-            # move selection to the next column or row
-            col = col + 1
-
-            if col >= 3:
-                row = row + 1
-                col = 0
-
-            row = min(row, self.rowCount() - 1)
-            self.selectCell.emit(self.index(row, col))
-
-            return True
-
-        def flags(self, _):
-            """
-            flags for the table
-            :return: flags
-            """
-            return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
 
     class MaskDetTable(QAbstractTableModel):
 
@@ -406,29 +227,6 @@ class DNSSetupWidget(BaseWidget):
             """
             return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
 
-    class TableViews(QTableView):
-        """
-        View of the tables
-        """
-
-        def keyPressEvent(self, QKeyEvent):
-            """
-            reimplemented keyPressEvent for deleting cells and arrows in editing cells 
-            :param QKeyEvent: 
-            :return: 
-            """
-            if self.state() == QAbstractItemView.EditingState:
-                index = self.currentIndex()
-                if QKeyEvent.key() in [Qt.Key_Down, Qt.Key_Up]:
-                    self.setFocus()
-                    self.setCurrentIndex(self.model().index(index.row(), index.column()))
-                else:
-                    QTableView.keyPressEvent(self, QKeyEvent)
-            if QKeyEvent.key() in [Qt.Key_Delete, Qt.Key_Backspace]:
-                self.model().emptyCells(self.selectedIndexes())
-            else:
-                QTableView.keyPressEvent(self, QKeyEvent)
-
     # Tips for the user how to fill in the data
 
     TIP_sampleDataPath    = ""
@@ -484,8 +282,16 @@ class DNSSetupWidget(BaseWidget):
     TIP_scatterV3    = ""
 
     def __init__(self, settings):
-
         BaseWidget.__init__(self, settings=settings)
+        self.newDNSScriptElement()
+
+
+        #GUI
+        self.gui = FunctionalStyleGUI(self, self.OnGUI)
+        self.gui.redrawGUI()
+
+        return
+
         inf = float("inf")
 
         def tip(widget, text):
@@ -860,6 +666,203 @@ class DNSSetupWidget(BaseWidget):
         self.rbnSingleCryst.clicked.connect(self._rbnOutChanged)
         self.rbnPolyAmor.clicked.connect(self._rbnOutChanged)
 
+
+    def OnGUI(self):
+        if self.elem == None:
+            self.newDNSScriptElement()
+
+        gui = self.gui
+
+        gui.horizontalLayoutBegin()
+
+        # left side:
+        gui.verticalLayoutBegin()
+        self._leftGUI()
+        gui.verticalLayoutEnd(preventVStretch = True)
+
+        # right side:
+        gui.verticalLayoutBegin()
+        self._rightGUI()
+        gui.verticalLayoutEnd()
+
+        gui.horizontalLayoutEnd()
+    
+    def _leftGUI(self):
+        elem = self.elem
+        gui = self.gui
+
+        gui.groupBoxBegin('Sample data')
+        elem.sampleDataPath = gui.folderPathEdit(elem.sampleDataPath, title='Data Directory', tip=self.TIP_sampleDataPath)
+
+        gui.horizontalLayoutBegin(title='File Prefix', tip=self.TIP_sampleFilePre)
+        elem.filePrefix = gui.lineEdit(elem.filePrefix, tip=self.TIP_sampleFilePre)
+        elem.fileSuffix = gui.lineEdit(elem.fileSuffix, title='suffix', tip=self.TIP_sampleFileSuff)
+        gui.horizontalLayoutEnd()
+
+        elem.dataRuns  = gui.dataTable(elem.dataRuns, ("Run numbers", "Output Workspace", "Comment"), tip=self.TIP_runsView)
+        gui.groupBoxEnd()
+
+        gui.groupBoxBegin('Mask Detectors')
+        elem.maskAngles  = gui.dataTable(elem.maskAngles, (u"Min Angle[\305]", u"Max Angle[\305]"), tip=self.TIP_runsView)
+        gui.groupBoxEnd()
+
+        gui.groupBoxBegin(' ')
+        elem.saveToFile = gui.checkBox(elem.saveToFile, title='Save to file', tip=self.TIP_chkSaveToFile)
+        elem.outDir = gui.folderPathEdit(elem.outDir, title='Output Directory', tip=self.TIP_outDir, enabled=elem.saveToFile)
+        elem.outPrefix = gui.lineEdit(elem.outPrefix, title='Output File Prefix', tip=self.TIP_outFile, enabled=elem.saveToFile)
+        gui.groupBoxEnd()
+
+        return
+
+        gui.groupBoxBegin('Binning')
+        gui.horizontalLayoutBegin(title=" ")
+        gui.label(text='Start', tip=self.TIP_binEstart)
+        gui.label(text='Step',  tip=self.TIP_binEstep)
+        gui.label(text='End',   tip=self.TIP_binEend)
+        gui.horizontalLayoutEnd()
+
+        elem.binEon = \
+        gui.horizontalLayoutCheckedBegin(elem.binEon, "Energy", tip=self.TIP_binEon)
+        elem.binEstart = gui.doubleSpinBox(elem.binEstart,              tip=self.TIP_binEstart, enabled=elem.binEon)
+        elem.binEstep  = gui.doubleSpinBox(elem.binEstep, decimals = 4, tip=self.TIP_binEstep, enabled=elem.binEon)
+        elem.binEend   = gui.doubleSpinBox(elem.binEend,                tip=self.TIP_binEend, enabled=elem.binEon)
+        gui.horizontalLayoutEnd()
+
+        if not elem.binEon:
+            elem.binQon = False
+        elem.binQon = \
+        gui.horizontalLayoutCheckedBegin(elem.binQon, "Q", tip=self.TIP_binQon, enabled=elem.binEon)
+        elem.binQstart = gui.doubleSpinBox(elem.binQstart, title=None, tip=self.TIP_binQstart, enabled=elem.binQon)
+        elem.binQstep  = gui.doubleSpinBox(elem.binQstep,  title=None, tip=self.TIP_binQstep, enabled=elem.binQon)
+        elem.binQend   = gui.doubleSpinBox(elem.binQend,   title=None, tip=self.TIP_binQend, enabled=elem.binQon)
+        gui.horizontalLayoutEnd()
+        gui.groupBoxEnd()
+
+
+        gui.groupBoxBegin('Options')
+        elem.subtractECVan = gui.checkBox(elem.subtractECVan, 'Subtract empty can from vanadium' , tip=self.TIP_chkSubtractECVan)
+        elem.normalise     = gui.radioButtonGroup(elem.normalise, ('none', 'to monitor', 'to time'), title='Normalize')
+        elem.correctTof    = gui.radioButtonGroup(elem.correctTof, ('none', 'vanadium', 'sample'), title='Correct TOF')
+
+        elem.replaceNaNs = gui.checkBox(elem.replaceNaNs, 'Replace special values in S(Q,W) with 0', tip=self.TIP_chkReplaceNaNs, enabled=elem.binQon)
+        elem.createDiff  = gui.checkBox(elem.createDiff,  'Create diffractograms'                  , tip=self.TIP_chkCreateDiff, enabled=elem.binEon)
+        elem.keepSteps   = gui.checkBox(elem.keepSteps,   'Keep intermediate steps'                , tip=self.TIP_chkKeepSteps)
+        gui.groupBoxEnd()
+
+    def _rightGUI(self):
+        elem = self.elem
+        gui = self.gui
+        
+        gui.groupBoxBegin('Standard Data')
+        elem.standardDataPath = gui.folderPathEdit(elem.standardDataPath, title='Path', tip=self.TIP_standardDataPath)
+        gui.groupBoxEnd()
+
+        gui.groupBoxBegin('Data Reduction Settings')
+        elem.detEffi        = gui.checkBox(elem.detEffi,      title='Detector efficiency correction',            tip=self.TIP_chkDetEffi)
+        elem.sumVan         = gui.checkBox(elem.sumVan,       title='Sum Vanadium over detector position',       tip=self.TIP_chkSumVan, enabled=elem.detEffi)
+        elem.subInst        = gui.checkBox(elem.subInst,      title='Subtract instrument background for sample', tip=self.TIP_chkSubInst)
+        elem.subFac         = gui.doubleSpinBox(elem.subFac, minVal=0,  title='Factor',                                    tip=self.TIP_subFac,    enabled= elem.subInst)
+        elem.flipRatio      = gui.checkBox(elem.flipRatio,    title='Flipping ratio correction',                 tip=self.TIP_chkFlipRatio)
+        elem.flipFac        = gui.doubleSpinBox(elem.flipFac, minVal=0, title='Factor',                                    tip=self.TIP_flipFac,   enabled=elem.flipRatio)
+
+        elem.multiSF        = gui.doubleSpinBox(elem.multiSF, minVal=0, maxVal=1, title='Multiple SF scattering probability',        tip=self.TIP_multiSF,   enabled=False) # this is always disabled. why?
+        elem.normalise      = gui.radioButtonGroup(elem.normalise, ('time', 'monitor'), title = 'Normalize')
+        elem.neutronWaveLen = gui.doubleSpinBox(elem.neutronWaveLen, minVal=0, title=u'Neutron wavelength (\305)',         tip=self.TIP_neutronWaveLen)
+        gui.groupBoxEnd(preventHStretch=True)
+
+        gui.groupBoxBegin('Sample Type')
+        elem.out = gui.radioButtonGroup(elem.out, ('Polycrystal/Amorphous', 'Single Crystal'), title='Sample Type')
+        if elem.out == elem.OUT_POLY_AMOR:
+            # sample type polycrystal/amorph
+            gui.groupBoxBegin(' ')
+            gui.horizontalLayoutBegin(title='Abscissa')
+            elem.outAxisQ      = gui.checkBox(elem.outAxisQ, "q", tip=self.TIP_chkAxQ)
+            elem.outAxisD      = gui.checkBox(elem.outAxisD, "d", tip=self.TIP_chkAxD)
+            elem.outAxis2Theta = gui.checkBox(elem.outAxis2Theta, u"2\u0398", tip=self.TIP_chkAx2Theta)
+            gui.horizontalLayoutEnd()
+
+            elem.separation  = gui.radioButtonGroup(elem.separation, ('XYZ', 'Coherent/Incoherent', 'No / none?'), title='Separation', tip=self.TIP_rbnXYZ)
+            gui.groupBoxEnd()
+        else:
+            # sample type singlecrystal
+            gui.groupBoxBegin(' ')
+            elem.omegaOffset  = gui.doubleSpinBox(elem.omegaOffset, title='Omega Offset', tip=self.TIP_omegaOffset)
+            #
+            gui.verticalLayoutBegin(title='Lattice Parameters')
+            gui.horizontalLayoutBegin()
+            elem.latticeA     = gui.doubleSpinBox(elem.latticeA, minVal=0, decimals=4, title=u'a[\305]', tip=self.TIP_latticeA)
+            elem.latticeB     = gui.doubleSpinBox(elem.latticeB, minVal=0, decimals=4, title=u'b[\305]', tip=self.TIP_latticeB)
+            elem.latticeC     = gui.doubleSpinBox(elem.latticeC, minVal=0, decimals=4, title=u'c[\305]', tip=self.TIP_latticeC)
+            gui.horizontalLayoutEnd()
+            gui.horizontalLayoutBegin()
+            elem.latticeAlpha = gui.doubleSpinBox(elem.latticeAlpha, minVal=5.0, maxVal=175.0, title=u'\u03B1[\u00B0]', tip=self.TIP_latticeAlpha)
+            elem.latticeBeta  = gui.doubleSpinBox(elem.latticeBeta , minVal=5.0, maxVal=175.0, title=u'\u03B2[\u00B0]', tip=self.TIP_latticeBeta)
+            elem.latticeGamma = gui.doubleSpinBox(elem.latticeGamma, minVal=5.0, maxVal=175.0, title=u'\u03B3[\u00B0]', tip=self.TIP_latticeGamma)
+            gui.horizontalLayoutEnd()
+            gui.verticalLayoutEnd()
+            #
+            gui.verticalLayoutBegin(title='Scatter Plane')
+            gui.horizontalLayoutBegin(title='u')
+            elem.scatterU1    = gui.doubleSpinBox(elem.scatterU1, tip=self.TIP_scatterU1)
+            elem.scatterU2    = gui.doubleSpinBox(elem.scatterU2, tip=self.TIP_scatterU2)
+            elem.scatterU3    = gui.doubleSpinBox(elem.scatterU3, tip=self.TIP_scatterU3)
+            gui.horizontalLayoutEnd()
+            gui.horizontalLayoutBegin(title='v')
+            elem.scatterV1    = gui.doubleSpinBox(elem.scatterV1, tip=self.TIP_scatterV1)
+            elem.scatterV2    = gui.doubleSpinBox(elem.scatterV2, tip=self.TIP_scatterV2)
+            elem.scatterV3    = gui.doubleSpinBox(elem.scatterV3, tip=self.TIP_scatterV3)
+            gui.horizontalLayoutEnd()
+            gui.verticalLayoutEnd()
+            gui.groupBoxEnd()
+        gui.groupBoxEnd(preventVStretch=True)
+
+        return
+                # save state of standard data path widget to element
+
+        # save state of data reduction settings widget to element
+        elem.detEffi        = self.chkdetEffi.isChecked()
+        elem.sumVan         = self.chksumVan.isChecked()
+        elem.subInst        = self.chksubInst.isChecked()
+        elem.subFac         = self.subFac.value()
+        elem.flipRatio     = self.chkFlipRatio.isChecked()
+        elem.flipFac       = self.flipFac.value()
+        elem.multiSF        = self.multiSF.value()
+        elem.neutronWaveLen = self.neutronWaveLength.value()
+        elem.normalise = elem.NORM_TIME if self.rbnNormTime.isChecked() else \
+            elem.NORM_MONITOR
+
+        # save state of sample data settings to element
+        elem.out = elem.OUT_POLY_AMOR if self.rbnPolyAmor.isChecked() else \
+            elem.OUT_SINGLE_CRYST
+
+        elem.outAxisQ      = self.chkAxQ.isChecked()
+        elem.outAxisD      = self.chkAxD.isChecked()
+        elem.outAxis2Theta = self.chkAx2Theta.isChecked()
+        elem.separation    = elem.SEP_XYZ if self.rbnXYZ.isChecked() else \
+            elem.SEP_COH if self.rbnCoherent.isChecked() else elem.SEP_NO
+
+        elem.omegaOffset = self.omegaOffset.value()
+
+        elem.latticeA     = self.latticeA.value()
+        elem.latticeB     = self.latticeB.value()
+        elem.latticeC     = self.latticeC.value()
+        elem.latticeAlpha = self.latticeAlpha.value()
+        elem.latticeBeta  = self.latticeBeta.value()
+        elem.latticeGamma = self.latticeGamma.value()
+        elem.scatterU1    = self.scatterU1.value()
+        elem.scatterU2    = self.scatterU2.value()
+        elem.scatterU3    = self.scatterU3.value()
+        elem.scatterV1    = self.scatterV1.value()
+        elem.scatterV2    = self.scatterV2.value()
+        elem.scatterV3    = self.scatterV3.value()
+
+
+    def newDNSScriptElement(self):
+        self.elem = DNSScriptElement()
+        self.elem.reset()
+        self.elem.facility_name   = self._settings.facility_name
+        self.elem.instrument_name = self._settings.instrument_name
+
     def _sampleDataDir(self):
         """
         dialog to browse for the directory with sample data
@@ -997,7 +1000,7 @@ class DNSSetupWidget(BaseWidget):
         for rbn in self.RbnsPolyAmor:
             rbn.setEnabled(False)
 
-    def get_state(self):
+    def get_stateOLD(self):
         """
         get the state of the ui
         :return: script element
@@ -1084,7 +1087,7 @@ class DNSSetupWidget(BaseWidget):
 
         return elem
 
-    def set_state(self, dnsScriptElement):
+    def set_stateOLD(self, dnsScriptElement):
         """
         set state from the script element to the ui
         :param dnsScriptElement: script element
@@ -1197,3 +1200,11 @@ class DNSSetupWidget(BaseWidget):
         self.scatterV1.setValue(elem.scatterV1)
         self.scatterV2.setValue(elem.scatterV2)
         self.scatterV3.setValue(elem.scatterV3)
+
+
+    def get_state(self):
+        return self.elem
+
+    def set_state(self, dnsScriptElement):
+        self.elem = dnsScriptElement
+        self.gui.redrawGUI()

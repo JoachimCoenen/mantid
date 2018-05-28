@@ -22,6 +22,7 @@ except:
     sip.setapi('QVariant',2)
 
 from PyQt5 import QtGui, QtCore, QtWidgets # noqa
+from PyQt5.QtCore import QObject
 
 if six.PY3:
     unicode = str
@@ -63,7 +64,6 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
 
         # Application settings
         settings = QtCore.QSettings()
-        print(settings.fileName())
 
         # Name handle for the instrument
         if instrument is None:
