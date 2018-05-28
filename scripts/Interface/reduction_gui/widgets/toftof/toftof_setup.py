@@ -185,12 +185,10 @@ class TOFTOFSetupWidget(BaseWidget):
         #if not elem.binEon:
         #    elem.saveNXSPE = False
         
-        gui.groupBoxBegin('Save Reduced Data')
         elem.saveNXSPE = gui.checkBox(elem.saveNXSPE, 'NXSPE', tip=self.TIP_chkNxspe, enabled=elem.binEon)
         elem.saveNexus = gui.checkBox(elem.saveNexus, 'NeXus', tip=self.TIP_chkNexus)
         # disable save Ascii, it is not available for the moment
         elem.saveAscii = gui.checkBox(elem.saveAscii, 'Ascii', tip=self.TIP_chkAscii, enabled=False)
-        gui.groupBoxEnd()
         gui.horizontalLayoutEnd()
         gui.groupBoxEnd()
 
