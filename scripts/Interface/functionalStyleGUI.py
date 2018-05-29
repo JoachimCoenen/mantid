@@ -380,7 +380,7 @@ class FunctionalStyleGUI():
 		item = self.addItem(ItemType, hasLabel = title != None, **kwargs)
 		if hasattr(item, 'setToolTip'):
 			item.setToolTip(tip)
-		if label != None and isinstance(item, QtWidgets.QWidget):
+		if label != None and isinstance(item, QtWidgets.QWidget) and isinstance(label, QtWidgets.QLabel):
 			label.setBuddy(item)
 		return (item, label)
 
@@ -388,9 +388,16 @@ class FunctionalStyleGUI():
 	def pushLayout(self, LayoutType, title, isIndented, LabelType = QtWidgets.QLabel, tip = "", **kwargs):
 		items = self.addLabeledItem(QtWidgets.QWidget, title, LabelType, tip, **kwargs)
 		widget = items[0]
-		widget.setLayout(LayoutType())
 		layout = widget.layout()
-		layout.setContentsMargins(0, 0, 0, 0)
+		if not type(layout) is LayoutType:
+			if layout != None:
+				self.removeWidgets(layout, 0)
+				layout.deleteLater()
+				layout.setParent(None)
+
+			widget.setLayout(LayoutType())
+			layout = widget.layout()
+			layout.setContentsMargins(0, 0, 0, 0)
 
 		#items = self.addLabeledItem(LayoutType, title, LabelType, tip, **kwargs)
 		#layout = items[0]
@@ -603,6 +610,24 @@ class FunctionalStyleGUI():
 		if QtCore.QObject.receivers(spinBox, spinBox.valueChanged) == 0 :
 			spinBox.valueChanged.connect(lambda x: self.OnInputModified(spinBox))
 		return spinBox.value()
+
+	def comboBox(self, value, choices, title = None, tip = "", **kwargs):
+		comboBox = self.addLabeledItem(QtWidgets.QComboBox, title, tip=tip, **kwargs)[0]
+
+		allCurrentItems = [comboBox.itemText(i) for i in range(comboBox.count())]
+		if allCurrentItems == choices:
+			print("### comboBox all OK")
+		else:
+			comboBox.clear()
+			comboBox.addItems(choices)
+			print("### comboBox redone choices")
+
+		if comboBox != self.modifiedInput[0] and comboBox.currentIndex() != value:
+			comboBox.setCurrentIndex(value)
+		
+		if QtCore.QObject.receivers(comboBox, comboBox.currentIndexChanged[int]) == 0 :
+			comboBox.currentIndexChanged[int].connect(lambda x: self.OnInputModified(comboBox))
+		return comboBox.currentIndex()
 
 	def slider(self, value, minVal, maxVal, title = None, tip = "", **kwargs):
 		slider = self.addLabeledItem(QtWidgets.QSlider, title, tip=tip, **kwargs)[0]

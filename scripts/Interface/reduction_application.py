@@ -52,6 +52,7 @@ import ui.ui_reduction_main # noqa
 import ui.ui_instrument_dialog # noqa
 import ui.ui_cluster_details_dialog # noqa
 
+from functionalStyleGUI import FunctionalStyleGUI
 
 class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction):
     def __init__(self, instrument=None, instrument_list=None):
@@ -312,27 +313,41 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         """
             Invoke an instrument selection dialog
         """
-        class InstrDialog(QtWidgets.QDialog, ui.ui_instrument_dialog.Ui_Dialog):
+        class InstrDialog(QtWidgets.QDialog):
+       # class InstrDialog(QtWidgets.QDialog, ui.ui_instrument_dialog.Ui_Dialog):
             def __init__(self, instrument_list=None):
                 QtWidgets.QDialog.__init__(self)
                 self.instrument_list = instrument_list
-                self.setupUi(self)
-                self.instr_combo.clear()
-                self.facility_combo.clear()
-                instruments = sorted(INSTRUMENT_DICT.keys())
-                instruments.reverse()
-                for facility in instruments:
-                    self.facility_combo.addItem(QtWidgets.QApplication.translate("Dialog", facility, None))
 
-                self._facility_changed(instruments[0])
-                self.facility_combo.activated[str].connect(self._facility_changed)
+                #values:
+                self.facilities = sorted(INSTRUMENT_DICT.keys())
+                self.facilities.reverse()
+                self.facility = ''
+                self.instrument = ''
+                #GUI:
+                self._gui = FunctionalStyleGUI(self, self.OnGUI)
+                self._gui.redrawGUI()
+                self.resize(318, 137)
 
-            def _facility_changed(self, facility):
-                self.instr_combo.clear()
-                instr_list = sorted(INSTRUMENT_DICT[unicode(facility)].keys())
-                for item in instr_list:
-                    if self.instrument_list is None or item in self.instrument_list:
-                        self.instr_combo.addItem(QtWidgets.QApplication.translate("Dialog", item, None))
+            def OnGUI(self):
+                gui = self._gui
+                print( self.facilities)
+                facilityIndex = self.facilities.index(self.facility) if self.facility in self.facilities else -1
+                facilityIndex = gui.comboBox(facilityIndex, self.facilities, title='Facility')
+                self.facility = self.facilities[facilityIndex]
+
+                instruments = filter(lambda item:  self.instrument_list is None or item in self.instrument_list, sorted(INSTRUMENT_DICT[unicode(self.facility)].keys()))
+                instrumentIndex = instruments.index(self.instrument) if self.instrument in instruments else -1
+                instrumentIndex = gui.comboBox(instrumentIndex, instruments, title='Instrument')
+                self.instrument = instruments[instrumentIndex]
+
+                gui.horizontalLayoutBegin()
+                if gui.button('OK'):
+                    self.accept()
+                if gui.button('Cancel'):
+                    self.reject()
+                gui.horizontalLayoutEnd()
+                
 
         if self.general_settings.debug:
             dialog = InstrDialog()
@@ -340,8 +355,10 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             dialog = InstrDialog(self._instrument_list)
         dialog.exec_()
         if dialog.result()==1:
-            self._instrument = dialog.instr_combo.currentText()
-            self._facility = dialog.facility_combo.currentText()
+            #self._instrument = dialog.instr_combo.currentText()
+            #self._facility = dialog.facility_combo.currentText()
+            self._instrument = dialog.instrument
+            self._facility = dialog.facility
             self.setup_layout()
             self._new()
             return True
