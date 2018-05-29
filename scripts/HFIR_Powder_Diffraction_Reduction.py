@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function)
 import sys
 
 from HFIRPowderReduction import HfirPDReductionGUI
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
 def qapp():

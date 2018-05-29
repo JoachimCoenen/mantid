@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from functools import partial
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_sample_data_setup_script import SampleSetupScript
@@ -64,18 +64,12 @@ class SampleSetupWidget(BaseWidget):
         self._handle_tzero_guess(self._content.use_ei_guess_chkbox.isChecked())
 
         # Connections
-        self.connect(self._content.sample_browse, QtCore.SIGNAL("clicked()"),
-                     self._sample_browse)
-        self.connect(self._content.detcal_browse, QtCore.SIGNAL("clicked()"),
-                     self._detcal_browse)
-        self.connect(self._content.hardmask_browse, QtCore.SIGNAL("clicked()"),
-                     self._hardmask_browse)
-        self.connect(self._content.grouping_browse, QtCore.SIGNAL("clicked()"),
-                     self._grouping_browse)
-        self.connect(self._content.use_ei_guess_chkbox, QtCore.SIGNAL("stateChanged(int)"),
-                     self._handle_tzero_guess)
-        self.connect(self._content.savedir_browse, QtCore.SIGNAL("clicked()"),
-                     self._savedir_browse)
+        self._content.sample_browse.clicked.connect(self._sample_browse)
+        self._content.detcal_browse.clicked.connect(self._detcal_browse)
+        self._content.hardmask_browse.clicked.connect(self._hardmask_browse)
+        self._content.grouping_browse.clicked.connect(self._grouping_browse)
+        self._content.use_ei_guess_chkbox.stateChanged[int].connect(self._handle_tzero_guess)
+        self._content.savedir_browse.clicked.connect(self._savedir_browse)
 
         # Validated widgets
         self._connect_validated_lineedit(self._content.sample_edit)

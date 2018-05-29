@@ -1,6 +1,6 @@
 #pylint: disable=C0103
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from . import ui_OptimizeLattice
 

@@ -8,7 +8,7 @@ import os
 from abc import ABCMeta, abstractmethod
 from inspect import isclass
 
-from six import with_metaclass
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5 import QtGui, QtCore
 
 from mantid.kernel import (Logger, config)

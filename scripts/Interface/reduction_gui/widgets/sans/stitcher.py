@@ -1,6 +1,6 @@
 # pylint: disable=invalid-name, protected-access, super-on-old-class
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import os
 from reduction_gui.settings.application_settings import GeneralSettings
 from reduction_gui.widgets.base_widget import BaseWidget

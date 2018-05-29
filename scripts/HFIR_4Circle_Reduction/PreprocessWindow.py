@@ -1,7 +1,7 @@
 import os
 import time
 import csv
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import ui_preprocess_window
 import reduce4circleControl
 import guiutility as gui_util

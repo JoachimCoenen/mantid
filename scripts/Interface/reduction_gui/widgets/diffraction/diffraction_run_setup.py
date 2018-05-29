@@ -3,7 +3,7 @@
 # This is my first attempt to make a tab from quasi-scratch
 ################################################################################
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 from mantid.kernel import Logger
 
@@ -130,20 +130,15 @@ class RunSetupWidget(BaseWidget):
         # self._handle_tzero_guess(self._content.use_ei_guess_chkbox.isChecked())
 
         # Connections from action/event to function to handle
-        self.connect(self._content.calfile_browse, QtCore.SIGNAL("clicked()"),
-                     self._calfile_browse)
-        self.connect(self._content.charfile_browse, QtCore.SIGNAL("clicked()"),
-                     self._charfile_browse)
-        self.connect(self._content.groupfile_browse, QtCore.SIGNAL("clicked()"),
-                     self._groupfile_browse)
+        self._content.calfile_browse.clicked.connect(self._calfile_browse)
+        self._content.charfile_browse.clicked.connect(self._charfile_browse)
+        self._content.groupfile_browse.clicked.connect(self._groupfile_browse)
         self.connect(self._content.pushButton_browseExpIniFile, QtCore.SIGNAL('clicked()'),
                      self.do_browse_ini_file)
-        self.connect(self._content.outputdir_browse, QtCore.SIGNAL("clicked()"),
-                     self._outputdir_browse)
+        self._content.outputdir_browse.clicked.connect(self._outputdir_browse)
         self.connect(self._content.binning_edit, QtCore.SIGNAL("valueChanged"),
                      self._binvalue_edit)
-        self.connect(self._content.bintype_combo, QtCore.SIGNAL("currentIndexChanged(QString)"),
-                     self._bintype_process)
+        self._content.bintype_combo.currentIndexChanged[QString].connect(self._bintype_process)
 
         #self.connect(self._content.override_emptyrun_checkBox, QtCore.SIGNAL("clicked()"),
         #        self._overrideemptyrun_clicked)
@@ -152,20 +147,14 @@ class RunSetupWidget(BaseWidget):
         #self.connect(self._content.override_vanbkgdrun_checkBox, QtCore.SIGNAL("clicked()"),
         #        self._overridevanbkgdrun_clicked)
 
-        self.connect(self._content.disablebkgdcorr_chkbox, QtCore.SIGNAL("clicked()"),
-                     self._disablebkgdcorr_clicked)
-        self.connect(self._content.disablevancorr_chkbox, QtCore.SIGNAL("clicked()"),
-                     self._disablevancorr_clicked)
-        self.connect(self._content.disablevanbkgdcorr_chkbox, QtCore.SIGNAL("clicked()"),
-                     self._disablevanbkgdcorr_clicked)
+        self._content.disablebkgdcorr_chkbox.clicked.connect(self._disablebkgdcorr_clicked)
+        self._content.disablevancorr_chkbox.clicked.connect(self._disablevancorr_clicked)
+        self._content.disablevanbkgdcorr_chkbox.clicked.connect(self._disablevanbkgdcorr_clicked)
 
-        self.connect(self._content.usebin_button, QtCore.SIGNAL("clicked()"),
-                     self._usebin_clicked)
-        self.connect(self._content.resamplex_button, QtCore.SIGNAL("clicked()"),
-                     self._resamplex_clicked)
+        self._content.usebin_button.clicked.connect(self._usebin_clicked)
+        self._content.resamplex_button.clicked.connect(self._resamplex_clicked)
 
-        self.connect(self._content.help_button, QtCore.SIGNAL("clicked()"),
-                     self._show_help)
+        self._content.help_button.clicked.connect(self._show_help)
 
         # Validated widgets
 

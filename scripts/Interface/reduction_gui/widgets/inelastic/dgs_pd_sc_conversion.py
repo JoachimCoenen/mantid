@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from functools import partial
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_pd_sc_conversion_script import PdAndScConversionScript
@@ -45,10 +45,8 @@ class PdAndScConversionWidget(BaseWidget):
         self._save_powder_nxs_state(self._content.save_procnexus_cb.isChecked())
 
         # Connections
-        self.connect(self._content.save_procnexus_save, QtCore.SIGNAL("clicked()"),
-                     self._save_powder_nxs_save)
-        self.connect(self._content.save_procnexus_cb, QtCore.SIGNAL("toggled(bool)"),
-                     self._save_powder_nxs_state)
+        self._content.save_procnexus_save.clicked.connect(self._save_powder_nxs_save)
+        self._content.save_procnexus_cb.toggled[bool].connect(self._save_powder_nxs_state)
 
         # Validate widgets
         self._connect_validated_lineedit(self._content.q_low_edit)

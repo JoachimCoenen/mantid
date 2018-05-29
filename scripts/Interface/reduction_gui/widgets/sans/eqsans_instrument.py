@@ -1,7 +1,7 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import reduction_gui.widgets.util as util
 import os
 from reduction_gui.reduction.sans.eqsans_options_script import ReductionOptions

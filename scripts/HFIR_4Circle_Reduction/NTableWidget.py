@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function)
 from six.moves import range
 import csv
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8

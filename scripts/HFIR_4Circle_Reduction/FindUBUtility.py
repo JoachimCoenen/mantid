@@ -8,7 +8,7 @@ from . import ui_AddUBPeaksDialog
 from . import ui_UBSelectPeaksDialog
 from . import guiutility
 
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
 class AddScansForUBDialog(QtWidgets.QDialog):

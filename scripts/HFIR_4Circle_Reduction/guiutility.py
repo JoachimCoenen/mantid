@@ -6,7 +6,7 @@ from six.moves import range
 import math
 import numpy
 import os
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
 def convert_str_to_matrix(matrix_str, matrix_shape):

@@ -1,5 +1,5 @@
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.reduction.output_script import Output
 from reduction_gui.widgets.base_widget import BaseWidget
 import ui.ui_hfir_output

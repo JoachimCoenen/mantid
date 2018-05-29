@@ -12,7 +12,7 @@ from abc import ABCMeta, abstractmethod
 import os
 
 from six import with_metaclass
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from sans.gui_logic.gui_common import (GENERIC_SETTINGS, JSON_SUFFIX, load_file)
 import ui_settings_diagnostic_tab

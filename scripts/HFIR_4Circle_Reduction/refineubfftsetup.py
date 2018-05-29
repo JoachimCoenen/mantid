@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, division, print_function)
 import HFIR_4Circle_Reduction.ui_RefineUbFftDialog as ui_RefineUbFftDialog
 
-from PyQt5 import QtCore
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:

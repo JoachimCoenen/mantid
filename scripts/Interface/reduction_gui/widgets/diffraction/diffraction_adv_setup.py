@@ -3,7 +3,7 @@
 # Advanced Setup Widget
 ################################################################################
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 
 from reduction_gui.reduction.diffraction.diffraction_adv_setup_script import AdvancedSetupScript
@@ -94,11 +94,9 @@ class AdvancedSetupWidget(BaseWidget):
         self._content.filterbadpulses_edit.setText("95.")
 
         # Connections from action/event to function to handle
-        self.connect(self._content.stripvanpeaks_chkbox, QtCore.SIGNAL("clicked()"),
-                     self._stripvanpeaks_clicked)
+        self._content.stripvanpeaks_chkbox.clicked.connect(self._stripvanpeaks_clicked)
 
-        self.connect(self._content.help_button, QtCore.SIGNAL("clicked()"),
-                     self._show_help)
+        self._content.help_button.clicked.connect(self._show_help)
         # Hanlder for events
         # TODO - Need to add an event hanlder for the change of instrument and facility
 

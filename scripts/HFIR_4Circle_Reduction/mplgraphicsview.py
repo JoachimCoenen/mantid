@@ -4,7 +4,7 @@ from six.moves import range
 import os
 import numpy as np
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas

@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 import six
 import os
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import reduction_gui.widgets.util as util
 from reduction_gui.reduction.sans.hfir_sample_script import SampleData
 from reduction_gui.widgets.base_widget import BaseWidget

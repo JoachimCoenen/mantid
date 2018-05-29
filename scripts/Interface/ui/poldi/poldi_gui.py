@@ -4,7 +4,7 @@ try:
 except ImportError:
     canMantidPlot = False
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from mantid.simpleapi import *
 from mantidqtpython import MantidQt
 from ui.poldi.ui_poldi_window import Ui_PoldiWindow

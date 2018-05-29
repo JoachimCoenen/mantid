@@ -2,8 +2,7 @@
 # Dialog to set up HTTP data downloading server and download HB3A data to local
 ##########
 import os
-from PyQt5 import QtCore
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 import HFIR_4Circle_Reduction.fourcircle_utility as hb3a_util
 from HFIR_4Circle_Reduction import ui_httpserversetup as ui_http
 

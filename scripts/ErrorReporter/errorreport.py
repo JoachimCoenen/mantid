@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import ui_errorreport
 from PyQt5.QtCore import pyqtSignal
 from mantidqtpython import MantidQt

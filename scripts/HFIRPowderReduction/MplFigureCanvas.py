@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 import os
 import numpy as np
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar

@@ -3,7 +3,7 @@
 # Event Filtering (and advanced) Setup Widget
 ################################################################################
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 
 from reduction_gui.reduction.diffraction.diffraction_filter_setup_script import FilterSetupScript
@@ -115,26 +115,20 @@ class FilterSetupWidget(BaseWidget):
         # Default states
 
         # Connections from action/event to function to handle
-        self.connect(self._content.timefilter_checkBox, QtCore.SIGNAL("stateChanged(int)"),
-                     self._filterbytime_statechanged)
+        self._content.timefilter_checkBox.stateChanged[int].connect(self._filterbytime_statechanged)
 
-        self.connect(self._content.logvaluefilter_checkBox, QtCore.SIGNAL("stateChanged(int)"),
-                     self._filterbylogvalue_statechanged)
+        self._content.logvaluefilter_checkBox.stateChanged[int].connect(self._filterbylogvalue_statechanged)
 
-        self.connect(self._content.load_button, QtCore.SIGNAL("clicked()"),
-                     self._run_number_changed)
+        self._content.load_button.clicked.connect(self._run_number_changed)
 
         # self._content.run_number_edit.textChanged[str].connect(self._run_number_changed)
         self._content.run_number_edit.returnPressed.connect(self._run_number_changed)
 
-        self.connect(self._content.plot_log_button, QtCore.SIGNAL("clicked()"),
-                     self._plot_log_clicked)
+        self._content.plot_log_button.clicked.connect(self._plot_log_clicked)
 
-        self.connect(self._content.syn_logname_button, QtCore.SIGNAL("clicked()"),
-                     self._sync_logname_clicked)
+        self._content.syn_logname_button.clicked.connect(self._sync_logname_clicked)
 
-        self.connect(self._content.help_button, QtCore.SIGNAL("clicked()"),
-                     self._show_help)
+        self._content.help_button.clicked.connect(self._show_help)
 
         # Validated widgets
         # self._connect_validated_lineedit(self._content.sample_edit)

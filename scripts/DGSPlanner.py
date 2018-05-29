@@ -1,7 +1,7 @@
 #pylint: disable=invalid-name,unused-import
 from __future__ import (absolute_import, division, print_function)
 import sys
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from DGSPlanner import DGSPlannerGUI
 
 

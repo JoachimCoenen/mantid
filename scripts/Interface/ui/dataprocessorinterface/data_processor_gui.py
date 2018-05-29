@@ -4,7 +4,7 @@ try:
 except ImportError:
     canMantidPlot = False
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from mantidqtpython import MantidQt
 from ui.dataprocessorinterface.ui_data_processor_window import Ui_DataProcessorWindow
 

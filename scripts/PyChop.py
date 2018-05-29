@@ -5,7 +5,7 @@ Module to import and run the PyChop GUI for use either on the commandline or as 
 """
 
 import sys
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyChop import PyChopGui
 
 if __name__ == '__main__':

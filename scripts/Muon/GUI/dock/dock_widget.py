@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, division, print_function)
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from Muon.GUI.dummy.dummy_widget import DummyWidget
 from Muon.GUI.dummy_label.dummy_label_widget import DummyLabelWidget

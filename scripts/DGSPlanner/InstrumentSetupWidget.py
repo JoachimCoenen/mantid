@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name,no-name-in-module,too-many-instance-attributes,too-many-public-methods
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import sys
 import mantid
 import numpy

@@ -4,7 +4,7 @@
 """
 from __future__ import (absolute_import, division, print_function)
 import six
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 import sys
 import os
 import traceback

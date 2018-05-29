@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QPushButton, QTableView, QHeaderView, QCh
     QLayout, QWidget, QSpacerItem, QHBoxLayout, QVBoxLayout, QLabel, QFrame, QGroupBox, QGridLayout, QButtonGroup, \
     QSizePolicy, QMessageBox, QAbstractItemView
 from PyQt5.QtCore import QAbstractTableModel, pyqtSignal, QModelIndex, Qt
-from PyQt5 import QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.dns.dns_reduction import DNSScriptElement

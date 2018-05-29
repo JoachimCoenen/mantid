@@ -1,4 +1,5 @@
-import PyQt5.QtGui as QtGui
+
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
 def warning(error):

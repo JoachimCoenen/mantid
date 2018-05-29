@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_data_corrections_script import DataCorrectionsScript
 import reduction_gui.widgets.util as util
@@ -50,24 +50,18 @@ class DataCorrectionsWidget(BaseWidget):
         self.incident_beam_norm_grp.addButton(self._content.monitor1_rb, 2)
 
         self._monitor_intrange_widgets_state(self._content.monitor1_rb.isChecked())
-        self.connect(self._content.monitor1_rb, QtCore.SIGNAL("toggled(bool)"),
-                     self._monitor_intrange_widgets_state)
+        self._content.monitor1_rb.toggled[bool].connect(self._monitor_intrange_widgets_state)
 
         self._detvan_intrange_widgets_state(self._content.van_int_cb.isChecked())
-        self.connect(self._content.van_int_cb, QtCore.SIGNAL("toggled(bool)"),
-                     self._detvan_intrange_widgets_state)
-        self.connect(self._content.use_procdetvan_cb, QtCore.SIGNAL("toggled(bool)"),
-                     self._detvan_widgets_opp_state)
+        self._content.van_int_cb.toggled[bool].connect(self._detvan_intrange_widgets_state)
+        self._content.use_procdetvan_cb.toggled[bool].connect(self._detvan_widgets_opp_state)
 
         self._save_detvan_widgets_state(self._content.save_procdetvan_cb.isChecked())
-        self.connect(self._content.save_procdetvan_cb, QtCore.SIGNAL("toggled(bool)"),
-                     self._save_detvan_widgets_state)
+        self._content.save_procdetvan_cb.toggled[bool].connect(self._save_detvan_widgets_state)
 
         # Connections
-        self.connect(self._content.van_input_browse, QtCore.SIGNAL("clicked()"),
-                     self._detvan_browse)
-        self.connect(self._content.save_procdetvan_save, QtCore.SIGNAL("clicked()"),
-                     self._save_procdetvan_save)
+        self._content.van_input_browse.clicked.connect(self._detvan_browse)
+        self._content.save_procdetvan_save.clicked.connect(self._save_procdetvan_save)
 
     def _monitor_intrange_widgets_state(self, state=False):
         self._content.monint_label.setEnabled(state)

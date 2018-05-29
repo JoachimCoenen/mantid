@@ -1,5 +1,5 @@
 from sans.common.enums import SANSInstrument, ISISReductionMode, DetectorType
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import os
 
 

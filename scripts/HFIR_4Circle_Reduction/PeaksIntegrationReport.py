@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function)
 import os
 
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from . import ui_PeakIntegrationSpreadSheet
 
 

@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import sys
 
-import PyQt5.QtGui as QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from Muon import model_constructor
 from Muon import transform_presenter

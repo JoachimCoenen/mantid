@@ -8,7 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 
 from abc import ABCMeta, abstractmethod
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from six import with_metaclass
 import ui_masking_table
 

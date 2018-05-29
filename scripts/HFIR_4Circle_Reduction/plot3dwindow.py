@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 from six.moves import range
 import sys
 import numpy as np
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from . import ui_View3DWidget
 from HFIR_4Circle_Reduction import guiutility

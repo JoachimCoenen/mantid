@@ -32,9 +32,6 @@
    <number>8</number>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
    <item>
     <widget class="QScrollArea" name="scrollArea">
      <property name="sizePolicy">
@@ -334,7 +331,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="abs_scale_direct_beam_layout">
+           <layout class="QHBoxLayout" name="abs_scale_direct_beam_layout" stretch="0,0,0,0,0,0">
             <item>
              <spacer name="horizontalSpacer_10">
               <property name="orientation">

@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_diagnose_detectors_script import DiagnoseDetectorsScript
 import reduction_gui.widgets.util as util
@@ -57,8 +57,7 @@ class DiagnoseDetectorsWidget(BaseWidget):
             widget.setValidator(ivp)
 
         # Connections
-        self.connect(self._content.det_van2_browse, QtCore.SIGNAL("clicked()"),
-                     self._det_van2_browse)
+        self._content.det_van2_browse.clicked.connect(self._det_van2_browse)
 
     def _det_van2_browse(self):
         fname = self.data_browse_dialog()

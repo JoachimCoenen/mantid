@@ -1,6 +1,6 @@
 #pylint: disable=invalid-name
 from __future__ import (absolute_import, division, print_function)
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from reduction_gui.widgets.base_widget import BaseWidget
 from reduction_gui.reduction.inelastic.dgs_absolute_units_script import AbsoluteUnitsScript
 import reduction_gui.widgets.util as util
@@ -54,12 +54,9 @@ class AbsoluteUnitsWidget(BaseWidget):
             widget.setValidator(dvp)
 
         # Connections
-        self.connect(self._content.absunits_van_browse, QtCore.SIGNAL("clicked()"),
-                     self._absunits_van_browse)
-        self.connect(self._content.absunits_detvan_browse, QtCore.SIGNAL("clicked()"),
-                     self._absunits_detvan_browse)
-        self.connect(self._content.grouping_file_browse, QtCore.SIGNAL("clicked()"),
-                     self._grouping_file_browse)
+        self._content.absunits_van_browse.clicked.connect(self._absunits_van_browse)
+        self._content.absunits_detvan_browse.clicked.connect(self._absunits_detvan_browse)
+        self._content.grouping_file_browse.clicked.connect(self._grouping_file_browse)
 
     def _absunits_van_browse(self):
         fname = self.data_browse_dialog()

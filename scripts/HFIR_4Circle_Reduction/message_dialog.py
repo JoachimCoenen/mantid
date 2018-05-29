@@ -1,7 +1,7 @@
 # Dialog for message
 from __future__ import (absolute_import, division, print_function)
 from six.moves import range
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from . import ui_messagebox
 

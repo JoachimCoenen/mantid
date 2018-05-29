@@ -3,8 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import sys
 
-import PyQt5.QtGui as QtGui
-import PyQt5.QtCore as QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from Muon.GUI.dummy_label.dummy_label_widget import DummyLabelWidget
 from Muon.GUI.dock.dock_widget import DockWidget
