@@ -127,6 +127,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
         #GUI
         self._isClusterButtonVisible = False
+        self._isProgressBarVisible = False
         self.setCentralWidget(QtWidgets.QWidget(self))
         self._gui = FunctionalStyleGUI(self.centralWidget(), self.OnGUI)
         self._gui.redrawGUI()
@@ -144,7 +145,8 @@ class ReductionGUI(QtWidgets.QMainWindow):
                 if self._interface == None or self._interface.has_advanced_version():
                     self.general_settings.advanced = gui.checkBox(self.general_settings.advanced, title='Advanced Interface')
                 gui.addSpacer(40, QtWidgets.QSizePolicy.Expanding)
-                gui.progressBar(self.general_settings.progress)
+                if self._isProgressBarVisible:
+                    gui.progressBar(self.general_settings.progress)
                 gui.addSpacer(40, QtWidgets.QSizePolicy.Fixed)
                 gui.button('Reduce')
                 if self._isClusterButtonVisible:
@@ -171,7 +173,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
         """
         # Clean up the widgets that have already been created
         #self.tabWidget.clear()
-        self.isProgressBarVisible = False
+        self._isProgressBarVisible = False
 
         if self._instrument == '' or self._instrument is None:
             return self._change_instrument()

@@ -715,6 +715,8 @@ class FunctionalStyleGUI:
 		allCurrentItems = [comboBox.itemText(i) for i in range(comboBox.count())]
 		if allCurrentItems == choices:
 			print("### comboBox all OK")
+		elif allCurrentItems == list(choices):
+			print("### comboBox all OK")
 		else:
 			comboBox.clear()
 			comboBox.addItems(choices)
