@@ -4,10 +4,6 @@ from __future__ import print_function, absolute_import
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 
-
-
-
-
 class Stack:
 	def __init__(self):
 		self.__storage = []
@@ -249,10 +245,6 @@ class FunctionalStyleGUI:
 		self.modifiedInput = (None, None) # tuple (widget, data)
 		self._modifiedInputStack = Stack() # for handling recursive OnInputModified calls, don't remove!
 
-		#self.buttonGroups = {} # dict {name : QButtonGroup}
-		#self.oldButtonGroups = {} # dict {name : {set of buttons in this group}}
-
-
 	def redrawGUI(self):
 		if self.isCurrentlyDrawing:
 			return
@@ -308,7 +300,7 @@ class FunctionalStyleGUI:
 			#if hasattr(item, name):
 			getattr(item, name)(value)
 
-	def addItem(self, ItemType, hasLabel = False, isLabel = False, **kwargs):
+	def addItem(self, ItemType, hasLabel = False, isLabel = False, constructorArgs = {}, **kwargs):
 		gcs = self.widgetStack.peek()
 		item = None
 		isNew = False
@@ -317,12 +309,14 @@ class FunctionalStyleGUI:
 			item = gcs.w.itemAt(gcs.c).widget()
 			if item == None:
 				item = gcs.w.itemAt(gcs.c).layout()
+				if item == None :
+					item = gcs.w.itemAt(gcs.c).spacerItem()
 			if not type(item) is ItemType:
 				self.removeWidgets(self.currentLayout(), fromPos=gcs.c)
 				item = None
 		if item == None:
 			print("creating new item:", ItemType)
-			item = ItemType()
+			item = ItemType(*constructorArgs)
 
 			if isinstance(gcs.w, QtWidgets.QGridLayout):
 				rindex = gcs.rc
@@ -346,6 +340,8 @@ class FunctionalStyleGUI:
 					gcs.w.addWidget(item)
 				elif isinstance(item, QtWidgets.QLayout):
 						gcs.w.addLayout(item)
+				elif isinstance(item, QtWidgets.QSpacerItem):
+						gcs.w.addItem(item)
 			isNew = True
 		gcs.c += 1
 		if isLabel: 
@@ -356,7 +352,7 @@ class FunctionalStyleGUI:
 		self.addkwArgsToItem(item, **kwargs)
 		return item
 
-	def addLabeledItem(self, ItemType, title = None, LabelType = QtWidgets.QLabel, tip = "", **kwargs):
+	def addLabeledItem(self, ItemType, title = None, LabelType = QtWidgets.QLabel, tip = "", constructorArgs = {}, **kwargs):
 		# returns a tuple (item, label)
 		label = None
 		if title != None:
@@ -364,7 +360,7 @@ class FunctionalStyleGUI:
 			label.setToolTip(tip)
 			label.setText(title)
 
-		item = self.addItem(ItemType, hasLabel = title != None, **kwargs)
+		item = self.addItem(ItemType, hasLabel = title != None, constructorArgs=constructorArgs, **kwargs)
 		if hasattr(item, 'setToolTip'):
 			item.setToolTip(tip)
 		if label != None and isinstance(item, QtWidgets.QWidget) and isinstance(label, QtWidgets.QLabel):
@@ -478,14 +474,12 @@ class FunctionalStyleGUI:
 		if QtCore.QObject.receivers(checkBox, checkBox.toggled) == 0 :
 			checkBox.toggled.connect(lambda x: self.OnInputModified(checkBox))
 		return checkBox.isChecked()
-		# done
 
 	def _horizontalLayoutEnd(self, preventHStretch = False):
 		if preventHStretch:
 			spacer = self.addItem(QtWidgets.QWidget)
 			spacer.sizePolicy().setHorizontalStretch(5)
 		self.popLayout(QtWidgets.QHBoxLayout)
-		# done
 
 	def horizontalLayout(self, title = None, tip = "", preventHStretch = False, **kwargs):
 		"""
@@ -561,7 +555,6 @@ class FunctionalStyleGUI:
 			def __enter__(innerSelf):
 				self._groupBoxBegin(title, tip, **kwargs)
 
-
 			def __exit__(innerSelf, exc_type, exc_value, traceback):
 				self._groupBoxEnd(preventVStretch, preventHStretch)
 		
@@ -575,7 +568,6 @@ class FunctionalStyleGUI:
 		class GroupBox:
 			def __enter__(innerSelf):
 				return self._groupBoxCheckedBegin(isChecked, title, tip, **kwargs)
-
 
 			def __exit__(innerSelf, exc_type, exc_value, traceback):
 				self._groupBoxEnd(preventVStretch, preventHStretch)
@@ -595,6 +587,55 @@ class FunctionalStyleGUI:
 		self._horizontalLayoutEnd(preventHStretch)
 		# done
 
+	def tabWidget(self, title = None, tip = "", isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+		"""
+		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
+		Everything within the with statement will be inside the vertical layout.
+		"""
+		class TabControl:
+			def __enter__(innerSelf):
+				innerSelf.tabWidget = self.addItem(QtWidgets.QTabWidget, **kwargs)
+				innerSelf.tabWidget.setToolTip(tip)
+				innerSelf.c = 0
+				return innerSelf
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				tabWidget = innerSelf.tabWidget
+				while tabWidget.count() > innerSelf.c:
+					tabWidget.removeTab(tabWidget.count()-1)
+
+			def addTab(innerSelf, label):
+				class Tab:
+					def __enter__(tabSelf):
+						tabWidget = innerSelf.tabWidget
+						if tabWidget.count() <= innerSelf.c:
+							widget = QtWidgets.QWidget()
+							widget.setLayout(QtWidgets.QGridLayout())
+							tabWidget.addTab(widget, label)
+							print("adding Tab", tabWidget.count())
+						tabWidget.setTabText(innerSelf.c, label)
+						self.pushLayoutInstance(tabWidget.widget(innerSelf.c).layout(), isIndented)
+						innerSelf.c +=1
+					def __exit__(tabSelf, exc_type, exc_value, traceback):
+						self._verticalLayoutEnd(preventVStretch, preventHStretch)
+				return Tab()
+		
+		return TabControl()
+
+	def addSpacer(self, size, sizePolicy):
+		spacer = self.addItem(QtWidgets.QSpacerItem, constructorArgs=(0, 0))
+		needsInvalidation = False
+
+		layout = self.currentLayout()
+		if isinstance(layout, QtWidgets.QGridLayout):
+			needsInvalidation = needsInvalidation or spacer.sizeHint().height() != size
+			needsInvalidation = needsInvalidation or spacer.sizePolicy().verticalPolicy() != sizePolicy
+			spacer.changeSize(0, size, vPolicy = sizePolicy)
+		elif isinstance(layout, QtWidgets.QHBoxLayout):
+			needsInvalidation = needsInvalidation or spacer.sizeHint().width() != size
+			needsInvalidation = needsInvalidation or spacer.sizePolicy().horizontalPolicy() != sizePolicy
+			spacer.changeSize(size, 0, hPolicy = sizePolicy)
+		if needsInvalidation:
+			spacer.invalidate()
 
 	def button(self, text, tip = "", **kwargs):
 		button = self.addLabeledItem(QtWidgets.QPushButton, None, tip=tip, **kwargs)[0]
@@ -774,6 +815,53 @@ class FunctionalStyleGUI:
 			table.model().endResetModel()
 		return table.model().tableData
 
+	def progressBar(self, progressSignal, minVal = 0, maxVal = 100, title = None, tip = "", **kwargs):
+		progressBar = self.addLabeledItem(QtWidgets.QProgressBar, title, tip=tip, **kwargs)[0]
 
+		progressBar.setOrientation(QtCore.Qt.Horizontal)
+		progressBar.setMinimum(minVal)
+		progressBar.setMaximum(maxVal)
+		try:
+			progressSignal.disconnect(progressBar.setValue)
+		except Exception as e:
+			if str(e)[0:19] != "disconnect() failed":
+				raise e
+		progressSignal.connect(progressBar.setValue, type=QtCore.Qt.UniqueConnection)
+
+	def customWidget(self, widgetInstance):
+		gcs = self.widgetStack.peek()
+		item = None
+		isNew = False
+		hasLabel = False
+
+		if gcs.w.count() > gcs.c:
+			item = gcs.w.itemAt(gcs.c).widget()
+			if item != widgetInstance:
+				self.removeWidgets(self.currentLayout(), fromPos=gcs.c)
+				item = None
+		if item == None:
+			print("adding custom item:", widgetInstance)
+			item = widgetInstance
+
+			if isinstance(gcs.w, QtWidgets.QGridLayout):
+				rindex = gcs.rc
+				print("####", "rowCount={}, hasLabel={}, isLabel={}".format(gcs.rc, hasLabel, False))
+				cindex = 1
+				cspan = 2	
+				if hasLabel: 
+					cindex = 2
+					cspan = 1
+					rindex -= 1
+				print(rindex, cindex, 1, cspan)
+				if isinstance(item, QtWidgets.QWidget):
+					gcs.w.addWidget(item, rindex, cindex, 1, cspan)
+			else:
+				if isinstance(item, QtWidgets.QWidget):
+					gcs.w.addWidget(item)
+			isNew = True
+		gcs.c += 1
+		if isinstance(gcs.w, QtWidgets.QGridLayout):
+			row, column, rowSpan, columnSpan = gcs.w.getItemPosition(gcs.c-1)
+			gcs.rc = row + rowSpan
 
 

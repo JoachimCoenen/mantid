@@ -54,8 +54,8 @@ import ui.ui_cluster_details_dialog # noqa
 
 from functionalStyleGUI import FunctionalStyleGUI
 
-class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction):
-    def __init__(self, instrument=None, instrument_list=None):
+class ReductionGUI(QtWidgets.QMainWindow):
+    def __init__(self, instrument = None, facility = None, instrument_list=None):
         QtWidgets.QMainWindow.__init__(self)
 
         if REDUCTION_WARNING:
@@ -66,14 +66,8 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         # Application settings
         settings = QtCore.QSettings()
 
-        # Name handle for the instrument
-        if instrument is None:
-            instrument = unicode(settings.value("instrument_name", ''))
-            if instrument_list is not None and instrument not in instrument_list:
-                instrument = None
-
         self._instrument = instrument
-        self._facility = None
+        self._facility = facility
 
         # List of allowed instrument
         self._instrument_list = instrument_list
@@ -108,18 +102,18 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         # General settings shared by all widgets
         self.general_settings = GeneralSettings(settings)
 
-        self.setupUi(self)
+        #self.setupUi(self)
         
         # Event connections
-        if not IS_IN_MANTIDPLOT:
-            self.reduce_button.hide()
-        self.cluster_button.hide()
-        self.export_button.clicked.connect(self._export)
-        self.reduce_button.clicked.connect(self.reduce_clicked)
-        self.save_button.clicked.connect(self._save)
-        self.interface_chk.clicked.connect(self._interface_choice)
+        #if not IS_IN_MANTIDPLOT:
+        #    self.reduce_button.hide()
+        #self.cluster_button.hide()
+        #self.export_button.clicked.connect(self._export)
+        #self.reduce_button.clicked.connect(self.reduce_clicked)
+        #self.save_button.clicked.connect(self._save)
+        #self.interface_chk.clicked.connect(self._interface_choice)
 
-        self.interface_chk.setChecked(self.general_settings.advanced)
+        #self.interface_chk.setChecked(self.general_settings.advanced)
 
         # Of the widgets that are part of the application, one is the ApplicationWindow.
         # The ApplicationWindow will send a shutting_down() signal when quitting,
@@ -129,7 +123,34 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             if hasattr(w, "shutting_down"):
                 w.shutting_down.connect(self.close)
 
-        self.general_settings.progress.connect(self._progress_updated)
+        #self.general_settings.progress.connect(self._progress_updated)
+
+        #GUI
+        self._isClusterButtonVisible = False
+        self.setCentralWidget(QtWidgets.QWidget(self))
+        self._gui = FunctionalStyleGUI(self.centralWidget(), self.OnGUI)
+        self._gui.redrawGUI()
+
+    def OnGUI(self):
+        gui = self._gui
+        with gui.verticalLayout():
+            with gui.tabWidget(title='TabControl') as tabWidget:
+                if self._interface != None:
+                    for tab in self._interface.get_tabs():
+                        with tabWidget.addTab(tab[0]):
+                            gui.customWidget(tab[1])
+                
+            with gui.horizontalLayout():
+                if self._interface == None or self._interface.has_advanced_version():
+                    self.general_settings.advanced = gui.checkBox(self.general_settings.advanced, title='Advanced Interface')
+                gui.addSpacer(40, QtWidgets.QSizePolicy.Expanding)
+                gui.progressBar(self.general_settings.progress)
+                gui.addSpacer(40, QtWidgets.QSizePolicy.Fixed)
+                gui.button('Reduce')
+                if self._isClusterButtonVisible:
+                    gui.button('Send Cluster')
+                gui.button('Save')
+                gui.button('Export')
 
     def _set_window_title(self):
         """
@@ -149,8 +170,8 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             Sets up the instrument-specific part of the UI layout
         """
         # Clean up the widgets that have already been created
-        self.tabWidget.clear()
-        self.progress_bar.hide()
+        #self.tabWidget.clear()
+        self.isProgressBarVisible = False
 
         if self._instrument == '' or self._instrument is None:
             return self._change_instrument()
@@ -174,27 +195,28 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         self._interface = instrument_factory(self._instrument, settings=self.general_settings)
 
         if self._interface is not None:
-            tab_list = self._interface.get_tabs()
-            for tab in tab_list:
-                self.tabWidget.addTab(tab[1], tab[0])
+            #tab_list = self._interface.get_tabs()
+            #for tab in tab_list:
+            #    self.tabWidget.addTab(tab[1], tab[0])
             self._set_window_title()
 
             # Show the "advanced interface" check box if needed
-            if self._interface.has_advanced_version():
-                self.interface_chk.show()
-            else:
-                self.interface_chk.hide()
+            #if self._interface.has_advanced_version():
+            #    self.interface_chk.show()
+            #else:
+            #    self.interface_chk.hide()
 
             # Show the parallel reduction button if enabled
             if self._interface.is_cluster_enabled() and IS_IN_MANTIDPLOT \
                     and CLUSTER_ENABLED:
                 config = ConfigService.Instance()
-                if config.hasProperty("cluster.submission") \
-                        and config.getString("cluster.submission").lower()=='on':
-                    self.cluster_button.show()
-                    self.cluster_button.clicked.connect(self.cluster_clicked)
+                self._isClusterButtonVisible = \
+                config.hasProperty("cluster.submission") and config.getString("cluster.submission").lower()=='on'
+                #self.cluster_button.show()
+                #self.cluster_button.clicked.connect(self.cluster_clicked)
             else:
-                self.cluster_button.hide()
+                self._isClusterButtonVisible = False
+                #self.cluster_button.hide()
 
             if load_last:
                 self._interface.load_last_reduction()
@@ -202,12 +224,14 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             print("Could not generate an interface for instrument %s" % self._instrument)
             self.close()
 
+        self._gui.redrawGUI()
         return True
 
     def _update_file_menu(self):
         """
             Set up the File menu and update the menu with recent files
         """
+        return
         self.file_menu.clear()
 
         newAction = QtWidgets.QAction("&New Reduction...", self)
@@ -353,6 +377,8 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             dialog = InstrDialog(self._instrument_list)
         dialog.exec_()
         if dialog.result()==1:
+            #self._instrument = dialog.instr_combo.currentText()
+            #self._facility = dialog.facility_combo.currentText()
             self._instrument = dialog.instrument
             self._facility = dialog.facility
             self.setup_layout()

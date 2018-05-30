@@ -95,7 +95,6 @@ class TOFTOFSetupWidget(BaseWidget):
             with gui.verticalLayout():
                 self._rightGUI()
 
-    
     def _leftGUI(self):
         elem = self.elem
         gui = self.gui
