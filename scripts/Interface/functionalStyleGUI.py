@@ -46,7 +46,7 @@ class GCS:
 		self.c = counter
 		self.rc = 0 # rowCount
 
-class FunctionalStyleGUI():
+class FunctionalStyleGUI:
 
 	class DataTableModel(QtCore.QAbstractTableModel):
 		def __init__(self, parent, headers = ()):
@@ -299,6 +299,7 @@ class FunctionalStyleGUI():
 
 	def currentLayout(self):
 		return self.widgetStack.peek().w
+		#done
 
 	def addkwArgsToItem(self, item, **kwargs):
 		for propName, value in kwargs.items():
@@ -418,11 +419,11 @@ class FunctionalStyleGUI():
 		self.widgetStack.pop()
 
 
-	def verticalLayoutBegin(self, title = None, tip = "", isIndented = False, **kwargs):
+	def _verticalLayoutBegin(self, title = None, tip = "", isIndented = False, **kwargs):
 		self.pushLayout(QtWidgets.QGridLayout, title, isIndented, tip=tip, **kwargs)
 		# done
 
-	def verticalLayoutEnd(self, preventVStretch = False, preventHStretch = False):
+	def _verticalLayoutEnd(self, preventVStretch = False, preventHStretch = False):
 		layout = self.currentLayout()
 		gcs = self.widgetStack.peek()
 		# add spacer et the end, so widgets are left aligned:
@@ -450,11 +451,25 @@ class FunctionalStyleGUI():
 			layout.setRowStretch(gcs.rc-1, 1)
 		self.popLayout(QtWidgets.QGridLayout)
 
-	def horizontalLayoutBegin(self, title = None, tip = "", **kwargs):
+	def verticalLayout(self, title = None, tip = "", isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+		"""
+		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
+		Everything within the with statement will be inside the vertical layout.
+		"""
+		class VerticalLayout:
+			def __enter__(innerSelf):
+				self._verticalLayoutBegin(title, tip, isIndented, **kwargs)
+
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				self._verticalLayoutEnd(preventVStretch, preventHStretch)
+		
+		return VerticalLayout()
+
+	def _horizontalLayoutBegin(self, title = None, tip = "", **kwargs):
 		self.pushLayout(QtWidgets.QHBoxLayout, title, isIndented=False, tip=tip, **kwargs)
 		# done
 
-	def horizontalLayoutCheckedBegin(self, isChecked, title = "", tip = "", **kwargs):
+	def _horizontalLayoutCheckedBegin(self, isChecked, title = "", tip = "", **kwargs):
 		items = self.pushLayout(QtWidgets.QHBoxLayout, title, isIndented=False, LabelType=QtWidgets.QCheckBox, tip=tip, **kwargs)
 		checkBox = items[1]
 		if checkBox != self.modifiedInput[0] and checkBox.isChecked() != isChecked:
@@ -465,14 +480,44 @@ class FunctionalStyleGUI():
 		return checkBox.isChecked()
 		# done
 
-	def horizontalLayoutEnd(self, preventHStretch = False):
+	def _horizontalLayoutEnd(self, preventHStretch = False):
 		if preventHStretch:
 			spacer = self.addItem(QtWidgets.QWidget)
 			spacer.sizePolicy().setHorizontalStretch(5)
 		self.popLayout(QtWidgets.QHBoxLayout)
 		# done
 
-	def groupBoxBegin(self, title = "", tip = "", **kwargs):
+	def horizontalLayout(self, title = None, tip = "", preventHStretch = False, **kwargs):
+		"""
+		Creates a horizontal layout. has to be used in an `with` statement (`with gui.horizontalLayout():`).
+		Everything within the with statement will be inside the horizontal layout.
+		"""
+		class HorizontalLayout:
+			def __enter__(innerSelf):
+				return self._horizontalLayoutBegin(title, tip, **kwargs)
+
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				self._horizontalLayoutEnd(preventHStretch)
+		
+		return HorizontalLayout()
+
+	def horizontalLayoutChecked(self, isChecked, title = None, tip = "", preventHStretch = False, **kwargs):
+		"""
+		Creates a horizontal layout with a checkBox. has to be used in an `with` statement (`with boolValue = gui.horizontalLayoutChecked(boolValue):`).
+		//////The state of the checkbox can be retreved via `boolValue = hlayout.value`
+		Everything within the with statement will be inside the horizontal layout.
+		"""
+		class HorizontalLayoutCecked:
+			def __enter__(innerSelf):
+				return self._horizontalLayoutCheckedBegin(isChecked, title, tip, **kwargs)
+
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				self._horizontalLayoutEnd(preventHStretch)
+		
+		return HorizontalLayoutCecked()
+		
+
+	def _groupBoxBegin(self, title = "", tip = "", **kwargs):
 		groupBox = self.addItem(QtWidgets.QGroupBox, **kwargs)
 		groupBox.setToolTip(tip)
 		groupBox.setTitle(title)
@@ -482,7 +527,7 @@ class FunctionalStyleGUI():
 			groupBox.setLayout(grid)
 		self.pushLayoutInstance(grid, isIndented=False) # groupBoxes are already indented by the System Styles
 
-	def groupBoxCheckedBegin(self, isChecked, title = "", tip = "", **kwargs):
+	def _groupBoxCheckedBegin(self, isChecked, title = "", tip = "", **kwargs):
 		groupBox = self.addItem(QtWidgets.QGroupBox, **kwargs)
 		if not groupBox.isCheckable():
 			groupBox.setCheckable(True)
@@ -503,10 +548,39 @@ class FunctionalStyleGUI():
 		return groupBox.isChecked()
 
 
-	def groupBoxEnd(self, preventVStretch = False, preventHStretch = False):
-		#pass
-		self.verticalLayoutEnd(preventVStretch, preventHStretch)
+	def _groupBoxEnd(self, preventVStretch = False, preventHStretch = False):
+		self._verticalLayoutEnd(preventVStretch, preventHStretch)
 		#done
+
+	def groupBox(self, title = None, tip = "", isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+		"""
+		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
+		Everything within the with statement will be inside the vertical layout.
+		"""
+		class GroupBox:
+			def __enter__(innerSelf):
+				self._groupBoxBegin(title, tip, **kwargs)
+
+
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				self._groupBoxEnd(preventVStretch, preventHStretch)
+		
+		return GroupBox()
+
+	def groupBoxChecked(self, isChecked, title = None, tip = "", isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+		"""
+		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
+		Everything within the with statement will be inside the vertical layout.
+		"""
+		class GroupBox:
+			def __enter__(innerSelf):
+				return self._groupBoxCheckedBegin(isChecked, title, tip, **kwargs)
+
+
+			def __exit__(innerSelf, exc_type, exc_value, traceback):
+				self._groupBoxEnd(preventVStretch, preventHStretch)
+		
+		return GroupBox()
 
 	def groupBoxHBegin(self, title = "", **kwargs):
 		groupBox = self.addItem(QtWidgets.QGroupBox, **kwargs)
@@ -518,7 +592,7 @@ class FunctionalStyleGUI():
 		self.pushLayoutInstance(grid, isIndented=False) # groupBoxes are already indented by the System Styles
 		
 	def groupBoxHEnd(self, preventHStretch = False):
-		self.horizontalLayoutEnd(preventHStretch)
+		self._horizontalLayoutEnd(preventHStretch)
 		# done
 
 
@@ -546,30 +620,27 @@ class FunctionalStyleGUI():
 		return lineEdit.text()
 
 	def folderPathEdit(self, path, title = None, tip = "", **kwargs):
-		self.horizontalLayoutBegin(title, tip=tip, **kwargs)
-		path = self.lineEdit(path, tip=tip, **kwargs)
-		if self.button('Browse', tip=tip, **kwargs):
-			newPath = str(QtWidgets.QFileDialog.getExistingDirectory(self.host, "Select Directory", path))
-			path = newPath if newPath else path
-		self.horizontalLayoutEnd()
+		with self.horizontalLayout(title, tip=tip, **kwargs):
+			path = self.lineEdit(path, tip=tip, **kwargs)
+			if self.button('Browse', tip=tip, **kwargs):
+				newPath = str(QtWidgets.QFileDialog.getExistingDirectory(self.host, "Select Directory", path))
+				path = newPath if newPath else path
 		return path
 
 	def openFilePathEdit(self, path, filter = "", title = None, tip = "", **kwargs):
-		self.horizontalLayoutBegin(title, tip=tip, **kwargs)
-		path = self.lineEdit(path, tip=tip, **kwargs)
-		if self.button('Browse', tip=tip, **kwargs):
-			newPath = str(QtWidgets.QFileDialog.getOpenFileNames(self.host, "Save File", filter, path))
-			path = newPath if newPath else path
-		self.horizontalLayoutEnd()
+		with self.horizontalLayout(title, tip=tip, **kwargs):
+			path = self.lineEdit(path, tip=tip, **kwargs)
+			if self.button('Browse', tip=tip, **kwargs):
+				newPath = str(QtWidgets.QFileDialog.getOpenFileNames(self.host, "Save File", filter, path))
+				path = newPath if newPath else path
 		return path
 
 	def saveFilePathEdit(self, path, filter = "", title = None, tip = "", **kwargs):
-		self.horizontalLayoutBegin(title, tip=tip, **kwargs)
-		path = self.lineEdit(path, tip=tip, **kwargs)
-		if self.button('Browse', tip=tip, **kwargs):
-			newPath = str(QtWidgets.QFileDialog.getSaveFileName(self.host, "Save File", filter, path))
-			path = newPath if newPath else path
-		self.horizontalLayoutEnd()
+		with self.horizontalLayout(title, tip=tip, **kwargs):
+			path = self.lineEdit(path, tip=tip, **kwargs)
+			if self.button('Browse', tip=tip, **kwargs):
+				newPath = str(QtWidgets.QFileDialog.getSaveFileName(self.host, "Save File", filter, path))
+				path = newPath if newPath else path
 		return path
 
 	def spinBox(self, value, minVal = -float('inf'), maxVal = +float('inf'), step = 1, title = None, tip = "", **kwargs):
@@ -661,13 +732,12 @@ class FunctionalStyleGUI():
 		for button in buttonGroup.buttons():
 			buttonGroup.removeButton(button)
 
-		self.horizontalLayoutBegin(title=title, tip=tip, **kwargs)
-		btnGrpLayout = self.currentLayout() # used later for identifying, wether btnGroup has been changed by user
-		for i in range(0, len(radioButtons)):
-			btn = self.addLabeledItem(QtWidgets.QRadioButton, None, tip=tip)[0]
-			buttonGroup.addButton(btn, i)
-			btn.setText(radioButtons[i])
-		self.horizontalLayoutEnd(preventHStretch = True)
+		with self.horizontalLayout(title=title, tip=tip, preventHStretch = True, **kwargs):
+			btnGrpLayout = self.currentLayout() # used later for identifying, wether btnGroup has been changed by user
+			for i in range(0, len(radioButtons)):
+				btn = self.addLabeledItem(QtWidgets.QRadioButton, None, tip=tip)[0]
+				buttonGroup.addButton(btn, i)
+				btn.setText(radioButtons[i])
 			
 		buttonGroup.setExclusive(True)
 		print("value = {}, buttonGroup.checkedId() = {}".format(value, buttonGroup.checkedId()))
@@ -703,7 +773,6 @@ class FunctionalStyleGUI():
 			table.model().beginResetModel() 
 			table.model().endResetModel()
 		return table.model().tableData
-
 
 
 

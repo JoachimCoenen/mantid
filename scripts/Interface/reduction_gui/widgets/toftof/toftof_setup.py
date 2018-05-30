@@ -87,110 +87,83 @@ class TOFTOFSetupWidget(BaseWidget):
         elem = self.elem
         gui = self.gui
 
-        gui.horizontalLayoutBegin()
+        with gui.horizontalLayout():
+            # left side:
+            with gui.verticalLayout(preventVStretch = True):
+                self._leftGUI()
+            # right side:
+            with gui.verticalLayout():
+                self._rightGUI()
 
-        # left side:
-        gui.verticalLayoutBegin()
-        self._leftGUI()
-        gui.verticalLayoutEnd(preventVStretch = True)
-
-        # right side:
-        gui.verticalLayoutBegin()
-        self._rightGUI()
-        gui.verticalLayoutEnd()
-
-        gui.horizontalLayoutEnd()
     
     def _leftGUI(self):
         elem = self.elem
         gui = self.gui
         
-        gui.groupBoxHBegin('Data search directory')
-        elem.dataDir       = gui.folderPathEdit(elem.dataDir, title='Search Directory', tip=self.TIP_dataDir)
-        gui.groupBoxHEnd()
+        with gui.groupBox('Data search directory'):
+            elem.dataDir       = gui.folderPathEdit(elem.dataDir, title='Search Directory', tip=self.TIP_dataDir)
 
-        gui.groupBoxBegin('Inputs')
-        elem.vanRuns       = gui.lineEdit(elem.vanRuns, title='Vanadium Runs', tip=self.TIP_vanRuns)
-        elem.vanCmnt       = gui.lineEdit(elem.vanCmnt, title='Van. comment', tip=self.TIP_vanCmnt)
+        with gui.groupBox('Inputs'):
+            elem.vanRuns       = gui.lineEdit(elem.vanRuns, title='Vanadium Runs', tip=self.TIP_vanRuns)
+            elem.vanCmnt       = gui.lineEdit(elem.vanCmnt, title='Van. comment', tip=self.TIP_vanCmnt)
+            with gui.horizontalLayout(title='Empty can runs', tip=self.TIP_ecRuns):
+                elem.ecRuns        = gui.lineEdit(elem.ecRuns, tip=self.TIP_ecRuns)
+                elem.ecFactor      = gui.doubleSpinBox(elem.ecFactor, 0, 1, title='EC factor', tip=self.TIP_ecFactor)
+            elem.maskDetectors = gui.lineEdit(elem.maskDetectors, title='Mask Detectors', tip=self.TIP_maskDetectors)
 
-        gui.horizontalLayoutBegin(title='Empty can runs', tip=self.TIP_ecRuns)
-        elem.ecRuns        = gui.lineEdit(elem.ecRuns, tip=self.TIP_ecRuns)
-        elem.ecFactor      = gui.doubleSpinBox(elem.ecFactor, 0, 1, title='EC factor', tip=self.TIP_ecFactor)
-        gui.horizontalLayoutEnd()
+        with gui.groupBox('Binning'):
+            with gui.horizontalLayout(title=" "):
+                gui.label(text='Start', tip=self.TIP_binEstart)
+                gui.label(text='Step',  tip=self.TIP_binEstep)
+                gui.label(text='End',   tip=self.TIP_binEend)
+            with gui.horizontalLayoutChecked(elem.binEon, "Energy", tip=self.TIP_binEon) as elem.binEon:
+                elem.binEstart = gui.doubleSpinBox(elem.binEstart,              tip=self.TIP_binEstart, enabled=elem.binEon)
+                elem.binEstep  = gui.doubleSpinBox(elem.binEstep, decimals = 4, tip=self.TIP_binEstep, enabled=elem.binEon)
+                elem.binEend   = gui.doubleSpinBox(elem.binEend,                tip=self.TIP_binEend, enabled=elem.binEon)
+            if not elem.binEon:
+                elem.binQon = False
+            with gui.horizontalLayoutChecked(elem.binQon, "Q", tip=self.TIP_binQon, enabled=elem.binEon) as elem.binQon:
+                elem.binQstart = gui.doubleSpinBox(elem.binQstart, title=None, tip=self.TIP_binQstart, enabled=elem.binQon)
+                elem.binQstep  = gui.doubleSpinBox(elem.binQstep,  title=None, tip=self.TIP_binQstep, enabled=elem.binQon)
+                elem.binQend   = gui.doubleSpinBox(elem.binQend,   title=None, tip=self.TIP_binQend, enabled=elem.binQon)
 
-        elem.maskDetectors = gui.lineEdit(elem.maskDetectors, title='Mask Detectors', tip=self.TIP_maskDetectors)
-        gui.groupBoxEnd()
+        with gui.groupBox('Options'):
+            elem.subtractECVan = gui.checkBox(elem.subtractECVan, 'Subtract empty can from vanadium' , tip=self.TIP_chkSubtractECVan)
+            elem.normalise     = gui.radioButtonGroup(elem.normalise, ('none', 'to monitor', 'to time'), title='Normalize')
+            elem.correctTof    = gui.radioButtonGroup(elem.correctTof, ('none', 'vanadium', 'sample'), title='Correct TOF')
 
-        gui.groupBoxBegin('Binning')
-        gui.horizontalLayoutBegin(title=" ")
-        gui.label(text='Start', tip=self.TIP_binEstart)
-        gui.label(text='Step',  tip=self.TIP_binEstep)
-        gui.label(text='End',   tip=self.TIP_binEend)
-        gui.horizontalLayoutEnd()
-
-        elem.binEon = \
-        gui.horizontalLayoutCheckedBegin(elem.binEon, "Energy", tip=self.TIP_binEon)
-        elem.binEstart = gui.doubleSpinBox(elem.binEstart,              tip=self.TIP_binEstart, enabled=elem.binEon)
-        elem.binEstep  = gui.doubleSpinBox(elem.binEstep, decimals = 4, tip=self.TIP_binEstep, enabled=elem.binEon)
-        elem.binEend   = gui.doubleSpinBox(elem.binEend,                tip=self.TIP_binEend, enabled=elem.binEon)
-        gui.horizontalLayoutEnd()
-
-        if not elem.binEon:
-            elem.binQon = False
-        elem.binQon = \
-        gui.horizontalLayoutCheckedBegin(elem.binQon, "Q", tip=self.TIP_binQon, enabled=elem.binEon)
-        elem.binQstart = gui.doubleSpinBox(elem.binQstart, title=None, tip=self.TIP_binQstart, enabled=elem.binQon)
-        elem.binQstep  = gui.doubleSpinBox(elem.binQstep,  title=None, tip=self.TIP_binQstep, enabled=elem.binQon)
-        elem.binQend   = gui.doubleSpinBox(elem.binQend,   title=None, tip=self.TIP_binQend, enabled=elem.binQon)
-        gui.horizontalLayoutEnd()
-        gui.groupBoxEnd()
-
-
-        gui.groupBoxBegin('Options')
-        elem.subtractECVan = gui.checkBox(elem.subtractECVan, 'Subtract empty can from vanadium' , tip=self.TIP_chkSubtractECVan)
-        elem.normalise     = gui.radioButtonGroup(elem.normalise, ('none', 'to monitor', 'to time'), title='Normalize')
-        elem.correctTof    = gui.radioButtonGroup(elem.correctTof, ('none', 'vanadium', 'sample'), title='Correct TOF')
-
-        elem.replaceNaNs = gui.checkBox(elem.replaceNaNs, 'Replace special values in S(Q,W) with 0', tip=self.TIP_chkReplaceNaNs, enabled=elem.binQon)
-        elem.createDiff  = gui.checkBox(elem.createDiff,  'Create diffractograms'                  , tip=self.TIP_chkCreateDiff, enabled=elem.binEon)
-        elem.keepSteps   = gui.checkBox(elem.keepSteps,   'Keep intermediate steps'                , tip=self.TIP_chkKeepSteps)
-        gui.groupBoxEnd()
+            elem.replaceNaNs = gui.checkBox(elem.replaceNaNs, 'Replace special values in S(Q,W) with 0', tip=self.TIP_chkReplaceNaNs, enabled=elem.binQon)
+            elem.createDiff  = gui.checkBox(elem.createDiff,  'Create diffractograms'                  , tip=self.TIP_chkCreateDiff, enabled=elem.binEon)
+            elem.keepSteps   = gui.checkBox(elem.keepSteps,   'Keep intermediate steps'                , tip=self.TIP_chkKeepSteps)
 
     def _rightGUI(self):
         elem = self.elem
         gui = self.gui
         
-        gui.groupBoxBegin('Workspace prefix')
-        elem.prefix = gui.lineEdit(elem.prefix,  title='Prefix', tip=self.TIP_prefix)
-        gui.groupBoxEnd()
+        with gui.groupBox('Workspace prefix'):
+            elem.prefix = gui.lineEdit(elem.prefix,  title='Prefix', tip=self.TIP_prefix)
 
-        gui.groupBoxBegin('Data')
-        print('elem.dataRuns = ', elem.dataRuns)
-        elem.dataRuns  = gui.dataTable(elem.dataRuns, ('Data runs', 'Comment'), tip=self.TIP_dataRunsView)
-        print('elem.dataRuns = ', elem.dataRuns)
-        gui.groupBoxEnd()
+        with gui.groupBox('Data'):
+            print('elem.dataRuns = ', elem.dataRuns)
+            elem.dataRuns  = gui.dataTable(elem.dataRuns, ('Data runs', 'Comment'), tip=self.TIP_dataRunsView)
+            print('elem.dataRuns = ', elem.dataRuns)
         #layout = self.gui.currentLayout()
         #layout.setRowStretch(layout.rowCount()-1, 5)
 
-        gui.groupBoxBegin('Save Reduced Data')
-        elem.saveDir       = gui.folderPathEdit(elem.saveDir, title='Save Directory', tip=self.TIP_saveDir)
+        with gui.groupBox('Save Reduced Data'):
+            elem.saveDir       = gui.folderPathEdit(elem.saveDir, title='Save Directory', tip=self.TIP_saveDir)
 
-        gui.horizontalLayoutBegin(title='Workspaces')
-        elem.saveSofQW = gui.checkBox(elem.saveSofQW, 'S(Q,W)'     , tip=self.TIP_chkSofQW, enabled=elem.binQon)
-        elem.saveSofTW = gui.checkBox(elem.saveSofTW, 'S(2theta,W)', tip=self.TIP_chkSofTW)
-        gui.horizontalLayoutEnd()
+            with gui.horizontalLayout(title='Workspaces'):
+                elem.saveSofQW = gui.checkBox(elem.saveSofQW, 'S(Q,W)'     , tip=self.TIP_chkSofQW, enabled=elem.binQon)
+                elem.saveSofTW = gui.checkBox(elem.saveSofTW, 'S(2theta,W)', tip=self.TIP_chkSofTW)
 
-        gui.horizontalLayoutBegin(title='Format')
-
-        #if not elem.binEon:
-        #    elem.saveNXSPE = False
-        
-        elem.saveNXSPE = gui.checkBox(elem.saveNXSPE, 'NXSPE', tip=self.TIP_chkNxspe, enabled=elem.binEon)
-        elem.saveNexus = gui.checkBox(elem.saveNexus, 'NeXus', tip=self.TIP_chkNexus)
-        # disable save Ascii, it is not available for the moment
-        elem.saveAscii = gui.checkBox(elem.saveAscii, 'Ascii', tip=self.TIP_chkAscii, enabled=False)
-        gui.horizontalLayoutEnd()
-        gui.groupBoxEnd()
+            with gui.horizontalLayout(title='Format'):
+                #if not elem.binEon:
+                #    elem.saveNXSPE = False
+                elem.saveNXSPE = gui.checkBox(elem.saveNXSPE, 'NXSPE', tip=self.TIP_chkNxspe, enabled=elem.binEon)
+                elem.saveNexus = gui.checkBox(elem.saveNexus, 'NeXus', tip=self.TIP_chkNexus)
+                # disable save Ascii, it is not available for the moment
+                elem.saveAscii = gui.checkBox(elem.saveAscii, 'Ascii', tip=self.TIP_chkAscii, enabled=False)
 
 
     def get_state(self):
