@@ -133,12 +133,10 @@ class RunSetupWidget(BaseWidget):
         self._content.calfile_browse.clicked.connect(self._calfile_browse)
         self._content.charfile_browse.clicked.connect(self._charfile_browse)
         self._content.groupfile_browse.clicked.connect(self._groupfile_browse)
-        self.connect(self._content.pushButton_browseExpIniFile, QtCore.SIGNAL('clicked()'),
-                     self.do_browse_ini_file)
+        self._content.pushButton_browseExpIniFile.clicked.connect(self.do_browse_ini_file)
         self._content.outputdir_browse.clicked.connect(self._outputdir_browse)
-        self.connect(self._content.binning_edit, QtCore.SIGNAL("valueChanged"),
-                     self._binvalue_edit)
-        self._content.bintype_combo.currentIndexChanged[QString].connect(self._bintype_process)
+        self._content.binning_edit.textEdited.connect(self._binvalue_edit)
+        self._content.bintype_combo.currentIndexChanged[str].connect(self._bintype_process)
 
         #self.connect(self._content.override_emptyrun_checkBox, QtCore.SIGNAL("clicked()"),
         #        self._overrideemptyrun_clicked)

@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>4-Circle Reduction</string>
   </property>
-  <widget class="QtWidget" name="centralwidget">
+  <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_11">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -215,7 +215,7 @@
           <property name="currentIndex">
            <number>2</number>
           </property>
-          <widget class="QtWidget" name="tab">
+          <widget class="QWidget" name="tab">
            <attribute name="title">
             <string>Setup &amp;&amp; Data Access</string>
            </attribute>
@@ -722,7 +722,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_survey">
+          <widget class="QWidget" name="tab_survey">
            <attribute name="title">
             <string>List Scans</string>
            </attribute>
@@ -1450,7 +1450,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_4">
+          <widget class="QWidget" name="tab_4">
            <attribute name="title">
             <string>View Raw Data</string>
            </attribute>
@@ -1875,7 +1875,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_2">
+          <widget class="QWidget" name="tab_2">
            <attribute name="title">
             <string>Calculate UB</string>
            </attribute>
@@ -2983,7 +2983,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_5">
+          <widget class="QWidget" name="tab_5">
            <attribute name="title">
             <string>UB Matrix</string>
            </attribute>
@@ -3406,7 +3406,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_advsetup">
+          <widget class="QWidget" name="tab_advsetup">
            <attribute name="title">
             <string>Scans Processing</string>
            </attribute>
@@ -4370,7 +4370,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_indexPeak">
+          <widget class="QWidget" name="tab_indexPeak">
            <attribute name="title">
             <string>Peak Integration</string>
            </attribute>
@@ -5097,7 +5097,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_k_shift">
+          <widget class="QWidget" name="tab_k_shift">
            <attribute name="title">
             <string>Export to Fullprof</string>
            </attribute>
@@ -5267,7 +5267,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_recordManagemet">
+          <widget class="QWidget" name="tab_recordManagemet">
            <attribute name="title">
             <string>Advanced Setup</string>
            </attribute>
@@ -5796,11 +5796,6 @@ p, li { white-space: pre-wrap; }
    <class>MatrixTable</class>
    <extends>QTableWidget</extends>
    <header>HFIR_4Circle_Reduction/hfctables.h</header>
-  </customwidget>
-  <customwidget>
-   <class>MatrixTable</class>
-   <extends>QTableWidget</extends>
-   <header>hfctables.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

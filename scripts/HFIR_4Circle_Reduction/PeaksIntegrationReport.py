@@ -24,11 +24,9 @@ class PeaksIntegrationReportDialog(QtWidgets.QDialog):
         self.ui.tableWidget_spreadsheet.setup()
 
         # set up handlers
-        self.connect(self.ui.pushButton_exportTable, QtCore.SIGNAL('clicked()'),
-                     self.do_export_table)
+        self.ui.pushButton_exportTable.clicked.connect(self.do_export_table)
 
-        self.connect(self.ui.pushButton_quit, QtCore.SIGNAL('clicked()'),
-                     self.do_quit)
+        self.ui.pushButton_quit.clicked.connect(self.do_quit)
 
         return
 

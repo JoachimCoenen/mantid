@@ -16,7 +16,7 @@
   <property name="title">
    <string>Beam Spreader</string>
   </property>
-  <widget class="QtWidget" name="gridLayoutWidget">
+  <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>

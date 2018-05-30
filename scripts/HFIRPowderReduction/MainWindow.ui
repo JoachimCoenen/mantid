@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QtWidget" name="centralwidget">
+  <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_8">
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -261,7 +261,7 @@
           <property name="currentIndex">
            <number>3</number>
           </property>
-          <widget class="QtWidget" name="tab_3">
+          <widget class="QWidget" name="tab_3">
            <attribute name="title">
             <string>Raw Detectors</string>
            </attribute>
@@ -406,7 +406,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab">
+          <widget class="QWidget" name="tab">
            <attribute name="title">
             <string>Normalized</string>
            </attribute>
@@ -790,7 +790,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_5">
+          <widget class="QWidget" name="tab_5">
            <attribute name="title">
             <string>Individual Detector</string>
            </attribute>
@@ -1092,7 +1092,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_merge">
+          <widget class="QWidget" name="tab_merge">
            <attribute name="title">
             <string>Multiple Scans</string>
            </attribute>
@@ -1577,7 +1577,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_4">
+          <widget class="QWidget" name="tab_4">
            <attribute name="title">
             <string>Vanadium</string>
            </attribute>
@@ -1869,7 +1869,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QtWidget" name="tab_2">
+          <widget class="QWidget" name="tab_2">
            <attribute name="title">
             <string>Advanced Setup</string>
            </attribute>

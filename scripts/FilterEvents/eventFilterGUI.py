@@ -134,11 +134,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.connect(self.ui.lineEdit_3, QtCore.SIGNAL("textChanged(QString)"),
         #         self.set_startTime)
         self.ui.lineEdit_3.setValidator(QtGui.QDoubleValidator(self.ui.lineEdit_3))
-        self.connect(self.ui.pushButton_setT0, QtCore.SIGNAL("clicked()"), self.set_startTime)
+        self.ui.pushButton_setT0.clicked.connect(self.set_startTime)
         # self.connect(self.ui.lineEdit_4, QtCore.SIGNAL("textChanged(QString)"),
         #         self.set_stopTime)
         self.ui.lineEdit_4.setValidator(QtGui.QDoubleValidator(self.ui.lineEdit_4))
-        self.connect(self.ui.pushButton_setTf, QtCore.SIGNAL("clicked()"), self.set_stopTime)
+        self.ui.pushButton_setTf.clicked.connect(self.set_stopTime)
 
         # File loader
         self.scanEventWorkspaces()
@@ -177,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.connect(self.ui.pushButton_filterLog, SIGNAL('clicked()'), self.filterByLogValue)
 
         #Set up help button
-        self.connect(self.ui.helpBtn, QtCore.SIGNAL('clicked()'), self.helpClicked)
+        self.ui.helpBtn.clickedconnect(self.helpClicked)
 
         # Set up vertical slide
         self._upperSlideValue = 99

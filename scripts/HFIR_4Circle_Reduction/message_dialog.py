@@ -23,8 +23,7 @@ class MessageDialog(QtWidgets.QDialog):
         self.ui.setupUi(self)
 
         # define operation
-        self.connect(self.ui.pushButton_close, QtCore.SIGNAL('clicked()'),
-                     self.do_quit)
+        self.ui.pushButton_close.clicked.connect(self.do_quit)
 
         return
 

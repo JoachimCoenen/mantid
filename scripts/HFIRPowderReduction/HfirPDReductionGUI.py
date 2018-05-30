@@ -156,106 +156,63 @@ class MainWindow(QtWidgets.QMainWindow):
         # Define gui-event handling
 
         # menu
-        self.connect(self.ui.actionQuit, QtCore.SIGNAL('triggered()'),
-                     self.doExist)
-        self.connect(self.ui.actionFind_Help, QtCore.SIGNAL('triggered()'),
-                     self.doHelp)
+        self.ui.actionQuit.triggered.connect(self.doExist)
+        self.ui.actionFind_Help.triggered.connect(self.doHelp)
 
         # main
-        self.connect(self.ui.comboBox_wavelength, QtCore.SIGNAL('currentIndexChanged(int)'),
-                     self.doUpdateWavelength)
-        self.connect(self.ui.pushButton_browseExcludedDetFile, QtCore.SIGNAL('clicked()'),
-                     self.doBrowseExcludedDetetorFile)
-        self.connect(self.ui.checkBox_useDetExcludeFile, QtCore.SIGNAL('stateChanged(int)'),
-                     self.do_enable_excluded_dets)
+        self.ui.comboBox_wavelength.currentIndexChanged[int].connect(self.doUpdateWavelength)
+        self.ui.pushButton_browseExcludedDetFile.clicked.connect(self.doBrowseExcludedDetetorFile)
+        self.ui.checkBox_useDetExcludeFile.stateChanged[int].connect(self.do_enable_excluded_dets)
 
         # tab 'Raw Detectors'
-        self.connect(self.ui.pushButton_plotRaw, QtCore.SIGNAL('clicked()'),
-                     self.doPlotRawPtMain)
-        self.connect(self.ui.pushButton_ptUp, QtCore.SIGNAL('clicked()'),
-                     self.do_plot_raw_pt_prev)
-        self.connect(self.ui.pushButton_ptDown, QtCore.SIGNAL('clicked()'),
-                     self.doPlotRawPtNext)
-        self.connect(self.ui.pushButton_clearRawDets, QtCore.SIGNAL('clicked()'),
-                     self.doClearRawDetCanvas)
+        self.ui.pushButton_plotRaw.clicked.connect(self.doPlotRawPtMain)
+        self.ui.pushButton_ptUp.clicked.connect(self.do_plot_raw_pt_prev)
+        self.ui.pushButton_ptDown.clicked.connect(self.doPlotRawPtNext)
+        self.ui.pushButton_clearRawDets.clicked.connect(self.doClearRawDetCanvas)
 
         # tab 'Individual Detectors'
-        self.connect(self.ui.pushButton_plotIndvDet, QtCore.SIGNAL('clicked()'),
-                     self.doPlotIndvDetMain)
-        self.connect(self.ui.pushButton_plotPrevDet, QtCore.SIGNAL('clicked()'),
-                     self.doPlotIndvDetPrev)
-        self.connect(self.ui.pushButton_plotNextDet, QtCore.SIGNAL('clicked()'),
-                     self.doPlotIndvDetNext)
-        self.connect(self.ui.pushButton_clearCanvasIndDet, QtCore.SIGNAL('clicked()'),
-                     self.doClearIndDetCanvas)
-        self.connect(self.ui.pushButton_plotLog, QtCore.SIGNAL('clicked()'),
-                     self.do_plot_sample_log)
+        self.ui.pushButton_plotIndvDet.clicked.connect(self.doPlotIndvDetMain)
+        self.ui.pushButton_plotPrevDet.clicked.connect(self.doPlotIndvDetPrev)
+        self.ui.pushButton_plotNextDet.clicked.connect(self.doPlotIndvDetNext)
+        self.ui.pushButton_clearCanvasIndDet.clicked.connect(self.doClearIndDetCanvas)
+        self.ui.pushButton_plotLog.clicked.connect(self.do_plot_sample_log)
 
         # tab 'Normalized'
-        self.connect(self.ui.pushButton_loadData, QtCore.SIGNAL('clicked()'),
-                     self.doLoadData)
-        self.connect(self.ui.pushButton_prevScan, QtCore.SIGNAL('clicked()'),
-                     self.doLoadReduceScanPrev)
-        self.connect(self.ui.pushButton_nextScan, QtCore.SIGNAL('clicked()'),
-                     self.doLoadReduceScanNext)
-        self.connect(self.ui.pushButton_unit2theta, QtCore.SIGNAL('clicked()'),
-                     self.doReduce2Theta)
-        self.connect(self.ui.pushButton_unitD, QtCore.SIGNAL('clicked()'),
-                     self.doReduceDSpacing)
-        self.connect(self.ui.pushButton_unitQ, QtCore.SIGNAL('clicked()'),
-                     self.doReduceQ)
-        self.connect(self.ui.pushButton_saveData, QtCore.SIGNAL('clicked()'),
-                     self.doSaveData)
-        self.connect(self.ui.pushButton_clearTab2Canvas, QtCore.SIGNAL('clicked()'),
-                     self.doClearCanvas)
+        self.ui.pushButton_loadData.clicked.connect(self.doLoadData)
+        self.ui.pushButton_prevScan.clicked.connect(self.doLoadReduceScanPrev)
+        self.ui.pushButton_nextScan.clicked.connect(self.doLoadReduceScanNext)
+        self.ui.pushButton_unit2theta.clicked.connect(self.doReduce2Theta)
+        self.ui.pushButton_unitD.clicked.connect(self.doReduceDSpacing)
+        self.ui.pushButton_unitQ.clicked.connect(self.doReduceQ)
+        self.ui.pushButton_saveData.clicked.connect(self.doSaveData)
+        self.ui.pushButton_clearTab2Canvas.clicked.connect(self.doClearCanvas)
 
         # tab 'Multiple Scans'
-        self.connect(self.ui.pushButton_loadMultData, QtCore.SIGNAL('clicked()'),
-                     self.doLoadSetData)
-        self.connect(self.ui.pushButton_mscanBin, QtCore.SIGNAL('clicked()'),
-                     self.doReduceSetData)
-        self.connect(self.ui.pushButton_mergeScans, QtCore.SIGNAL('clicked()'),
-                     self.doMergeScans)
-        self.connect(self.ui.pushButton_viewMScan1D, QtCore.SIGNAL('clicked()'),
-                     self.doMergeScanView1D)
-        self.connect(self.ui.pushButton_view2D, QtCore.SIGNAL('clicked()'),
-                     self.doMergeScanView2D)
-        self.connect(self.ui.pushButton_viewMerge, QtCore.SIGNAL('clicked()'),
-                     self.doMergeScanViewMerged)
-        self.connect(self.ui.pushButton_clearMultCanvas, QtCore.SIGNAL('clicked()'),
-                     self.doClearMultiRunCanvas)
-        self.connect(self.ui.pushButton_saveAllIndScans, QtCore.SIGNAL('clicked()'),
-                     self.doSaveMultipleScans)
-        self.connect(self.ui.pushButton_saveMerge, QtCore.SIGNAL('clicked()'),
-                     self.doSaveMergedScan)
-        self.connect(self.ui.pushButton_plotRawMultiScans, QtCore.SIGNAL('clicked()'),
-                     self.do_convert_plot_multi_scans)
+        self.ui.pushButton_loadMultData.clicked.connect(self.doLoadSetData)
+        self.ui.pushButton_mscanBin.clicked.connect(self.doReduceSetData)
+        self.ui.pushButton_mergeScans.clicked.connect(self.doMergeScans)
+        self.ui.pushButton_viewMScan1D.clicked.connect(self.doMergeScanView1D)
+        self.ui.pushButton_view2D.clicked.connect(self.doMergeScanView2D)
+        self.ui.pushButton_viewMerge.clicked.connect(self.doMergeScanViewMerged)
+        self.ui.pushButton_clearMultCanvas.clicked.connect(self.doClearMultiRunCanvas)
+        self.ui.pushButton_saveAllIndScans.clicked.connect(self.doSaveMultipleScans)
+        self.ui.pushButton_saveMerge.clicked.connect(self.doSaveMergedScan)
+        self.ui.pushButton_plotRawMultiScans.clicked.connect(self.do_convert_plot_multi_scans)
 
         # tab 'Vanadium'
-        self.connect(self.ui.pushButton_stripVanPeaks, QtCore.SIGNAL('clicked()'),
-                     self.doStripVandiumPeaks)
-        self.connect(self.ui.pushButton_saveVanRun, QtCore.SIGNAL('clicked()'),
-                     self.doSaveVanRun)
-        self.connect(self.ui.pushButton_rebin2Theta, QtCore.SIGNAL('clicked()'),
-                     self.doReduceVanadium2Theta)
-        self.connect(self.ui.pushButton_smoothVanData, QtCore.SIGNAL('clicked()'),
-                     self.doSmoothVanadiumData)
-        self.connect(self.ui.pushButton_applySmooth, QtCore.SIGNAL('clicked()'),
-                     self.doSmoothVanadiumApply)
-        self.connect(self.ui.pushButton_undoSmooth, QtCore.SIGNAL('clicked()'),
-                     self.doSmoothVanadiumUndo)
+        self.ui.pushButton_stripVanPeaks.clicked.connect(self.doStripVandiumPeaks)
+        self.ui.pushButton_saveVanRun.clicked.connect(self.doSaveVanRun)
+        self.ui.pushButton_rebin2Theta.clicked.connect(self.doReduceVanadium2Theta)
+        self.ui.pushButton_smoothVanData.clicked.connect(self.doSmoothVanadiumData)
+        self.ui.pushButton_applySmooth.clicked.connect(self.doSmoothVanadiumApply)
+        self.ui.pushButton_undoSmooth.clicked.connect(self.doSmoothVanadiumUndo)
 
         # tab 'Advanced Setup'
-        self.connect(self.ui.pushButton_browseCache, QtCore.SIGNAL('clicked()'),
-                     self.doBrowseCache)
-        self.connect(self.ui.radioButton_useServer, QtCore.SIGNAL('clicked()'),
-                     self.doChangeSrcLocation)
-        self.connect(self.ui.radioButton_useLocal, QtCore.SIGNAL('clicked()'),
-                     self.doChangeSrcLocation)
-        self.connect(self.ui.pushButton_browseLocalSrc, QtCore.SIGNAL('clicked()'),
-                     self.doBrowseLocalDataSrc)
-        self.connect(self.ui.pushButton_chkServer, QtCore.SIGNAL('clicked()'),
-                     self.doCheckSrcServer)
+        self.ui.pushButton_browseCache.clicked.connect(self.doBrowseCache)
+        self.ui.radioButton_useServer.clicked.connect(self.doChangeSrcLocation)
+        self.ui.radioButton_useLocal.clicked.connect(self.doChangeSrcLocation)
+        self.ui.pushButton_browseLocalSrc.clicked.connect(self.doBrowseLocalDataSrc)
+        self.ui.pushButton_chkServer.clicked.connect(self.doCheckSrcServer)
 
         # Define signal-event handling
 

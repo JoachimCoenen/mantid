@@ -109,7 +109,7 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
         self.general_settings = GeneralSettings(settings)
 
         self.setupUi(self)
-
+        
         # Event connections
         if not IS_IN_MANTIDPLOT:
             self.reduce_button.hide()
@@ -314,7 +314,6 @@ class ReductionGUI(QtWidgets.QMainWindow, ui.ui_reduction_main.Ui_SANSReduction)
             Invoke an instrument selection dialog
         """
         class InstrDialog(QtWidgets.QDialog):
-       # class InstrDialog(QtWidgets.QDialog, ui.ui_instrument_dialog.Ui_Dialog):
             def __init__(self, instrument_list=None):
                 QtWidgets.QDialog.__init__(self)
                 self.instrument_list = instrument_list
