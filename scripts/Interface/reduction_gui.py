@@ -66,6 +66,9 @@ class ReductionGUI(QtWidgets.QMainWindow):
         # Application settings
         settings = QtCore.QSettings()
 
+        if instrument_list is not None and instrument not in instrument_list:
+            instrument = None
+
         self._instrument = instrument
         self._facility = facility
 
@@ -134,16 +137,16 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
     def OnGUI(self):
         gui = self._gui
-        with gui.verticalLayout():
-            with gui.tabWidget(title='TabControl') as tabWidget:
+        with gui.vLayout():
+            with gui.tabWidget() as tabWidget:
                 if self._interface != None:
                     for tab in self._interface.get_tabs():
                         with tabWidget.addTab(tab[0]):
                             gui.customWidget(tab[1])
                 
-            with gui.horizontalLayout():
+            with gui.hLayout():
                 if self._interface == None or self._interface.has_advanced_version():
-                    self.general_settings.advanced = gui.checkBox(self.general_settings.advanced, title='Advanced Interface')
+                    self.general_settings.advanced = gui.checkBox(self.general_settings.advanced, label='Advanced Interface')
                 gui.addSpacer(40, QtWidgets.QSizePolicy.Expanding)
                 if self._isProgressBarVisible:
                     gui.progressBar(self.general_settings.progress)
@@ -166,6 +169,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
     def _progress_updated(self, value):
         self.progress_bar.setValue(value)
+        #done
 
     def setup_layout(self, load_last=False):
         """
@@ -343,7 +347,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
             def __init__(self, instrument_list=None):
                 QtWidgets.QDialog.__init__(self)
                 self.instrument_list = instrument_list
-
+                print("@@@@@@", (InstrDialog), "@@@@@@")
                 #values:
                 self.facilities = sorted(INSTRUMENT_DICT.keys())
                 self.facilities.reverse()
@@ -357,16 +361,12 @@ class ReductionGUI(QtWidgets.QMainWindow):
             def OnGUI(self):
                 gui = self._gui
                 print( self.facilities)
-                facilityIndex = self.facilities.index(self.facility) if self.facility in self.facilities else -1
-                facilityIndex = gui.comboBox(facilityIndex, self.facilities, title='Facility')
-                self.facility = self.facilities[facilityIndex]
+                self.facility = gui.comboBox(self.facility, self.facilities, label='Facility')
 
                 instruments = filter(lambda item:  self.instrument_list is None or item in self.instrument_list, sorted(INSTRUMENT_DICT[unicode(self.facility)].keys()))
-                instrumentIndex = instruments.index(self.instrument) if self.instrument in instruments else -1
-                instrumentIndex = gui.comboBox(instrumentIndex, instruments, title='Instrument')
-                self.instrument = instruments[instrumentIndex]
+                self.instrument = gui.comboBox(self.instrument, instruments, label='Instrument')
 
-                with gui.horizontalLayout():
+                with gui.hLayout():
                     if gui.button('OK'):
                         self.accept()
                     if gui.button('Cancel'):
@@ -659,7 +659,14 @@ def start(argv):
     app.setOrganizationName("Mantid")
     app.setOrganizationDomain("mantidproject.org")
     app.setApplicationName("Mantid Reduction")
-    reducer = ReductionGUI()
+
+    # Application settings
+    settings = QtCore.QSettings()
+
+    # Name handle for the instrument
+    instrument = unicode(settings.value("instrument_name", ''))
+
+    reducer = ReductionGUI(instrument=instrument)
     reducer.setup_layout(load_last=True)
     reducer.show()
     app.exec_()
