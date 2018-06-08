@@ -128,6 +128,10 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
         #self.general_settings.progress.connect(self._progress_updated)
 
+        #Main Menu:
+        self._fileMenu = self.menuBar().addMenu('File')
+        self._toolsMenu = self.menuBar().addMenu('Tools')
+
         #GUI
         self._isClusterButtonVisible = False
         self._isProgressBarVisible = False
@@ -137,25 +141,42 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
     def OnGUI(self):
         gui = self._gui
+
         with gui.vLayout():
-            with gui.tabWidget() as tabWidget:
-                if self._interface != None:
-                    for tab in self._interface.get_tabs():
-                        with tabWidget.addTab(tab[0]):
-                            gui.customWidget(tab[1])
-                
+            tabs = []
+            if self._interface != None:
+                tabs = self._interface.get_tabs()
+
+                if len(tabs) == 1:
+                    gui.customWidget(tabs[0][1], fullSize=True)
+                else:
+                    with gui.tabWidget(fullSize=True) as tabWidget:
+                        for tab in tabs:
+                            with tabWidget.addTab(tab[0]):
+                                gui.customWidget(tab[1])
+            
+            # footer:
             with gui.hLayout():
                 if self._interface == None or self._interface.has_advanced_version():
-                    self.general_settings.advanced = gui.checkBox(self.general_settings.advanced, label='Advanced Interface')
+                    newInterfaceChoice = gui.checkBox(self.general_settings.advanced, label='Advanced Interface')
+                    if newInterfaceChoice != self.general_settings.advanced:
+                        self.general_settings.advanced = newInterfaceChoice
+                        self._interface_choiceChanged()
+                #    
                 gui.addSpacer(40, QtWidgets.QSizePolicy.Expanding)
                 if self._isProgressBarVisible:
                     gui.progressBar(self.general_settings.progress)
                 gui.addSpacer(40, QtWidgets.QSizePolicy.Fixed)
-                gui.button('Reduce')
+                #
+                if gui.button('Reduce'):
+                    self.reduce_clicked()
                 if self._isClusterButtonVisible:
-                    gui.button('Send Cluster')
-                gui.button('Save')
-                gui.button('Export')
+                    if gui.button('Send Cluster'):
+                        self.cluster_clicked()
+                if gui.button('Save'):
+                    self._save()
+                if gui.button('Export'):
+                    self._export()
 
     def _set_window_title(self):
         """
@@ -237,8 +258,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
         """
             Set up the File menu and update the menu with recent files
         """
-        return
-        self.file_menu.clear()
+        self._fileMenu.clear()
 
         newAction = QtWidgets.QAction("&New Reduction...", self)
         newAction.setShortcut("Ctrl+N")
@@ -268,20 +288,20 @@ class ReductionGUI(QtWidgets.QMainWindow):
         quitAction.setShortcut("Ctrl+Q")
         quitAction.triggered.connect(self.close)
 
-        self.file_menu.addAction(newAction)
-        self.file_menu.addAction(openAction)
-        self.file_menu.addAction(saveAction)
-        self.file_menu.addAction(saveAsAction)
-        self.file_menu.addAction(exportAction)
-        self.file_menu.addSeparator()
+        self._fileMenu.addAction(newAction)
+        self._fileMenu.addAction(openAction)
+        self._fileMenu.addAction(saveAction)
+        self._fileMenu.addAction(saveAsAction)
+        self._fileMenu.addAction(exportAction)
+        self._fileMenu.addSeparator()
 
         if self.general_settings.debug:
             clearAction = QtWidgets.QAction("&Clear settings and quit", self)
             clearAction.setStatusTip("Restore initial application settings and close the application")
             clearAction.triggered.connect(self._clear_and_close)
-            self.file_menu.addAction(clearAction)
+            self._fileMenu.addAction(clearAction)
 
-        self.file_menu.addAction(quitAction)
+        self._fileMenu.addAction(quitAction)
 
         # TOOLS menu
         instrAction = QtWidgets.QAction("Change &instrument...", self)
@@ -296,9 +316,9 @@ class ReductionGUI(QtWidgets.QMainWindow):
         debugAction.setStatusTip(debug_menu_item_str)
         debugAction.triggered.connect(self._debug_mode)
 
-        self.tools_menu.clear()
-        self.tools_menu.addAction(instrAction)
-        self.tools_menu.addAction(debugAction)
+        self._toolsMenu.clear()
+        self._toolsMenu.addAction(instrAction)
+        self._toolsMenu.addAction(debugAction)
 
         # Cluster submission details
         if IS_IN_MANTIDPLOT and CLUSTER_ENABLED:
@@ -306,7 +326,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
             jobAction.setShortcut("Ctrl+R")
             jobAction.setStatusTip("Set the cluster information for remote job submission")
             jobAction.triggered.connect(self._cluster_details_dialog)
-            self.tools_menu.addAction(jobAction)
+            self._toolsMenu.addAction(jobAction)
 
         recent_files = []
         for fname in self._recent_files:
@@ -314,12 +334,12 @@ class ReductionGUI(QtWidgets.QMainWindow):
                 recent_files.append(fname)
 
         if len(recent_files)>0:
-            self.file_menu.addSeparator()
+            self._fileMenu.addSeparator()
             for i, fname in enumerate(recent_files):
                 action = QtWidgets.QAction("&%d %s" % (i+1, QtCore.QFileInfo(fname).fileName()), self)
                 action.setData(fname)
                 action.triggered.connect(self.open_file)
-                self.file_menu.addAction(action)
+                self._fileMenu.addAction(action)
 
     def _debug_mode(self, mode=None):
         """
@@ -332,10 +352,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
         self._new()
         self.setup_layout()
 
-    def _interface_choice(self, advanced_ui=None):
-        if advanced_ui is None:
-            advanced_ui = self.general_settings.advanced
-        self.general_settings.advanced = advanced_ui
+    def _interface_choiceChanged(self):
         self._new()
         self.setup_layout()
 
@@ -467,22 +484,22 @@ class ReductionGUI(QtWidgets.QMainWindow):
             Create an object capable of using the information in the
             interface and turn it into a reduction process.
         """
-        self.reduce_button.setEnabled(False)
-        self.export_button.setEnabled(False)
-        self.save_button.setEnabled(False)
-        self.interface_chk.setEnabled(False)
-        self.file_menu.setEnabled(False)
-        self.tools_menu.setEnabled(False)
+        #self.reduce_button.setEnabled(False)
+        #self.export_button.setEnabled(False)
+        #self.save_button.setEnabled(False)
+        #self.interface_chk.setEnabled(False)
+        self._fileMenu.setEnabled(False)
+        self._toolsMenu.setEnabled(False)
 
         if self._interface is not None:
             self._interface.reduce()
 
-        self.reduce_button.setEnabled(True)
-        self.export_button.setEnabled(True)
-        self.save_button.setEnabled(True)
-        self.interface_chk.setEnabled(True)
-        self.file_menu.setEnabled(True)
-        self.tools_menu.setEnabled(True)
+        #self.reduce_button.setEnabled(True)
+        #self.export_button.setEnabled(True)
+        #self.save_button.setEnabled(True)
+        #self.interface_chk.setEnabled(True)
+        self._fileMenu.setEnabled(True)
+        self._toolsMenu.setEnabled(True)
 
     def cluster_clicked(self):
         """
@@ -572,7 +589,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
         """
         fname_qstr = QtWidgets.QFileDialog.getOpenFileName(self, "Reduction settings - Choose a settings file",
                                                        self._last_directory,
-                                                       "Settings files (*.xml)")
+                                                       "Settings files (*.xml)")[0]
         fname = str(QtCore.QFileInfo(fname_qstr).filePath())
         if fname:
             # Store the location of the loaded file
@@ -609,7 +626,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
         fname_qstr = QtWidgets.QFileDialog.getSaveFileName(self, "Reduction settings - Save settings",
                                                        self._last_directory + '/' + fname,
-                                                       "Settings files (*.xml)")
+                                                       "Settings files (*.xml)")[0]
         fname = str(QtCore.QFileInfo(fname_qstr).filePath())
         if len(fname)>0:
             if not fname.endswith('.xml'):
@@ -638,7 +655,7 @@ class ReductionGUI(QtWidgets.QMainWindow):
 
         fname = unicode(QtWidgets.QFileDialog.getSaveFileName(self, "Mantid Python script - Save script",
                                                           self._last_export_directory,
-                                                          "Python script (*.py)"))
+                                                          "Python script (*.py)")[0])
 
         if len(fname)>0:
             if not fname.endswith('.py'):

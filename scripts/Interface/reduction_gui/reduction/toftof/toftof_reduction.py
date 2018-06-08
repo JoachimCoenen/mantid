@@ -187,7 +187,7 @@ class TOFTOFScriptElement(BaseScriptElement):
             dataRuns = get_strlst('data_runs')
             dataCmts = get_strlst('data_comment')
             for i in range(min(len(dataRuns), len(dataCmts))):
-                self.dataRuns.append((dataRuns[i], dataCmts[i]))
+                self.dataRuns.append([dataRuns[i], dataCmts[i]])
 
             self.binEon    = get_bol('rebin_energy_on',    self.DEF_binEon)
             self.binEstart = get_flt('rebin_energy_start', self.DEF_binEstart)

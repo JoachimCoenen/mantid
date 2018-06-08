@@ -12,7 +12,6 @@ class DNSScriptElement(BaseScriptElement):
     """
     script element of the dns reduction ui
     """
-
     # save to file
     DEF_SaveToFile = False
 
@@ -52,24 +51,40 @@ class DNSScriptElement(BaseScriptElement):
 
     # parameters for single crystal reduction
     DEF_OmegaOffset  = 0.0
-    DEF_LatticeA     = 0.0
-    DEF_LatticeB     = 0.0
-    DEF_LatticeC     = 0.0
-    DEF_LatticeAlpha = 0.0
-    DEF_LatticeBeta  = 0.0
-    DEF_LatticeGamma = 0.0
-    DEF_ScatterU1    = 0.0
-    DEF_ScatterU2    = 0.0
-    DEF_ScatterU3    = 0.0
-    DEF_ScatterV1    = 0.0
-    DEF_ScatterV2    = 0.0
-    DEF_ScatterV3    = 0.0
+    DEF_LatticeSize  = (0, 0, 0)
+    #DEF_LatticeA     = 0.0
+    #DEF_LatticeB     = 0.0
+    #DEF_LatticeC     = 0.0
+    DEF_LatticeAngles = (0, 0, 0)
+    #DEF_LatticeAlpha = 0.0
+    #DEF_LatticeBeta  = 0.0
+    #DEF_LatticeGamma = 0.0
+    DEF_ScatterVectorU = (0, 0, 0)
+    #DEF_ScatterU1    = 0.0
+    #DEF_ScatterU2    = 0.0
+    #DEF_ScatterU3    = 0.0
+    DEF_ScatterVectorV = (0, 0, 0)
+    #DEF_ScatterV1    = 0.0
+    #DEF_ScatterV2    = 0.0
+    #DEF_ScatterV3    = 0.0
 
     XML_TAG = "DNSReduction"
 
     def __init__(self):
         BaseScriptElement.__init__(self)
 
+        self.reset()
+
+        tmp = api.LoadEmptyInstrument(InstrumentName="DNS")
+        instrument = tmp.getInstrument()
+        api.DeleteWorkspace(tmp)
+
+        self.suff_norm = instrument.getStringParameter("normws_suffix")[0]
+
+    def reset(self):
+        """
+        Declare variables to reset the view
+        """
         # facility and instrument name
         self.facility_name   = ""
         self.instrument_name = ""
@@ -115,77 +130,22 @@ class DNSScriptElement(BaseScriptElement):
 
         # parameters for single crystal
         self.omegaOffset  = self.DEF_OmegaOffset
-        self.latticeA     = self.DEF_LatticeA
-        self.latticeB     = self.DEF_LatticeB
-        self.latticeC     = self.DEF_LatticeC
-        self.latticeAlpha = self.DEF_LatticeAlpha
-        self.latticeBeta  = self.DEF_LatticeBeta
-        self.latticeGamma = self.DEF_LatticeGamma
-        self.scatterU1    = self.DEF_ScatterU1
-        self.scatterU2    = self.DEF_ScatterU2
-        self.scatterU3    = self.DEF_ScatterU3
-        self.scatterV1    = self.DEF_ScatterV1
-        self.scatterV2    = self.DEF_ScatterV2
-        self.scatterV3    = self.DEF_ScatterV3
-
-        tmp = api.LoadEmptyInstrument(InstrumentName="DNS")
-        instrument = tmp.getInstrument()
-        api.DeleteWorkspace(tmp)
-
-        self.suff_norm = instrument.getStringParameter("normws_suffix")[0]
-
-    def reset(self):
-        """
-        Declare variables to reset the view
-        """
-
-        self.facility_name   = ""
-        self.instrument_name = ""
-
-        self.sampleDataPath = ""
-        self.filePrefix     = ""
-        self.fileSuffix     = ""
-
-        self.dataRuns = []
-
-        self.maskAngles = []
-
-        self.saveToFile = self.DEF_SaveToFile
-        self.outDir     = ""
-        self.outPrefix  = ""
-
-        self.standardDataPath = ""
-
-        self.detEffi        = self.DEF_DetEffi
-        self.sumVan         = self.DEF_SumVan
-        self.subInst        = self.DEF_SubInst
-        self.subFac         = self.DEF_SubFac
-        self.flipRatio     = self.DEF_FlipRatio
-        self.flipFac       = self.DEF_FlipFac
-        self.multiSF        = self.DEF_MultiSF
-        self.normalise      = self.DEF_Normalise
-        self.neutronWaveLen = self.DEF_NeutWaveLen
-
-        self.out = self.DEF_Output
-
-        self.outAxisQ      = self.DEF_OutAxisQ
-        self.outAxisD      = self.DEF_OutAxisD
-        self.outAxis2Theta = self.DEF_OutAxis2Theta
-        self.separation    = self.DEF_Separation
-
-        self.omegaOffset  = self.DEF_OmegaOffset
-        self.latticeA     = self.DEF_LatticeA
-        self.latticeB     = self.DEF_LatticeB
-        self.latticeC     = self.DEF_LatticeC
-        self.latticeAlpha = self.DEF_LatticeAlpha
-        self.latticeBeta  = self.DEF_LatticeBeta
-        self.latticeGamma = self.DEF_LatticeGamma
-        self.scatterU1    = self.DEF_ScatterU1
-        self.scatterU2    = self.DEF_ScatterU2
-        self.scatterU3    = self.DEF_ScatterU3
-        self.scatterV1    = self.DEF_ScatterV1
-        self.scatterV2    = self.DEF_ScatterV2
-        self.scatterV3    = self.DEF_ScatterV3
+        self.latticeSize  = self.DEF_LatticeSize
+        #self.latticeA     = self.DEF_LatticeA
+        #self.latticeB     = self.DEF_LatticeB
+        #self.latticeC     = self.DEF_LatticeC
+        self.latticeAngles= self.DEF_LatticeAngles
+        #self.latticeAlpha = self.DEF_LatticeAlpha
+        #self.latticeBeta  = self.DEF_LatticeBeta
+        #self.latticeGamma = self.DEF_LatticeGamma
+        self.scatterVectorU= self.DEF_ScatterVectorU
+        #self.scatterU1    = self.DEF_ScatterU1
+        #self.scatterU2    = self.DEF_ScatterU2
+        #self.scatterU3    = self.DEF_ScatterU3
+        self.scatterVectorV= self.DEF_ScatterVectorV
+        #self.scatterV1    = self.DEF_ScatterV1
+        #self.scatterV2    = self.DEF_ScatterV2
+        #self.scatterV3    = self.DEF_ScatterV3
 
     def to_xml(self):
         """
@@ -240,18 +200,18 @@ class DNSScriptElement(BaseScriptElement):
         put("separation",         self.separation)
 
         put("omega_offset",             self.omegaOffset)
-        put("lattice_parameters_a",     self.latticeA)
-        put("lattice_parameters_b",     self.latticeB)
-        put("lattice_parameters_c",     self.latticeC)
-        put("lattice_parameters_alpha", self.latticeAlpha)
-        put("lattice_parameters_beta",  self.latticeBeta)
-        put("lattice_parameters_gamma", self.latticeGamma)
-        put("scattering_Plane_u_1",     self.scatterU1)
-        put("scattering_Plane_u_2",     self.scatterU2)
-        put("scattering_Plane_u_3",     self.scatterU3)
-        put("scattering_Plane_v_1",     self.scatterV1)
-        put("scattering_Plane_v_2",     self.scatterV2)
-        put("scattering_Plane_v_3",     self.scatterV3)
+        put("lattice_parameters_a",     self.latticeSize[0])
+        put("lattice_parameters_b",     self.latticeSize[1])
+        put("lattice_parameters_c",     self.latticeSize[2])
+        put("lattice_parameters_alpha", self.latticeAngles[0])
+        put("lattice_parameters_beta",  self.latticeAngles[1])
+        put("lattice_parameters_gamma", self.latticeAngles[2])
+        put("scattering_Plane_u_1",     self.scatterVectorU[0])
+        put("scattering_Plane_u_2",     self.scatterVectorU[1])
+        put("scattering_Plane_u_3",     self.scatterVectorU[2])
+        put("scattering_Plane_v_1",     self.scatterVectorV[0])
+        put("scattering_Plane_v_2",     self.scatterVectorV[1])
+        put("scattering_Plane_v_3",     self.scatterVectorV[2])
 
         return "<{0}>\n{1}</{0}>\n".format(self.XML_TAG, res[0])
 
@@ -353,18 +313,22 @@ class DNSScriptElement(BaseScriptElement):
             self.separation    = get_int("separation",         self.DEF_Separation)
 
             self.omegaOffset  = get_flt("omega_offset",             self.omegaOffset)
-            self.latticeA     = get_flt("lattice_parameters_a",     self.DEF_LatticeA)
-            self.latticeB     = get_flt("lattice_parameters_b",     self.DEF_LatticeB)
-            self.latticeC     = get_flt("lattice_parameters_c",     self.DEF_LatticeC)
-            self.latticeAlpha = get_flt("lattice_parameters_alpha", self.DEF_LatticeAlpha)
-            self.latticeBeta  = get_flt("lattice_parameters_beta",  self.DEF_LatticeBeta)
-            self.latticeGamma = get_flt("lattice_parameters_gamma", self.DEF_LatticeGamma)
-            self.scatterU1    = get_flt("scattering_Plane_u_1",     self.DEF_ScatterU1)
-            self.scatterU2    = get_flt("scattering_Plane_u_2",     self.DEF_ScatterU2)
-            self.scatterU3    = get_flt("scattering_Plane_u_3",     self.DEF_ScatterU3)
-            self.scatterV1    = get_flt("scattering_Plane_v_1",     self.DEF_ScatterV1)
-            self.scatterV2    = get_flt("scattering_Plane_v_2",     self.DEF_ScatterV2)
-            self.scatterV3    = get_flt("scattering_Plane_v_3",     self.DEF_ScatterV3)
+            latticeA     = get_flt("lattice_parameters_a",     self.DEF_LatticeSize[0])
+            latticeB     = get_flt("lattice_parameters_b",     self.DEF_LatticeSize[1])
+            latticeC     = get_flt("lattice_parameters_c",     self.DEF_LatticeSize[2])
+            self.latticeSize = (latticeA, latticeB, latticeC)
+            latticeAlpha = get_flt("lattice_parameters_alpha", self.DEF_LatticeAngles[0])
+            latticeBeta  = get_flt("lattice_parameters_beta",  self.DEF_LatticeAngles[1])
+            latticeGamma = get_flt("lattice_parameters_gamma", self.DEF_LatticeAngles[2])
+            self.latticeAngles = (latticeAlpha, latticeBeta, latticeGamma)
+            scatterU1    = get_flt("scattering_Plane_u_1",     self.DEF_ScatterVectorU[0])
+            scatterU2    = get_flt("scattering_Plane_u_2",     self.DEF_ScatterVectorU[1])
+            scatterU3    = get_flt("scattering_Plane_u_3",     self.DEF_ScatterVectorU[2])
+            self.scatterVectorU = (scatterU1, scatterU2, scatterU3)
+            scatterV1    = get_flt("scattering_Plane_v_1",     self.DEF_ScatterVectorV[0])
+            scatterV2    = get_flt("scattering_Plane_v_2",     self.DEF_ScatterVectorV[1])
+            scatterV3    = get_flt("scattering_Plane_v_3",     self.DEF_ScatterVectorV[2])
+            self.scatterVectorV = (scatterV1, scatterV2, scatterV3)
 
     def error(self, message):
         """
@@ -431,13 +395,13 @@ class DNSScriptElement(BaseScriptElement):
         # one angle of the lattice parameters angles cant be bigger than the other two added and
         # the scatter parameters can't all be zero
         if self.out == self.OUT_SINGLE_CRYST:
-            if self.latticeAlpha > self.latticeBeta + self.latticeBeta or \
-                            self.latticeBeta > self.latticeAlpha + self.latticeGamma or \
-                            self.latticeGamma > self.latticeAlpha + self.latticeBeta:
+            if self.latticeAngles[0] > self.latticeAngles[1] + self.latticeAngles[2] \
+            or self.latticeAngles[1] > self.latticeAngles[0] + self.latticeAngles[2] \
+            or self.latticeAngles[2] > self.latticeAngles[0] + self.latticeAngles[1]:
                 self.error("Invalid lattice angles: one angle can't be bigger than the other to added")
-            if self.scatterU1 == 0.0 and self.scatterU2 == 0.0 and self.scatterU3 == 0.0:
+            if self.scatterVectorU[0] == 0.0 and self.scatterVectorU[1] == 0.0 and self.scatterVectorU[2] == 0.0:
                 self.error("|B.u|~0")
-            if self.scatterV1 == 0.0 and self.scatterV2 == 0.0 and self.scatterV3 == 0.0:
+            if self.scatterVectorV[0] == 0.0 and self.scatterVectorV[1] == 0.0 and self.scatterVectorV[2] == 0.0:
                 self.error("|B.v|~0")
 
     def _test_mask_angles(self):
@@ -598,10 +562,10 @@ class DNSScriptElement(BaseScriptElement):
 
         parameters["Data reduction settings"] = data_red_settings
 
-        type = dict()
+        sample = dict()
 
         if self.out == self.OUT_POLY_AMOR:
-            type["Type"] = "Polycrystal/Amorphous"
+            sample["Type"] = "Polycrystal/Amorphous"
 
             out_ax = []
             if self.outAxisD:
@@ -611,41 +575,41 @@ class DNSScriptElement(BaseScriptElement):
             if self.outAxis2Theta:
                 out_ax.append("2theta")
 
-            type["Abscissa"] = str(out_ax)
+            sample["Abscissa"] = str(out_ax)
 
             if self.separation == self.SEP_XYZ:
-                type["Separation"] = "XYZ"
+                sample["Separation"] = "XYZ"
             elif self.separation == self.SEP_COH:
-                type["Separation"] = "Coherent/Incoherent"
+                sample["Separation"] = "Coherent/Incoherent"
             else:
-                type["Separation"] = "No"
+                sample["Separation"] = "No"
 
         if self.out == self.OUT_SINGLE_CRYST:
-            type["Type"] = "Single Crystal"
+            sample["Type"] = "Single Crystal"
 
-            type["Omega offset"] = self.omegaOffset
+            sample["Omega offset"] = self.omegaOffset
 
             lattice = dict()
-            lattice["a"] = self.latticeA
-            lattice["b"] = self.latticeB
-            lattice["c"] = self.latticeC
+            lattice["a"] = self.latticeSize[0]
+            lattice["b"] = self.latticeSize[1]
+            lattice["c"] = self.latticeSize[2]
 
-            lattice["alpha"] = self.latticeAlpha
-            lattice["beta"]  = self.latticeBeta
-            lattice["gamma"] = self.latticeGamma
+            lattice["alpha"] = self.latticeAngles[0]
+            lattice["beta"]  = self.latticeAngles[1]
+            lattice["gamma"] = self.latticeAngles[2]
 
-            type["Lattice parameters"] = lattice
+            sample["Lattice parameters"] = lattice
 
             scatter = {}
-            u = "{}, {}, {}".format(self.scatterU1, self.scatterU2, self.scatterU3)
-            v = "{}, {}, {}".format(self.scatterV1, self.scatterV2, self.scatterV3)
+            u = "{}, {}, {}".format(self.scatterVectorU[0], self.scatterVectorU[1], self.scatterVectorU[2])
+            v = "{}, {}, {}".format(self.scatterVectorV[0], self.scatterVectorV[1], self.scatterVectorV[2])
 
             scatter["u"] = u
             scatter["v"] = v
 
-            type["Scattering Plane"] = scatter
+            sample["Scattering Plane"] = scatter
 
-        parameters["Sample"] = type
+        parameters["Sample"] = sample
 
         return parameters
 

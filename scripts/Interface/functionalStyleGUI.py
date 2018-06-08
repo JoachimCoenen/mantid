@@ -3,10 +3,11 @@ from __future__ import print_function, absolute_import
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
-
+import itertools
 import six
+import re
 if not 'unicode' in __builtins__:
-    unicode = str
+	unicode = str
 
 class Stack:
 	def __init__(self):
@@ -39,8 +40,51 @@ class Stack:
 	def __str__(self):
 		return self.__storage.__str__()
 
-class Layout(object):
+class WithBlock(object):
+	"""docstring for WithBlock"""
+	def __init__(self):
+		super(WithBlock, self).__init__()
+	
+	def __enter__(self):
+		pass
+
+	def __exit__(self, exc_type, exc_value, traceback):
+		pass
+
+	def surroundWithBlock(self, outer):
+		return self.surround(outer.__enter__, outer.__exit__)
+		#done
+
+	def surroundWith(self, enter, exit = None):
+		class BoundBlock(WithBlock):
+			"""docstring for BoundBlock"""
+			def __init__(self, inner, outer__enter, outer__exit = None):
+				super(BoundBlock, self).__init__()
+				self.inner = inner
+				self.outer__enter = outer__enter
+				self.outer__exit = outer__exit
+			
+			def __enter__(self):
+				result = self.outer__enter()
+				self.inner.__enter__()
+				return result
+
+			def __exit__(self, exc_type, exc_value, traceback):
+				hasHandeledException = self.inner.__exit__(exc_type, exc_value, traceback)
+				if self.outer__exit != None:
+					if hasHandeledException:
+						self.outer__exit(None, None, None)
+						return True
+					else:
+						return self.outer__exit(exc_type, exc_value, traceback)
+				else:
+					return hasHandeledException
+		
+		return BoundBlock(self, enter, exit)
+
+class Layout(WithBlock):
 	def __init__(self, qLayout, gui):
+		super(Layout, self).__init__()
 		self._qLayout = qLayout
 		self._gui = gui
 		self.indentLevel = 0
@@ -58,11 +102,13 @@ class Layout(object):
 		self.removeWidgets(self._qLayout, fromPos = self._index)
 		return False
 
-	def getItem(self):
-		if self._qLayout.count() <= self._index:
+	def getItem(self, index = None):
+		index = self._index if index == None else index
+
+		if self._qLayout.count() <= index:
 			return None
 		else:
-			item = self._qLayout.itemAt(self._index)
+			item = self._qLayout.itemAt(index)
 			if item.widget() != None:
 				return item.widget()
 			elif item.layout() != None:
@@ -88,17 +134,6 @@ class Layout(object):
 				hasToAddItem = True		
 
 		if hasToAddItem:
-			lst = [[item], args]
-			#flat_list = [item for sublist in  for item in sublist]
-			funcArgs = (type(self), ItemType, initArgs, args)
-
-			def getTypesRecursive(values):
-				typeOfValues = type(values)
-				return typeOfValues(getTypesRecursive(v) if hasattr(v, '__iter__') else type(v) for v in values)
-			funcArgsTypes = getTypesRecursive(funcArgs)
-			#print("_addItem(self={}, ItemType={}, initArgs={}, args = {})".format(*funcArgs))
-			#print("_addItem(self={}, ItemType={}, initArgs={}, args = {})".format(*funcArgsTypes))
-
 			if isinstance(item, QtWidgets.QWidget):
 				#print("adding Widget, args={}".format(type(item)))
 				self._qLayout.addWidget(item, *args)
@@ -129,6 +164,69 @@ class Layout(object):
 				pass
 				#child.spacerItem().setParent(None)
 
+class Splitter(Layout):
+	QLayoutType = QtWidgets.QSplitter
+	def __init__(self, qSplitter, gui):
+		super(Splitter, self).__init__(qSplitter, gui)
+		#done
+
+	def resetIndex(self):
+		self._index = 0
+		self.indentLevel = 0
+
+	def getItem(self, index = None):
+		index = self._index if index == None else index
+
+		if self._qLayout.count() <= index:
+			return None
+		else:
+			return self._qLayout.widget(index)
+
+	def _addItem(self, ItemType, initArgs = {}, args = ()):
+		item = self.getItem()
+
+		itemToAdd = None
+		if  isinstance(ItemType, QtWidgets.QWidget):
+			if not item == ItemType:
+				self.removeWidgets(self._qLayout, fromPos=self._index)
+				item = ItemType
+				itemToAdd = item
+		elif type(item) is QtWidgets.QWidget and type(item.layout()) is ItemType:
+			item = item.layout()
+		else:
+			if type(item) is not ItemType:
+				self.removeWidgets(self._qLayout, fromPos=self._index)
+				print("creating new item:", ItemType)
+				item = ItemType(*initArgs)
+				if isinstance(item, QtWidgets.QSpacerItem):
+					raise Exception('QSpacerItem cannot be added to a Splitter directly!')
+				elif isinstance(item, QtWidgets.QLayout):
+					itemToAdd = QtWidgets.QWidget()
+					itemToAdd.setLayout(item)
+				else:
+					itemToAdd = item
+
+		if itemToAdd:
+			#print("adding Widget, args={}".format(type(item)))
+			self._qLayout.addWidget(itemToAdd)
+
+		self._index += 1
+		return item
+
+	def addItem(self, ItemType, initArgs = {}, fullSize = False):
+		item = self._addItem(ItemType, initArgs)
+		return item
+
+	def removeWidgets(self, qLayout, fromPos = 0):
+		if not isinstance(qLayout, QtWidgets.QSplitter):
+			return super(Splitter, self).removeWidgets(qLayout, fromPos)
+
+		while qLayout.count() > fromPos:
+			widget = qLayout.widget(qLayout.count()-1)
+			print("!!!! REMOVING Widgets after:", fromPos, widget)
+			widget.deleteLater()
+			widget.setParent(None)
+
 class DoubleColumnLayout(Layout):
 	QLayoutType = QtWidgets.QGridLayout
 
@@ -137,6 +235,9 @@ class DoubleColumnLayout(Layout):
 		self._preventVStretch = preventVStretch
 		self._preventHStretch = preventHStretch
 		self.resetIndex()
+
+		self._qLayout.setVerticalSpacing(1)
+
 
 	def __exit__(self, exc_type, exc_value, traceback):
 		super(DoubleColumnLayout, self).__exit__(exc_type, exc_value, traceback)
@@ -161,6 +262,7 @@ class DoubleColumnLayout(Layout):
 		if self._qLayout.getItemPosition(self._index) != (row, column, rowSpan, columnSpan):
 			#print("{} != {}".format(self._qLayout.getItemPosition(self._index), (row, column, rowSpan, columnSpan)))
 			self.removeWidgets(self._qLayout, self._index)
+
 		return super(DoubleColumnLayout, self)._addItem(ItemType, args=(row, column, rowSpan, columnSpan), initArgs=initArgs)
 		#done
 
@@ -448,6 +550,7 @@ class FunctionalStyleGUI:
 
 		self.modifiedInput = (None, None) # tuple (widget, data)
 		self._modifiedInputStack = Stack() # for handling recursive OnInputModified calls, don't remove!
+		self.anim1 = None
 
 	def redrawGUI(self):
 		if self.isCurrentlyDrawing:
@@ -496,12 +599,21 @@ class FunctionalStyleGUI:
 		item = None
 		if shouldIndent:
 			with self.hLayout(fullSize):
-				self.addSpacer(25 * indentLevel, QtWidgets.QSizePolicy.Fixed)
+				self.addSpacer(17 * indentLevel, QtWidgets.QSizePolicy.Fixed)
 				item = self.currentLayout().addItem(ItemType, initArgs=initArgs, fullSize=fullSize)
-				self.addkwArgsToItem(item, **kwargs)
 		else:
 			item = self.currentLayout().addItem(ItemType, initArgs=initArgs, fullSize=fullSize)
-			self.addkwArgsToItem(item, **kwargs)
+
+		layout = self.currentLayout()
+		qLayout = layout._qLayout
+		if hasattr(qLayout, 'setRowMinimumHeight'):
+			row, _, _, _ = qLayout.getItemPosition(layout._index-1)
+			if not isinstance(item, QtWidgets.QLabel) and isinstance(item, QtWidgets.QWidget):
+				qLayout.setRowMinimumHeight(row, 27)
+			else:
+				qLayout.setRowMinimumHeight(row, 0)
+
+		self.addkwArgsToItem(item, **kwargs)
 
 		return item
 
@@ -545,7 +657,7 @@ class FunctionalStyleGUI:
 		Creates an indented block. has to be used in an `with` statement (`with gui.indentation():`).
 		Everything within the with statement will be indented.
 		"""
-		class Indentation(object):
+		class Indentation(WithBlock):
 			"""docstring for Indentation"""
 			def __init__(self, gui):
 				super(Indentation, self).__init__()
@@ -557,7 +669,6 @@ class FunctionalStyleGUI:
 				return False
 		return Indentation(self)
 		
-
 	def vLayout(self, fullSize = True, isIndented = False, preventVStretch = False, preventHStretch = False, tip = "", **kwargs):
 		"""
 		Creates a vertical layout. has to be used in an `with` statement (`with gui.vLayout():`).
@@ -614,58 +725,43 @@ class FunctionalStyleGUI:
 		The state of the checkbox can be retrieved via `boolValue = hlayout.value`
 		Everything within the with statement will be inside the horizontal layout.
 		"""
-		class HorizontalLayoutCecked(SingleRowLayout):
-			def __init__(self, qLayout, gui, preventHStretch, isChecked):
-				super(HorizontalLayoutCecked, self).__init__(qLayout, gui)
-				self._isChecked = isChecked
-
-			def __enter__(self):
-				super(HorizontalLayoutCecked, self).__enter__()
-				return self._isChecked
-
 		isChecked = self.checkBox(isChecked, label, tip, fullSize, enabled = kwargs.get('enabled', True))
-		qLayout = self.addItem(HorizontalLayoutCecked.QLayoutType, fullSize, isIndented, **kwargs)
+		qLayout = self.addItem(SingleRowLayout.QLayoutType, fullSize, isIndented, **kwargs)
 		
-		return HorizontalLayoutCecked(qLayout, self, preventHStretch, isChecked)
+		return SingleRowLayout(qLayout, self).surroundWith(enter=lambda: isChecked)
 		
-	def groupBox(self, title, fullSize = True, isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+	def groupBox(self, title, isIndented = False, preventVStretch = False, preventHStretch = False, enabled=True, **kwargs):
 		"""
 		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
 		Everything within the with statement will be inside the vertical layout.
 		"""
-		return self.groupBoxChecked(False, title, False, fullSize, isIndented, preventVStretch, preventHStretch, **kwargs)
+		self.title(title, isIndented=isIndented, enabled=enabled, **kwargs)
+		return self.indentation()
 
-	def groupBoxChecked(self, isChecked, title = None, isCheckable = True, fullSize = True, isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+	def groupBoxChecked(self, isChecked, title = None, isCheckable = True, isIndented = False, preventVStretch = False, preventHStretch = False, enabled=True, **kwargs):
 		"""
 		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
 		Everything within the with statement will be inside the vertical layout.
 		"""
-		class VerticalLayoutCecked(DoubleColumnLayout):
-			def __init__(self, qLayout, gui, preventVStretch, preventHStretch, isChecked):
-				super(VerticalLayoutCecked, self).__init__(qLayout, gui, preventVStretch, preventHStretch)
-				self._isChecked = isChecked
+		return self.indentation().surroundWith(lambda: self.checkBox(isChecked, title, "", True, isIndented, enabled, styleSheet="font-weight: bold;\n", **kwargs))
 
-			def __enter__(self):
-				super(VerticalLayoutCecked, self).__enter__()
-				return self._isChecked
+	def scrollBox(self, fullSize = True, isIndented = False, preventVStretch = False, preventHStretch = False, **kwargs):
+		"""
+		Creates a vertical layout. has to be used in an `with` statement (`with gui.verticalLayout():`).
+		Everything within the with statement will be inside the vertical layout.
+		"""
+		scrollBox = self.addItem(QtWidgets.QScrollArea, fullSize, isIndented, widgetResizable=True, **kwargs)
+		widget = scrollBox.widget()
+		if widget == None:
+			widget = QtWidgets.QWidget()
+			scrollBox.setWidget(widget)
 
-
-		groupBox = self.addItem(QtWidgets.QGroupBox, fullSize, isIndented, title=title, **kwargs)
-		qLayout = groupBox.layout()
+		qLayout = widget.layout()
 		if qLayout == None:
-			qLayout = QtWidgets.QGridLayout()
-			groupBox.setLayout(qLayout)
+			qLayout = DoubleColumnLayout.QLayoutType()
+			widget.setLayout(qLayout)
 
-		if isCheckable != groupBox.isCheckable():
-			groupBox.setCheckable(isCheckable)
-
-		if groupBox != self.modifiedInput[0] and groupBox.isChecked() != isChecked:
-			groupBox.setChecked(isChecked)
-
-		if QtCore.QObject.receivers(groupBox, groupBox.toggled) == 0 :
-			groupBox.toggled.connect(lambda x: self.OnInputModified(groupBox, x))
-
-		return VerticalLayoutCecked(qLayout, self, preventVStretch, preventHStretch, groupBox.isChecked())
+		return DoubleColumnLayout(qLayout, self, preventVStretch, preventHStretch)
 
 	def tabWidget(self, tip = "", fullSize = True, isIndented = False, **kwargs):
 		"""
@@ -698,8 +794,12 @@ class FunctionalStyleGUI:
 				self._index +=1
 				return DoubleColumnLayout(qLayout, self._gui, preventVStretch, preventHStretch)
 		
-		tabWidget = self.addItem(QtWidgets.QTabWidget, fullSize, isIndented, toolTip=tip, **kwargs)
+		tabWidget = self.addItem(QtWidgets.QTabWidget, fullSize, isIndented, toolTip=tip, minimumHeight=0, **kwargs)
 		return TabControl(tabWidget, self)
+
+	def splitter(self, **kwargs):
+		qLayout = self.addItem(Splitter.QLayoutType, True, False, **kwargs)
+		return Splitter(qLayout, self)
 
 	def addSpacer(self, size, sizePolicy):
 		spacer = self.currentLayout().addItem(QtWidgets.QSpacerItem, initArgs=(0, 0), fullSize=True)
@@ -730,6 +830,28 @@ class FunctionalStyleGUI:
 			sp.setHorizontalPolicy(QtWidgets.QSizePolicy.Minimum)
 			label.setSizePolicy(sp)
 
+	def title(self, text, fullSize = True, isIndented = False, enabled=True, **kwargs):
+		self.addSpacer(10, QtWidgets.QSizePolicy.Fixed)
+		self.label(text, fullSize, isIndented, enabled, styleSheet="font-weight: bold;", **kwargs)
+
+	helpBoxStyles = {'hint', 'info', 'warning', 'error'}
+	def helpBox(self, text, style = 'hint', fullSize = True, isIndented = False, enabled=True):
+		''' displays a full width Help Box'''
+		assert(style in self.helpBoxStyles)
+		styleSheet = 'font-size: 10pt; font-style: italic; '
+		styleSheet += 'color: rgb(255, 0, 0); ' if style in {'error'} else ''
+		styleSheet += 'color: rgb(127, 127, 0); ' if style in {'warning'} else ''
+		if text:
+			self.label(text, fullSize, isIndented, enabled, styleSheet=styleSheet)
+		#'font: italic 10pt "Bitstream Charter";'
+
+	def helpBoxRight(self, text, style = 'hint', isIndented = False, enabled=True):
+		''' displays a Help Box under the last drawn gui element'''
+		if text:
+			self.addItem(QtWidgets.QWidget, False, isIndented)
+			self.helpBox(text, style, False, isIndented, enabled)
+		#'font: italic 10pt "Bitstream Charter";'
+
 	def lineEdit(self, text, label = None, fullSize = False, isIndented = False, tip = "", enabled=True, **kwargs):
 		lineEdit = self.addLabeledItem(QtWidgets.QLineEdit, label, fullSize, isIndented, enabled=enabled, **kwargs)
 
@@ -738,6 +860,7 @@ class FunctionalStyleGUI:
 		
 		if QtCore.QObject.receivers(lineEdit, lineEdit.textEdited) == 0 :
 			lineEdit.textEdited.connect(lambda x: self.OnInputModified(lineEdit))
+		print('lineEdit: %d' % lineEdit.height())
 		return lineEdit.text()
 
 	def folderPathEdit(self, path, label, tip = '', fullSize = False, isIndented = False, enabled=True):
@@ -754,7 +877,7 @@ class FunctionalStyleGUI:
 		with self.hLayout(fullSize, isIndented):
 			path = self.lineEdit(path, enabled=enabled)
 			if self.button('Browse', enabled=enabled):
-				newPath = str(QtWidgets.QFileDialog.getOpenFileNames(self.host, "Save File", filter, path))
+				newPath = str(QtWidgets.QFileDialog.getOpenFileNames(self.host, "Save File", path, filter)[0])
 				path = newPath if newPath else path
 		return path
 
@@ -763,11 +886,11 @@ class FunctionalStyleGUI:
 		with self.hLayout(fullSize, isIndented):
 			path = self.lineEdit(path, enabled=enabled)
 			if self.button('Browse', enabled=enabled):
-				newPath = str(QtWidgets.QFileDialog.getSaveFileName(self.host, "Save File", filter, path))
+				newPath = str(QtWidgets.QFileDialog.getSaveFileName(self.host, "Save File", path, filter)[0])
 				path = newPath if newPath else path
 		return path
 
-	def spinBox(self, value, minVal = -float('inf'), maxVal = +float('inf'), step = 1, label = None, fullSize = False, isIndented = False, enabled=True, **kwargs):
+	def spinBox(self, value, minVal = -0, maxVal = +99, step = 1, label = None, fullSize = False, isIndented = False, enabled=True, **kwargs):
 		spinBox = self.addLabeledItem(QtWidgets.QSpinBox, label, fullSize, isIndented, enabled=enabled, singleStep=step, minimum=minVal, maximum=maxVal, **kwargs)
 
 		#spinBox.setRange(minVal, maxVal)
@@ -806,6 +929,7 @@ class FunctionalStyleGUI:
 		
 		if QtCore.QObject.receivers(comboBox, comboBox.currentIndexChanged[int]) == 0 :
 			comboBox.currentIndexChanged[int].connect(lambda x: self.OnInputModified(comboBox))
+		print('comboBox: %d' % comboBox.height())
 		return getCurrentValue()
 
 	def slider(self, value, minVal, maxVal, label = None, tip = "", fullSize = False, isIndented = False, enabled=True, **kwargs):
@@ -896,7 +1020,67 @@ class FunctionalStyleGUI:
 				raise e
 		progressSignal.connect(progressBar.setValue, type=QtCore.Qt.UniqueConnection)
 
+	def vector(self, values, labeles, widgetPainter, label = None, fullSize = False, isIndented = False, tip = "", enabled=True, **kwargs):
+		allLabeles = itertools.chain(labeles, itertools.repeat(None))
+		with self.hLayoutLabeled(label, fullSize, isIndented, tip=tip, enabled=enabled):
+			result = map(lambda (v, l): widgetPainter(v, label=l, tip=tip, enabled=enabled, **kwargs), zip(values, allLabeles))
+			return result
+
 	def customWidget(self, widgetInstance, label = None, tip = "", fullSize = False, isIndented = False, enabled=True, **kwargs):
 		self.addLabeledItem(widgetInstance, label, fullSize, isIndented, **kwargs)
+		#done
+	# line 919
 
+	# Mantid specific:
+	def validate_runs(self, runs):
+		# Ranges are:
+		# |- simple scalars : "17"
+		# |- simple ranges : "5:15" or "5-15", but not reversed eg:"15-5"
+		# |- sstepped ranges: "5:15:2" or "5-15:2" meaning "5, 7, 9, 11, 13, 15"
+		#
+		# Ranges can be seperated by a comma+space (eg. "3, 5"). Just a comma (eg. "3,5")is not sufficent!
+		if not runs:
+			return ''
+
+		errorStr = ''
+		reResult = re.findall(r'(^X|(?:^X)?[-:, ]+)(?:$|([^-:, \n]+)(?:([-:])([^-:, \n]*)(?:([:])([^-:, \n]*))?)?)', "X" + runs)
+		for r in reResult:
+			# Group 1 = start-of-String, or ", " mandatory
+			# Group 2 = start value				 mandatory
+			# Group 3 = range separator (- or :)
+			# Group 4 = end value
+			# Group 5 = step separator (:)
+			# Group 6 = step value
+			group1, start, rangeSepar, end, stepSepar, step = r
+			#Group 1
+			if not group1:
+				errorStr = 'invalid Input!'
+			elif group1[0] == 'X' and len(group1) > 1:
+				errorStr = "missing number before '%s'" % group1
+			elif group1 == ',':
+				errorStr = 'comma (,) needs to be followed by a space'
+			elif re.match(r', {2,}$', group1):
+				errorStr = 'too many spaces after comma (,)'
+			elif group1 not in {', ', 'X'}:
+				errorStr = "unknown characters found '%s'" % group1
+			elif not start.isdigit():
+				errorStr = "expected number after comma" if not start else \
+						   "'%s' is not a positiv integer" % start
+			elif rangeSepar and not end.isdigit():
+				errorStr = "expected number after '%s'" % rangeSepar if not end else \
+						   "'%s' is not a positiv integer" % end
+			elif end and int(end) <= int(start):
+				errorStr = "start of range cannot be larger than end of range: '%s%s%s'" % (start,rangeSepar, end)
+			elif stepSepar and not step.isdigit():
+				errorStr = "expected number after '%s'" % stepSepar if not step else \
+						   "'%s' is not a positiv integer" % step
+
+			if errorStr:
+				break
+		return errorStr
+
+	def runsEdit(self, runs, label = None, fullSize = False, isIndented = False, tip = "", enabled=True, **kwargs):
+		runs = self.lineEdit(runs, label, fullSize, isIndented, tip, enabled, **kwargs)
+		errorStr = self.validate_runs(runs)
+		return (runs, errorStr)
 
